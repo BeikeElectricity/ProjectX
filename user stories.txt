@@ -1,0 +1,16 @@
+Som en användare vill jag
+-Trycka på knapparna baserat på vad som händer i verkligheten.
+-att knapparna styrs av bussen.
+-Kunna logga in
+-Välja nickname
+-Se mina tidigare resultat.
+-Se hur jag förhåller mig till andra
+-Se när jag skall gå av
+-Ange när jag skall gå av.
+-Gissa hur lång tid det är till nästa station.
+-Gissa hur många som använder WIFIt.
+-Välja när jag vill börja spela.
+-Avsluta  spelet.
+-Läsa lite om spelet, About, Credits etc.
+-Vill jag ha hjälp att förstå hur det funkar.
+-Gissa hur snabbt bussen kör.
