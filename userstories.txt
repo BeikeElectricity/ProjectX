@@ -1,16 +1,16 @@
-Som en användare vill jag
--Trycka på knapparna baserat på vad som händer i verkligheten.
--att knapparna styrs av bussen.
--Kunna logga in
--Välja nickname
--Se mina tidigare resultat.
--Se hur jag förhåller mig till andra
--Se när jag skall gå av
--Ange när jag skall gå av.
--Gissa hur lång tid det är till nästa station.
--Gissa hur många som använder WIFIt.
--Välja när jag vill börja spela.
--Avsluta  spelet.
--Läsa lite om spelet, About, Credits etc.
--Vill jag ha hjälp att förstå hur det funkar.
--Gissa hur snabbt bussen kör.
+As a user I would like to
+-Press the buttons based on what is happening in reality. 
+-That the buttons as controlled by the bus.
+-Be able to log in.
+-Choose a nickname.
+-See my earlier results.
+-See how I'm doing compared to others.
+-See when it's time to get off the bus.
+-Select a destination.
+-Guess the time until the next station.
+-Guess how the number of people that use WIFI.
+-Choose when to play.
+-Exit the game.
+-Read about the game, About, Credits etc.
+-Be helped to understand the game.
+-Guess the speed of the bus.
