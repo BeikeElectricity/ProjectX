@@ -23,14 +23,15 @@ public class Database {
     private Statement stmt;
 
     public Database() {
-        Connection conn = null;
-        Statement stmt = null;
         try {
             //Register JDBC driver
             Class.forName("com.mysql.jdbc.Driver");
 
             //Open a connection
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+            //Create a statement
+            stmt = conn.createStatement();
 
         } catch (SQLException se) {
             //Handle errors for JDBC
