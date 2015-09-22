@@ -69,3 +69,4 @@ nb-configuration.xml
 
 ## OS Specific
 .DS_Store
+App/app/build.gradle
