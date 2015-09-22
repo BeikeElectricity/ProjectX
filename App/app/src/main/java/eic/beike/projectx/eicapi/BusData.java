@@ -10,36 +10,36 @@ public class BusData {
     /**
      * The time that the sensor data was compiled to this object.
      */
-    Integer timestamp;
+    public Integer timestamp;
 
 
     /**
      * The pedal position in percent (0 to 100) TODO: Confirm 100 is full throttle.
      * Updated once per second in bus
      */
-    Integer pedalPosition;
+    public Integer pedalPosition;
 
     /**
      * The temperature outside of the bus.
      * Updated once per second in bus
      */
-    Integer temperatureOutside;
+    public Integer temperatureOutside;
 
     /**
      * Whether the bus is currently at a bustation
      */
-    Boolean atStop;
+    public Boolean atStop;
 
 
     /**
      * Whether the stop button has been pressed.
      */
-    Boolean stopPressed;
+    public Boolean stopPressed;
 
     /**
      * The name of the next stop.
      */
-    String nextStop;
+    public String nextStop;
 
 //   TODO: Deal with remaining signals.
 //
