@@ -9,9 +9,7 @@
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->
-    <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        android:textAlignment="center">
+
 
         <LinearLayout
             android:orientation="vertical"
@@ -26,7 +24,7 @@
                 android:text="Play"
                 android:id="@+id/button"
                 android:layout_gravity="center_horizontal"
-                android:onClick="setListFooter" />
+                android:onClick="play" />
 
             <Button
                 android:layout_width="266dp"
@@ -51,6 +49,5 @@
                 android:layout_gravity="center_horizontal" />
         </LinearLayout>
 
-    </FrameLayout>
 
 </FrameLayout>
