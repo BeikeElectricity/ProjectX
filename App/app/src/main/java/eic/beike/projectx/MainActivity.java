@@ -7,10 +7,17 @@ import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewParent;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
     public static final String SETTINGS_FILE = "settings";
+
+    public static final String NAME_FIELD = "name";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,7 +25,7 @@ public class MainActivity extends Activity {
         SharedPreferences settings = getSharedPreferences(SETTINGS_FILE,0);
 
         // First time running?
-        if (settings.getString("nick","") == "") {
+        if (settings.getString(NAME_FIELD,"") == "") {
             setContentView(R.layout.main_init);
 
             // Used to fetch the phone id
@@ -28,15 +35,28 @@ public class MainActivity extends Activity {
             final String androidId;
             androidId = tm.getDeviceId();
 
+            // Save it
             SharedPreferences.Editor editor = settings.edit();
             editor.putString("id",androidId);
 
-            editor.commit();
+            editor.apply();
         } else {
             setContentView(R.layout.main_splash);
 
         }
 
+    }
+
+
+    public void onClick(View view) {
+        EditText editBox = (EditText) findViewById(R.id.editText);
+        String text = editBox.getText().toString();
+
+        SharedPreferences settings = getSharedPreferences(SETTINGS_FILE, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(NAME_FIELD,text);
+
+        editor.apply();
     }
 
     @Override
