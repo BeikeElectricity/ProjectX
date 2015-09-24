@@ -1,5 +1,6 @@
 package eic.beike.projectx;
 
+import android.app.Instrumentation;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.test.ActivityInstrumentationTestCase2;
@@ -60,6 +61,10 @@ public class NameSplashActivityTest extends ActivityInstrumentationTestCase2<Nam
     public void testOnClick() throws Exception {
         String expected = "testName";
 
+        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(
+                Menu.class.getName(),null, false
+        );
+
         // Send string input value
         getInstrumentation().runOnMainSync(new Runnable() {
             @Override
@@ -87,5 +92,8 @@ public class NameSplashActivityTest extends ActivityInstrumentationTestCase2<Nam
 
         // Check that the name was actually set in settings.
         assertEquals(expected,name);
+
+        // Check that the menu was started.
+        assertEquals(1, monitor.getHits());
     }
 }

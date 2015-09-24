@@ -41,9 +41,6 @@ public class MainActivityTest
         editor.clear().commit();
 
 
-
-
-
     }
 
     public void testActivityExists() throws Exception {
