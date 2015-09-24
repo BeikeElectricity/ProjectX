@@ -2,7 +2,6 @@ package eic.beike.projectx;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -11,47 +10,53 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
-public class MainActivity extends Activity {
-
-    public static final String SETTINGS_FILE = "settings";
-
-    public static final String NAME_FIELD = "name";
+public class NameSplashActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences settings = getSharedPreferences(SETTINGS_FILE, 0);
-//        settings.edit().clear().commit();
-        // First time running?
-        String name = settings.getString(NAME_FIELD,"");
-        if (name == "") {
-            Intent intent = new Intent(this, NameSplashActivity.class);
-            startActivity(intent);
-        }
+        setContentView(R.layout.main_init);
 
-        setContentView(R.layout.main_splash);
+        Log.d("MainActivity", this.getClass().getName()+ ": onCrate");
 
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        SharedPreferences settings = getSharedPreferences(MainActivity.SETTINGS_FILE,0);
 
-        TextView text = (TextView) findViewById(R.id.splash_text);
-        text.append(" "+name);
+
+        // Used to fetch the phone id
+        final TelephonyManager tm = (TelephonyManager) getBaseContext()
+                .getSystemService(Context.TELEPHONY_SERVICE);
+
+        final String androidId;
+        androidId = tm.getDeviceId();
+
+        // Save it
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("id", androidId);
+
+        editor.apply();
+    }
+
+    public void onClick(View view) {
+        EditText editBox = (EditText) findViewById(R.id.nameInputField);
+        String text = editBox.getText().toString();
+
+        SharedPreferences settings = getSharedPreferences(MainActivity.SETTINGS_FILE, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(MainActivity.NAME_FIELD,text);
+
+        editor.apply();
+
 
         // TODO: Start menu activity
 //        Intent intent = new Intent(this, MainMenuActivity.class);
 //        startActivity(intent);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_name_splash, menu);
         return true;
     }
 
