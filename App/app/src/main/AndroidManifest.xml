@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <activity
+
             android:name=".Menu"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_menu"
@@ -26,6 +27,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="eic.beike.projectx.MainActivity" />
         </activity>
+        <activity
+            android:name=".GameActivity">
+        </activity>
     </application>
-
 </manifest>

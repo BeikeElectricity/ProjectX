@@ -29,10 +29,10 @@
             <Button
                 android:layout_width="266dp"
                 android:layout_height="wrap_content"
-                android:text="New Button"
+                android:text="Exit"
                 android:id="@+id/button2"
                 android:layout_gravity="center_horizontal"
-                android:onClick="@string/dummy_content" />
+                android:onClick="exit" />
 
             <Button
                 android:layout_width="266dp"

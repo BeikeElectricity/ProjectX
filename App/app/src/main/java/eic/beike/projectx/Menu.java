@@ -23,11 +23,23 @@ public class Menu extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_menu);
     }
 
+
+    /**
+     * @param v The input form the "Play" button. Not used, but required
+     */
     public void play(View v) {
-        Intent intentPlay = new Intent(this, MainActivity.class);
+        Intent intentPlay = new Intent(this, GameActivity.class);
         startActivity(intentPlay);
+    }
+
+    /**
+     * @param v The input form the "Exit" button. Not used, but required
+     */
+
+    public void exit(View v) {
+        System.exit(0);
     }
 }
