@@ -1,4 +1,4 @@
-package eic.beike.projectx.eicapi;
+package eic.beike.projectx.busdata;
 
 import android.util.Log;
 import com.google.gson.Gson;
@@ -20,7 +20,7 @@ import java.util.*;
 /**
  * Created by alex on 9/21/15.
  */
-public class BusCollector implements EICCommunicator{
+public class SimpleBusCollector implements BusCollector {
 
     /**
      * The Vin number of the bus, this is how we identify buses.

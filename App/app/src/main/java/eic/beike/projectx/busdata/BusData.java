@@ -1,4 +1,4 @@
-package eic.beike.projectx.eicapi;
+package eic.beike.projectx.busdata;
 
 
 /**

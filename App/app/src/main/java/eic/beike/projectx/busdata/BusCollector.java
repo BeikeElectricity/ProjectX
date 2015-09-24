@@ -1,11 +1,11 @@
-package eic.beike.projectx.eicapi;
+package eic.beike.projectx.busdata;
 
 /**
  * Interface for communicating with the Electricity API.
  *
  * Created by alex on 9/22/15.
  */
-public interface EICCommunicator {
+public interface BusCollector {
     /**
      * Get the latest timestamped data for the active bus.
      *
