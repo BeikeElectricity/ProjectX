@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
         text.append(" "+name);
 
         // TODO: Start menu activity
-//        Intent intent = new Intent(this, MainMenuActivity.class);
+//        Intent intent = new Intent(this,Menu.class);
 //        startActivity(intent);
     }
 
