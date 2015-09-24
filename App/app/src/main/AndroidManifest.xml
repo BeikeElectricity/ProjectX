@@ -21,8 +21,10 @@
         </activity>
         <activity
             android:name=".NameSplashActivity"
-            android:label="@string/title_activity_name_splash" >
+            android:label="@string/title_activity_name_splash">
+	</activity>
+	<activity
+            android:name=".GameActivity">
         </activity>
     </application>
-
 </manifest>
