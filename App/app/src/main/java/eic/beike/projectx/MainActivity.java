@@ -13,19 +13,26 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+
+/**
+ * @author Adam Ingmansson
+ */
 public class MainActivity extends Activity {
 
     public static final String SETTINGS_FILE = "settings";
 
     public static final String NAME_FIELD = "name";
+    public static final String ID_FIELD = "id";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("TestDebug",this.getClass().getName()+":onCreate");
         SharedPreferences settings = getSharedPreferences(SETTINGS_FILE, 0);
 //        settings.edit().clear().commit();
         // First time running?
         String name = settings.getString(NAME_FIELD,"");
+        Log.d("TestDebug",String.format("Got name: '%s'",name));
         if (name == "") {
             Intent intent = new Intent(this, NameSplashActivity.class);
             startActivity(intent);
@@ -39,8 +46,6 @@ public class MainActivity extends Activity {
             e.printStackTrace();
         }
 
-        TextView text = (TextView) findViewById(R.id.splash_text);
-        text.append(" "+name);
 
         // TODO: Start menu activity
 //        Intent intent = new Intent(this,Menu.class);

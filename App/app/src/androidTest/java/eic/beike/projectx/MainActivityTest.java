@@ -15,16 +15,15 @@ import android.widget.TextView;
 import java.util.jar.Attributes;
 
 /**
- * Created by adam on 2015-09-24.
+ *@author Adam Ingmansson
  */
 public class MainActivityTest
         extends ActivityInstrumentationTestCase2<MainActivity> {
 
     MainActivity activity;
-    EditText textField;
-    Button button;
 
     Context context;
+    SharedPreferences settings;
 
     public MainActivityTest() {
         super(MainActivity.class);
@@ -36,7 +35,7 @@ public class MainActivityTest
 
         // Clear name from settings
         context = getInstrumentation().getContext();
-        SharedPreferences settings = context.getSharedPreferences(MainActivity.SETTINGS_FILE, 0);
+        settings = context.getSharedPreferences(MainActivity.SETTINGS_FILE, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.clear().commit();
 
@@ -48,19 +47,43 @@ public class MainActivityTest
         assertNotNull(activity);
     }
 
-    public void testOnCreate() throws Exception {
-
+    public void testOnCreateWithName() throws Exception {
+        Log.d("TestDebug","testOnCreate");
         // Used to check if an Activity is started, in this case NameSplashActivity.
-        Instrumentation.ActivityMonitor am =
+        Instrumentation.ActivityMonitor monitor =
+                getInstrumentation().addMonitor(
+                        Menu.class.getName(), null, true
+                );
+
+        Log.d("TestDebug","Activity start");
+        getActivity();
+
+        // Wait for activity
+        Log.d("TestDebug","Before wait");
+        NameSplashActivity nsa = (NameSplashActivity) monitor.waitForActivityWithTimeout(5000);
+        Log.d("TestDebug", "After wait");
+        assertNotNull(nsa);
+        // Check that it was started
+        assertEquals(1, monitor.getHits());
+    }
+
+    public void testOnCreateWithoutName() throws Exception {
+        Log.d("TestDebug","testOnCreate");
+        // Used to check if an Activity is started, in this case NameSplashActivity.
+        Instrumentation.ActivityMonitor monitor =
                 getInstrumentation().addMonitor(
                         NameSplashActivity.class.getName(), null, true
                 );
-        activity = getActivity();
+
+        Log.d("TestDebug","Activity start");
+        getActivity();
 
         // Wait for activity
-        NameSplashActivity nsa = (NameSplashActivity) am.waitForActivityWithTimeout(10000);
+        Log.d("TestDebug","Before wait");
+        NameSplashActivity nsa = (NameSplashActivity) monitor.waitForActivityWithTimeout(5000);
+        Log.d("TestDebug", "After wait");
         assertNotNull(nsa);
         // Check that it was started
-        assertEquals(1,am.getHits());
+        assertEquals(1, monitor.getHits());
     }
 }

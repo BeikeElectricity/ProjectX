@@ -11,6 +11,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+
+/**
+ * @author Adam Ingmansson
+ */
 public class NameSplashActivity extends Activity {
 
     @Override
@@ -18,10 +22,7 @@ public class NameSplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_init);
 
-        Log.d("MainActivity", this.getClass().getName()+ ": onCrate");
-
         SharedPreferences settings = getSharedPreferences(MainActivity.SETTINGS_FILE,0);
-
 
         // Used to fetch the phone id
         final TelephonyManager tm = (TelephonyManager) getBaseContext()
@@ -32,11 +33,17 @@ public class NameSplashActivity extends Activity {
 
         // Save it
         SharedPreferences.Editor editor = settings.edit();
-        editor.putString("id", androidId);
+        editor.putString(MainActivity.ID_FIELD, androidId);
 
         editor.apply();
+        Log.d("TestDebug",String.format("Id '%s' saved",androidId));
     }
 
+
+    /**
+     * Handles clicks form the button in the view
+     * @param view
+     */
     public void onClick(View view) {
         EditText editBox = (EditText) findViewById(R.id.nameInputField);
         String text = editBox.getText().toString();
