@@ -96,9 +96,9 @@ public class NameSplashActivityTest extends ActivityInstrumentationTestCase2<Nam
         String expected = "testName";
 
         //TODO
-//        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(
-//                Menu.class.getName(), null, false
-//        );
+        Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(
+                MenuActivity.class.getName(), null, false
+        );
 
 
         textField.setText(expected);
@@ -118,6 +118,6 @@ public class NameSplashActivityTest extends ActivityInstrumentationTestCase2<Nam
 
         //TODO
         // Check that the menu was started.
-//        assertEquals(1, monitor.getHits());
+        assertEquals(1, monitor.getHits());
     }
 }

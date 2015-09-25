@@ -48,8 +48,8 @@ public class MainActivity extends Activity {
 
 
         // TODO: Start menu activity
-//        Intent intent = new Intent(this,Menu.class);
-//        startActivity(intent);
+        Intent intent = new Intent(this,MenuActivity.class);
+        startActivity(intent);
     }
 
 

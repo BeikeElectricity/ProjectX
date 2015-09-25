@@ -20,7 +20,6 @@ import java.util.jar.Attributes;
 public class MainActivityTest
         extends ActivityInstrumentationTestCase2<MainActivity> {
 
-    MainActivity activity;
 
     Context context;
     SharedPreferences settings;
@@ -43,7 +42,7 @@ public class MainActivityTest
     }
 
     public void testActivityExists() throws Exception {
-        activity = getActivity();
+        MainActivity activity = getActivity();
         assertNotNull(activity);
     }
 
@@ -52,14 +51,14 @@ public class MainActivityTest
         // Used to check if an Activity is started, in this case NameSplashActivity.
         Instrumentation.ActivityMonitor monitor =
                 getInstrumentation().addMonitor(
-                        Menu.class.getName(), null, true
+                        MenuActivity.class.getName(), null, true
                 );
 
         Log.d("TestDebug","Activity start");
         getActivity();
 
         // Wait for activity
-        Log.d("TestDebug","Before wait");
+        Log.d("TestDebug", "Before wait");
         NameSplashActivity nsa = (NameSplashActivity) monitor.waitForActivityWithTimeout(5000);
         Log.d("TestDebug", "After wait");
         assertNotNull(nsa);

@@ -2,6 +2,7 @@ package eic.beike.projectx;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -56,8 +57,8 @@ public class NameSplashActivity extends Activity {
 
 
         // TODO: Start menu activity
-//        Intent intent = new Intent(this, Menu.class);
-//        startActivity(intent);
+        Intent intent = new Intent(this, MenuActivity.class);
+        startActivity(intent);
     }
 
     @Override
