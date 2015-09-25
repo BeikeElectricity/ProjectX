@@ -4,17 +4,12 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import eic.beike.projectx.util.Constants;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import javax.net.ssl.HttpsURLConnection;
+import java.io.*;
 import java.lang.reflect.Type;
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -28,49 +23,54 @@ public class SimpleBusCollector implements BusCollector {
     private String vinNumber;
 
     /**
+     *
+     * @param reader bufferedreader for gson.
      * @return a list of sensordata sorted by timestamp.
      */
-    private List<ResponseEntry> fetchSensorData() {
-        //Retrieve a stream with the results for the last five seconds on the active bus.
-        long t1 = System.currentTimeMillis();
-        long t2 = t1 - 5000;
-        InputStream source = retrieveStream(Constants.BASE_URL +
-                "dgw=" + vinNumber + "&" + "t1=" + String.valueOf(t1) + "&t2=" + String.valueOf(t2));
-        Reader reader = new InputStreamReader(source);
-
-        //Parse the response, gson needs the type which is weird below.
+    private List<ResponseEntry> fetchSensorData(BufferedReader reader) {
+        //Parse the reader, gson needs the type which is weird below.
         Gson gson = new Gson();
-        Type listType = new TypeToken<List<ResponseEntry>>() {}.getType();
+        Type listType = new TypeToken<List<ResponseEntry>>() {
+        }.getType();
         List<ResponseEntry> response = gson.fromJson(reader, listType);
 
-        Collections.sort(response);
+        //Sort if there is something to sort.
+        if (response!=null) {
+            Collections.sort(response);
+        }
         return response;
     }
 
-    private InputStream retrieveStream(String url) {
-        DefaultHttpClient client = new DefaultHttpClient();
-        HttpGet getRequest = new HttpGet(url);
-        getRequest.setHeader("Authorization", "Basic " + Constants.AUTHORIZATION);
+    /**
+     * Make a http request and return a reader for the response.
+     *
+     * @param url the formatet rest call
+     * @return an inputstream with the server response, this needs to be parsed. NULL if something goes wrong.
+     */
+    private BufferedReader retrieveReader(String url) {
+        BufferedReader in = null;
         try {
-            HttpResponse getResponse = client.execute(getRequest);
-            final int statusCode = getResponse.getStatusLine().getStatusCode();
-            if (statusCode != HttpStatus.SC_OK) {
+            URL requestURL = new URL(url);
+            HttpsURLConnection con = (HttpsURLConnection) requestURL.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Authorization", "Basic " + Constants.AUTHORIZATION);
+
+            int responseCode = con.getResponseCode();
+            if (responseCode != HttpStatus.SC_OK) {
                 Log.w(getClass().getSimpleName(),
-                        "Error " + statusCode + " for URL " + url);
+                        "Error " + responseCode + " for URL " + url);
                 return null;
             }
-            HttpEntity getResponseEntity = getResponse.getEntity();
-            return getResponseEntity.getContent();
+            in = new BufferedReader(new InputStreamReader(
+                    con.getInputStream()));
         } catch (IOException e) {
-            getRequest.abort();
             Log.w(getClass().getSimpleName(), "Error for URL " + url, e);
         }
-        return null;
+        return in;
     }
 
     /**
-     *
-     * @return
+     * @return The stamped data.
      */
     @Override
     public BusData getBusData() {
@@ -90,34 +90,51 @@ public class SimpleBusCollector implements BusCollector {
         //Stamp the data so that caller knows when we collected the sensor data.
         data.timestamp = (int) System.currentTimeMillis();
 
+        //Retrieve a stream with the results for the last five seconds on the active bus.
+        long t1 = System.currentTimeMillis();
+        long t2 = t1 - 5000;
+        //TODO: remove hardcoded request.
+        BufferedReader reader = retrieveReader(Constants.BASE_URL +
+                "?dgw=" + vinNumber + "&" + "t1=" + String.valueOf(t1) + "&t2=" + String.valueOf(t2));
+
         //Fetch data and parse the result.
-        List<ResponseEntry> response = fetchSensorData();
-        Iterator<ResponseEntry> iterator = response.iterator();
-        while (!currentlyParsedResources.isEmpty()){
-            entry = iterator.next();
-            Resource r = Resource.valueOf(entry.resource);
-            switch (r) {
-                case Accelerator_Pedal_Position:
-                    data.pedalPosition = Integer.valueOf(entry.value);
-                    break;
-                case Ambient_Temperature:
-                    data.temperatureOutside = Integer.valueOf(entry.value);
-                    break;
-                case At_Stop:
-                    data.atStop = Boolean.valueOf(entry.value);
-                    break;
-                case Stop_Pressed:
-                    data.stopPressed = Boolean.valueOf(entry.value);
-                    break;
-                case Next_Stop:
-                    data.nextStop = entry.value;
-                    break;
-                default:
-                    Log.d(getClass().getSimpleName(), "Value of sensor " + r.name() + " not currently used");
-            }
-            //Remove whatever sensor we just considered.
-            currentlyParsedResources.remove(r);
+        List<ResponseEntry> response = fetchSensorData(reader);
+        try {
+            reader.close();
+        } catch (IOException e) {
+            Log.e(this.getClass().getSimpleName(),"Could not close reader!");
         }
+
+        //Try to fill in the response
+        if(response!=null) {
+            Iterator<ResponseEntry> iterator = response.iterator();
+            while (!currentlyParsedResources.isEmpty() && iterator.hasNext()) {
+                entry = iterator.next();
+                Resource r = Resource.valueOf(entry.resource);
+                switch (r) {
+                    case Accelerator_Pedal_Position:
+                        data.pedalPosition = Integer.valueOf(entry.value);
+                        break;
+                    case Ambient_Temperature:
+                        data.temperatureOutside = Integer.valueOf(entry.value);
+                        break;
+                    case At_Stop:
+                        data.atStop = Boolean.valueOf(entry.value);
+                        break;
+                    case Stop_Pressed:
+                        data.stopPressed = Boolean.valueOf(entry.value);
+                        break;
+                    case Next_Stop:
+                        data.nextStop = entry.value;
+                        break;
+                    default:
+                        Log.d(getClass().getSimpleName(), "Value of sensor " + r.name() + " not currently used");
+                }
+                //Remove whatever sensor we just considered.
+                currentlyParsedResources.remove(r);
+            }
+        }
+        //TODO: See that currentlyParsedResources is empty and handle the not empty case.
         return data;
     }
 
