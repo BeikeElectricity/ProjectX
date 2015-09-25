@@ -1,0 +1,53 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:background="#0099cc"
+    tools:context="eic.beike.projectx.Menu">
+
+    <!-- The primary full-screen view. This can be replaced with whatever view
+         is needed to present your content, e.g. VideoView, SurfaceView,
+         TextureView, etc. -->
+
+    <!-- This FrameLayout insets its children based on system windows using
+         android:fitsSystemWindows. -->
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:baselineAligned="false">
+
+            <Button
+                android:layout_width="266dp"
+                android:layout_height="wrap_content"
+                android:text="Play"
+                android:id="@+id/button"
+                android:layout_gravity="center_horizontal"
+                android:onClick="play" />
+
+            <Button
+                android:layout_width="266dp"
+                android:layout_height="wrap_content"
+                android:text="Exit"
+                android:id="@+id/button2"
+                android:layout_gravity="center_horizontal"
+                android:onClick="exit" />
+
+            <Button
+                android:layout_width="266dp"
+                android:layout_height="wrap_content"
+                android:text="New Button"
+                android:id="@+id/button3"
+                android:layout_gravity="center_horizontal" />
+
+            <Button
+                android:layout_width="266dp"
+                android:layout_height="wrap_content"
+                android:text="New Button"
+                android:id="@+id/button4"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
+
+
+</FrameLayout>
