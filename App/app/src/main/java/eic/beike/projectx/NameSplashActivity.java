@@ -23,8 +23,6 @@ public class NameSplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_init);
 
-        Log.d("TestDebug",this.getClass().getName()+":onCreate");
-
         SharedPreferences settings = getSharedPreferences(MainActivity.SETTINGS_FILE,0);
 
         // Used to fetch the phone id
@@ -39,7 +37,6 @@ public class NameSplashActivity extends Activity {
         editor.putString(MainActivity.ID_FIELD, androidId);
 
         editor.apply();
-        Log.d("TestDebug",String.format("Id '%s' saved",androidId));
     }
 
 
@@ -48,7 +45,6 @@ public class NameSplashActivity extends Activity {
      * @param view
      */
     public void onClick(View view) {
-        Log.d("TestDebug",this.getClass().getName()+":onClick");
         EditText editBox = (EditText) findViewById(R.id.nameInputField);
         String text = editBox.getText().toString();
 
@@ -59,7 +55,7 @@ public class NameSplashActivity extends Activity {
         editor.apply();
 
 
-        // TODO: Start menu activity
+        // Start menu activity
         Intent intent = new Intent(this, MenuActivity.class);
         startActivity(intent);
     }

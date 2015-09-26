@@ -27,55 +27,24 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("TestDebug", this.getClass().getName() + ":onCreate");
 
         setContentView(R.layout.main_splash);
 
-        for (int i = 0;i<3;i++) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-
         SharedPreferences settings = getSharedPreferences(SETTINGS_FILE, 0);
 
-//        settings.edit().clear().commit();
         // First time running?
         String name = settings.getString(NAME_FIELD,"");
-        Log.d("TestDebug", String.format("Got name: '%s'", name));
 
-
-
-
-        // Start menu activity
-        Log.d("TestDebug", "Starting Menu");
         if (name == "") {
-            Log.d("TestDebug","No name, starting namesplash");
-
             startActivity(
-                    new Intent(this, NameSplashActivity.class)
+                new Intent(this, NameSplashActivity.class)
             );
-
-            Log.d("TestDebug","Finalize.");
-//            try {
-//                finalize();
-//            } catch (Throwable throwable) {
-//                throwable.printStackTrace();
-//            }
-
         } else {
+            // Start menu activity
             startActivity(
-                    new Intent(this, MenuActivity.class)
+                new Intent(this, MenuActivity.class)
             );
         }
-//        try {
-//            finalize();
-//        } catch (Throwable throwable) {
-//            throwable.printStackTrace();
-//        }
     }
 
 

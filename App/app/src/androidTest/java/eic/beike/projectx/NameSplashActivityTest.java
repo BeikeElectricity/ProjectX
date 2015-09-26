@@ -1,5 +1,6 @@
 package eic.beike.projectx;
 
+import android.annotation.SuppressLint;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,6 +9,7 @@ import android.test.TouchUtils;
 import android.test.UiThreadTest;
 import android.test.ViewAsserts;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,28 +31,41 @@ public class NameSplashActivityTest extends ActivityInstrumentationTestCase2<Nam
     Context context;
     SharedPreferences settings;
 
+    Instrumentation.ActivityMonitor menuMonitor;
+
     public NameSplashActivityTest() {
         super(NameSplashActivity.class);
     }
 
+
+
+    @SuppressLint("CommitPrefEdits")
     public void setUp() throws Exception {
         super.setUp();
 
-        setActivityInitialTouchMode(true);
-
-
         // Clear name from settings
-        context = getInstrumentation().getContext();
+        context = getInstrumentation().getTargetContext();
         settings = context.getSharedPreferences(MainActivity.SETTINGS_FILE, 0);
-        Log.d("TestDebug","Settings cleared");
+        settings.edit().clear().commit();
+    }
+
+
+    @Override
+    public void tearDown() throws Exception {
+
+        if (this.activity != null) {
+            this.activity.finish();
+        }
+
+        this.activity = null;
+
+        // Clear settings
+        Context context = getInstrumentation().getTargetContext();
+        SharedPreferences settings = context.getSharedPreferences(MainActivity.SETTINGS_FILE, 0);
         settings.edit().clear().commit();
 
-        activity = getActivity();
 
-        textField = (EditText) activity.findViewById(R.id.nameInputField);
-        button = (Button) activity.findViewById(R.id.nameOkButton);
-
-
+        super.tearDown();
     }
 
     /**
@@ -58,6 +73,11 @@ public class NameSplashActivityTest extends ActivityInstrumentationTestCase2<Nam
      * @throws Exception
      */
     public void testActivityExists() throws Exception {
+        activity = getActivity();
+        textField = (EditText) activity.findViewById(R.id.nameInputField);
+        button = (Button) activity.findViewById(R.id.nameOkButton);
+
+
         assertNotNull(activity);
 
         assertNotNull(textField);
@@ -77,6 +97,9 @@ public class NameSplashActivityTest extends ActivityInstrumentationTestCase2<Nam
      * @throws Exception
      */
     public void testOnCreate() throws Exception {
+        Log.d("TestDebug","testOnCreate");
+
+        activity = getActivity();
 
         String id = settings.getString(MainActivity.ID_FIELD,"");
         Log.d("TestDebug",String.format("Id '%s' fetched.",id));
@@ -95,11 +118,14 @@ public class NameSplashActivityTest extends ActivityInstrumentationTestCase2<Nam
     public void testOnClick() throws Exception {
         String expected = "testName";
 
-        //TODO
         Instrumentation.ActivityMonitor monitor = getInstrumentation().addMonitor(
-                MenuActivity.class.getName(), null, false
+                MenuActivity.class.getName(), null, true
         );
 
+        activity = getActivity();
+
+        textField = (EditText) activity.findViewById(R.id.nameInputField);
+        button = (Button) activity.findViewById(R.id.nameOkButton);
 
         textField.setText(expected);
 
@@ -116,7 +142,6 @@ public class NameSplashActivityTest extends ActivityInstrumentationTestCase2<Nam
         // Check that the name was actually set in settings.
         assertEquals(expected,name);
 
-        //TODO
         // Check that the menu was started.
         assertEquals(1, monitor.getHits());
     }
