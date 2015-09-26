@@ -23,7 +23,7 @@ public class MainActivityTest
 
     MainActivity activity;
     Context context;
-//    SharedPreferences settings;
+    SharedPreferences settings;
 
     Instrumentation.ActivityMonitor splashMonitor;
     Instrumentation.ActivityMonitor menuMonitor;
@@ -35,14 +35,14 @@ public class MainActivityTest
     @SuppressLint("CommitPrefEdits")
     public void setUp() throws Exception {
         super.setUp();
+        Log.d("TestDebug", "------------------------------------------------------");
         Log.d("TestDebug", "setUp");
 
-        // Clear name from settings
-        Context context = getInstrumentation().getContext();
-        SharedPreferences settings = context.getSharedPreferences(MainActivity.SETTINGS_FILE, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.clear().commit();
 
+        // Clear name from settings
+        Context context = getInstrumentation().getTargetContext();
+        SharedPreferences settings = context.getSharedPreferences(MainActivity.SETTINGS_FILE, 0);
+        settings.edit().clear().commit();
 
 
     }
@@ -50,25 +50,41 @@ public class MainActivityTest
     @Override
     public void tearDown() throws Exception {
         Log.d("TestDebug", "tearDown");
+        Log.d("TestDebug","------------------------------------------------------");
 
         if (this.activity != null) {
             this.activity.finish();
         }
 
         this.activity = null;
+
+        // Clear settings
+        Context context = getInstrumentation().getTargetContext();
+        SharedPreferences settings = context.getSharedPreferences(MainActivity.SETTINGS_FILE, 0);
+        settings.edit().clear().commit();
+
+
         super.tearDown();
     }
 
     public void testActivityExists() throws Exception {
         Log.d("TestDebug", "testActivityExists");
 
+        // Used to prevent stalling
+        Instrumentation.ActivityMonitor splashMonitor = getInstrumentation().addMonitor(
+                NameSplashActivity.class.getName(), null, true
+        );
         Log.d("TestDebug", "getActivity");
-        MainActivity activity = getActivity();
+        activity = getActivity();
         assertNotNull(activity);
+
+        // Clean up
+        getInstrumentation().removeMonitor(splashMonitor);
+
     }
 
 
-    public void ttestOnCreateWithoutName() throws Exception {
+    public void testOnCreateWithoutName() throws Exception {
         Log.d("TestDebug","testOnCreateWithoutName");
 //
 //         Used to check if an Activity is started, in this case NameSplashActivity.
@@ -83,7 +99,7 @@ public class MainActivityTest
 
         // Wait for activity
         Log.d("TestDebug", "Before wait");
-        Activity nsa = splashMonitor.waitForActivityWithTimeout(5000);
+        Activity nsa = splashMonitor.waitForActivityWithTimeout(10000);
         Log.d("TestDebug", "After wait");
 
         assertNotNull(nsa);
@@ -101,21 +117,28 @@ public class MainActivityTest
                 MenuActivity.class.getName(), null, true
         );
 
-        Context context = getInstrumentation().getContext();
+        Instrumentation.ActivityMonitor splashMonitor = getInstrumentation().addMonitor(
+                NameSplashActivity.class.getName(), null, true
+        );
+
+
+        Context context = getInstrumentation().getTargetContext();
         SharedPreferences settings = context.getSharedPreferences(MainActivity.SETTINGS_FILE, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString(MainActivity.NAME_FIELD,"testName").commit();
+        settings.edit()
+                .putString(MainActivity.NAME_FIELD, "testName")
+                .commit();
 
         Log.d("TestDebug","Activity start");
         activity = getActivity();
 
         // Wait for activity
         Log.d("TestDebug", "Before wait");
-        MenuActivity nsa = (MenuActivity) menuMonitor.waitForActivityWithTimeout(5000);
+        MenuActivity nsa = (MenuActivity) menuMonitor.waitForActivityWithTimeout(10000);
         Log.d("TestDebug", "After wait");
 
         assertNotNull(nsa);
         // Check that it was started
+        assertEquals(0, splashMonitor.getHits());
         assertEquals(1, menuMonitor.getHits());
 
     }

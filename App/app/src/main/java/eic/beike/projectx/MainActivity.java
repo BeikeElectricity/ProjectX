@@ -28,11 +28,21 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("TestDebug", this.getClass().getName() + ":onCreate");
+
         setContentView(R.layout.main_splash);
+
+        for (int i = 0;i<3;i++) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
 
         SharedPreferences settings = getSharedPreferences(SETTINGS_FILE, 0);
 
-        settings.edit().clear().commit();
+//        settings.edit().clear().commit();
         // First time running?
         String name = settings.getString(NAME_FIELD,"");
         Log.d("TestDebug", String.format("Got name: '%s'", name));
@@ -57,11 +67,6 @@ public class MainActivity extends Activity {
 //            }
 
         } else {
-    //        try {
-    //            Thread.sleep(2000);
-    //        } catch (InterruptedException e) {
-    //            e.printStackTrace();
-    //        }
             startActivity(
                     new Intent(this, MenuActivity.class)
             );
