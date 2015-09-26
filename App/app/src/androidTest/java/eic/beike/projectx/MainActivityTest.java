@@ -1,6 +1,7 @@
 package eic.beike.projectx;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -20,9 +21,12 @@ import java.util.jar.Attributes;
 public class MainActivityTest
         extends ActivityInstrumentationTestCase2<MainActivity> {
 
-
+    MainActivity activity;
     Context context;
-    SharedPreferences settings;
+//    SharedPreferences settings;
+
+    Instrumentation.ActivityMonitor splashMonitor;
+    Instrumentation.ActivityMonitor menuMonitor;
 
     public MainActivityTest() {
         super(MainActivity.class);
@@ -31,58 +35,88 @@ public class MainActivityTest
     @SuppressLint("CommitPrefEdits")
     public void setUp() throws Exception {
         super.setUp();
+        Log.d("TestDebug", "setUp");
 
         // Clear name from settings
-        context = getInstrumentation().getContext();
-        settings = context.getSharedPreferences(MainActivity.SETTINGS_FILE, 0);
+        Context context = getInstrumentation().getContext();
+        SharedPreferences settings = context.getSharedPreferences(MainActivity.SETTINGS_FILE, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.clear().commit();
 
 
+
+    }
+
+    @Override
+    public void tearDown() throws Exception {
+        Log.d("TestDebug", "tearDown");
+
+        if (this.activity != null) {
+            this.activity.finish();
+        }
+
+        this.activity = null;
+        super.tearDown();
     }
 
     public void testActivityExists() throws Exception {
+        Log.d("TestDebug", "testActivityExists");
+
+        Log.d("TestDebug", "getActivity");
         MainActivity activity = getActivity();
         assertNotNull(activity);
     }
 
-    public void testOnCreateWithName() throws Exception {
-        Log.d("TestDebug","testOnCreate");
-        // Used to check if an Activity is started, in this case NameSplashActivity.
-        Instrumentation.ActivityMonitor monitor =
-                getInstrumentation().addMonitor(
-                        MenuActivity.class.getName(), null, true
-                );
+
+    public void ttestOnCreateWithoutName() throws Exception {
+        Log.d("TestDebug","testOnCreateWithoutName");
+//
+//         Used to check if an Activity is started, in this case NameSplashActivity.
+//        Instrumentation.ActivityMonitor
+        Instrumentation.ActivityMonitor splashMonitor = getInstrumentation().addMonitor(
+                NameSplashActivity.class.getName(), null, true
+        );
 
         Log.d("TestDebug","Activity start");
-        getActivity();
+//        getActivity();
+        activity = getActivity();
 
         // Wait for activity
         Log.d("TestDebug", "Before wait");
-        NameSplashActivity nsa = (NameSplashActivity) monitor.waitForActivityWithTimeout(5000);
+        Activity nsa = splashMonitor.waitForActivityWithTimeout(5000);
         Log.d("TestDebug", "After wait");
+
         assertNotNull(nsa);
         // Check that it was started
-        assertEquals(1, monitor.getHits());
+        assertEquals(1, splashMonitor.getHits());
+
+        getInstrumentation().removeMonitor(splashMonitor);
     }
 
-    public void testOnCreateWithoutName() throws Exception {
-        Log.d("TestDebug","testOnCreate");
-        // Used to check if an Activity is started, in this case NameSplashActivity.
-        Instrumentation.ActivityMonitor monitor =
-                getInstrumentation().addMonitor(
-                        NameSplashActivity.class.getName(), null, true
-                );
+
+    public void testOnCreateWithName() throws Exception {
+        Log.d("TestDebug","testOnCreateWithName");
+        // Used to check if an Activity is started, in this case MenuActivity.
+        Instrumentation.ActivityMonitor menuMonitor = getInstrumentation().addMonitor(
+                MenuActivity.class.getName(), null, true
+        );
+
+        Context context = getInstrumentation().getContext();
+        SharedPreferences settings = context.getSharedPreferences(MainActivity.SETTINGS_FILE, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(MainActivity.NAME_FIELD,"testName").commit();
 
         Log.d("TestDebug","Activity start");
-        getActivity();
+        activity = getActivity();
 
         // Wait for activity
-        Log.d("TestDebug","Before wait");
-        NameSplashActivity nsa = (NameSplashActivity) monitor.waitForActivityWithTimeout(5000);
+        Log.d("TestDebug", "Before wait");
+        MenuActivity nsa = (MenuActivity) menuMonitor.waitForActivityWithTimeout(5000);
         Log.d("TestDebug", "After wait");
+
         assertNotNull(nsa);
         // Check that it was started
-        assertEquals(1, monitor.getHits());
+        assertEquals(1, menuMonitor.getHits());
+
     }
 }

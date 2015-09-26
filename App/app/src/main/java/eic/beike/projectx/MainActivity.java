@@ -27,29 +27,50 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("TestDebug",this.getClass().getName()+":onCreate");
-        SharedPreferences settings = getSharedPreferences(SETTINGS_FILE, 0);
-//        settings.edit().clear().commit();
-        // First time running?
-        String name = settings.getString(NAME_FIELD,"");
-        Log.d("TestDebug",String.format("Got name: '%s'",name));
-        if (name == "") {
-            Intent intent = new Intent(this, NameSplashActivity.class);
-            startActivity(intent);
-        }
-
+        Log.d("TestDebug", this.getClass().getName() + ":onCreate");
         setContentView(R.layout.main_splash);
 
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        SharedPreferences settings = getSharedPreferences(SETTINGS_FILE, 0);
+
+        settings.edit().clear().commit();
+        // First time running?
+        String name = settings.getString(NAME_FIELD,"");
+        Log.d("TestDebug", String.format("Got name: '%s'", name));
+
+
+
+
+        // Start menu activity
+        Log.d("TestDebug", "Starting Menu");
+        if (name == "") {
+            Log.d("TestDebug","No name, starting namesplash");
+
+            startActivity(
+                    new Intent(this, NameSplashActivity.class)
+            );
+
+            Log.d("TestDebug","Finalize.");
+//            try {
+//                finalize();
+//            } catch (Throwable throwable) {
+//                throwable.printStackTrace();
+//            }
+
+        } else {
+    //        try {
+    //            Thread.sleep(2000);
+    //        } catch (InterruptedException e) {
+    //            e.printStackTrace();
+    //        }
+            startActivity(
+                    new Intent(this, MenuActivity.class)
+            );
         }
-
-
-        // TODO: Start menu activity
-        Intent intent = new Intent(this,MenuActivity.class);
-        startActivity(intent);
+//        try {
+//            finalize();
+//        } catch (Throwable throwable) {
+//            throwable.printStackTrace();
+//        }
     }
 
 
