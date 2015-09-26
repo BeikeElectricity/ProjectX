@@ -1,6 +1,11 @@
 package eic.beike.projectx.busdata;
 
 
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The latest bus data before the given timestamp.
  * Created by alex on 9/22/15.
@@ -8,9 +13,27 @@ package eic.beike.projectx.busdata;
 public class BusData {
 
     /**
+     * Whether all fields have been populated.
+     */
+    private boolean full = true;
+
+    /**
+     * Sensors we consider in the app. These are initialized in the constructor.
+     */
+    private List<Resource> unmarkedResources;
+    public BusData() {
+        unmarkedResources = new ArrayList<Resource>(5);
+        unmarkedResources.add(Resource.Accelerator_Pedal_Position);
+        unmarkedResources.add(Resource.Ambient_Temperature);
+        unmarkedResources.add(Resource.At_Stop);
+        unmarkedResources.add(Resource.Next_Stop);
+        unmarkedResources.add(Resource.Stop_Pressed);
+    }
+
+    /**
      * The time that the sensor data was compiled to this object.
      */
-    public Integer timestamp;
+    public Long timestamp;
 
 
     /**
@@ -40,6 +63,46 @@ public class BusData {
      * The name of the next stop.
      */
     public String nextStop;
+
+    /**
+     * @return true if all tracked sensors where set.
+     */
+    public boolean isFull() {
+       return  full;
+    }
+
+    /**
+     * Awkwardly switch the response for further parsing to our own model.
+     *
+     * @param entry One parsed line from the json, this corresponds to one value of on sensor
+     *              in one bus at one time.
+     */
+    protected void populateField(ResponseEntry entry) {
+        Resource r = Resource.valueOf(entry.resource);
+        switch (r) {
+            case Accelerator_Pedal_Position:
+                pedalPosition = Integer.valueOf(entry.value);
+                break;
+            case Ambient_Temperature:
+                temperatureOutside = Integer.valueOf(entry.value);
+                break;
+            case At_Stop:
+                atStop = Boolean.valueOf(entry.value);
+                break;
+            case Stop_Pressed:
+                stopPressed = Boolean.valueOf(entry.value);
+                break;
+            case Next_Stop:
+                nextStop = entry.value;
+                break;
+            default:
+                Log.d(getClass().getSimpleName(), "Value of sensor " + r.name() + " not currently used");
+        }
+
+        //Keep track of which sensors have been recorded.
+        unmarkedResources.remove(r);
+        full = unmarkedResources.isEmpty();
+    }
 
 //   TODO: Deal with remaining signals.
 //

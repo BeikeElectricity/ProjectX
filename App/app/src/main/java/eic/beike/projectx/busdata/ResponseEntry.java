@@ -3,6 +3,7 @@ package eic.beike.projectx.busdata;
 import com.google.gson.annotations.SerializedName;
 
 /**
+ * Small data class used by gson, comparation on timestamp
  * Created by alex on 9/22/15.
  */
 public class ResponseEntry implements Comparable<ResponseEntry>{
