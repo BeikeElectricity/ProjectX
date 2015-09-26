@@ -83,7 +83,7 @@ public class SimpleBusCollector implements BusCollector {
         ResponseEntry entry;
 
         //Stamp the data so that caller knows when we collected the sensor data.
-        data.timestamp = (long) System.currentTimeMillis();
+        data.setTimestamp(System.currentTimeMillis());
 
         //Retrieve a stream with the results for the last five seconds on the active bus.
         long t1 = System.currentTimeMillis();

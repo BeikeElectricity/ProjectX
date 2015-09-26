@@ -2,12 +2,15 @@ package eic.beike.projectx.busdata;
 
 
 import android.util.Log;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * The latest bus data before the given timestamp.
+ * Use lombok getters to access the fields.
  * Created by alex on 9/22/15.
  */
 public class BusData {
@@ -22,7 +25,7 @@ public class BusData {
      */
     private List<Resource> unmarkedResources;
     public BusData() {
-        unmarkedResources = new ArrayList<Resource>(5);
+        unmarkedResources = new ArrayList<>(5);
         unmarkedResources.add(Resource.Accelerator_Pedal_Position);
         unmarkedResources.add(Resource.Ambient_Temperature);
         unmarkedResources.add(Resource.At_Stop);
@@ -33,36 +36,43 @@ public class BusData {
     /**
      * The time that the sensor data was compiled to this object.
      */
-    public Long timestamp;
+    @Setter
+    @Getter
+    private Long timestamp;
 
 
     /**
      * The pedal position in percent (0 to 100) TODO: Confirm 100 is full throttle.
      * Updated once per second in bus
      */
-    public Integer pedalPosition;
+    @Getter
+    private int pedalPosition;
 
     /**
      * The temperature outside of the bus.
      * Updated once per second in bus
      */
-    public Integer temperatureOutside;
+    @Getter
+    private int temperatureOutside;
 
     /**
-     * Whether the bus is currently at a bustation
+     * Whether the bus is currently at a bus station
      */
-    public Boolean atStop;
+    @Getter
+    private boolean atStop;
 
 
     /**
      * Whether the stop button has been pressed.
      */
-    public Boolean stopPressed;
+    @Getter
+    private boolean stopPressed;
 
     /**
      * The name of the next stop.
      */
-    public String nextStop;
+    @Getter
+    private String nextStop;
 
     /**
      * @return true if all tracked sensors where set.
