@@ -28,7 +28,7 @@ public class SimpleBusCollectorTest extends TestCase {
      */
     private void reflectBaseUrl() throws  Exception{
         //Change base url to the mockserver.
-        HttpUrl url = server.url("/projectx/");
+        HttpUrl url = server.url("/projectx");
         Field field = Constants.class.getDeclaredField("BASE_URL");
         field.setAccessible(true);
         field.set(null, url.toString());
@@ -42,7 +42,7 @@ public class SimpleBusCollectorTest extends TestCase {
     public void setUp() throws Exception {
         super.setUp();
         server = new MockWebServer();
-        server.useHttps((SSLSocketFactory) SSLSocketFactory.getDefault(), false);
+        server.useHttps((SSLSocketFactory) SSLSocketFactory.getDefault(), true);
         collector.chooseBus("Ericsson$Vin_Num_001");
     }
 
