@@ -25,7 +25,7 @@ public class BusData {
      */
     private List<Resource> unmarkedResources;
     public BusData() {
-        unmarkedResources = new ArrayList<>(5);
+        unmarkedResources = new ArrayList<Resource>(5);
         unmarkedResources.add(Resource.Accelerator_Pedal_Position);
         unmarkedResources.add(Resource.Ambient_Temperature);
         unmarkedResources.add(Resource.At_Stop);
