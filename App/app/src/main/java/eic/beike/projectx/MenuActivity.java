@@ -26,6 +26,11 @@ public class MenuActivity extends Activity {
         setContentView(R.layout.activity_menu);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResult(MenuActivity.RESULT_CANCELED);
+    }
 
     /**
      * @param v The input form the "Play" button. Not used, but required

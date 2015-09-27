@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="eic.beike.projectx" >
 
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,6 +20,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".NameSplashActivity"
+            android:label="@string/title_activity_name_splash">
+	</activity>
+	<activity
             android:name=".MenuActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_menu"
