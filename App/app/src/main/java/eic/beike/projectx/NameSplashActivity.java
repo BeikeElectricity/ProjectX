@@ -12,11 +12,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import java.util.jar.Attributes;
+
 
 /**
  * @author Adam Ingmansson
  */
 public class NameSplashActivity extends Activity {
+
+    public static final int MENU_ACTIVITY = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +61,20 @@ public class NameSplashActivity extends Activity {
 
         // Start menu activity
         Intent intent = new Intent(this, MenuActivity.class);
-        startActivity(intent);
+
+        // Set so there is no history for back button
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivityForResult(intent, NameSplashActivity.MENU_ACTIVITY);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == MENU_ACTIVITY) {
+            if (resultCode == NameSplashActivity.RESULT_CANCELED) {
+                setResult(NameSplashActivity.RESULT_CANCELED);
+                finish();
+            }
+        }
     }
 
     @Override

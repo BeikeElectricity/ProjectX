@@ -23,6 +23,7 @@ public class MainActivity extends Activity {
 
     public static final String NAME_FIELD = "name";
     public static final String ID_FIELD = "id";
+    private static final int NEXT_ACTIVITY = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,17 +37,30 @@ public class MainActivity extends Activity {
         String name = settings.getString(NAME_FIELD,"");
 
         if (name == "") {
-            startActivity(
-                new Intent(this, NameSplashActivity.class)
+            startActivityForResult(
+                new Intent(this, NameSplashActivity.class),
+                MainActivity.NEXT_ACTIVITY
             );
         } else {
-            // Start menu activity
-            startActivity(
-                new Intent(this, MenuActivity.class)
-            );
+            // Start menu
+
+            Intent intent = new Intent(this, MenuActivity.class);
+
+            // Set so there is no history for back button
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+            startActivityForResult(intent, MainActivity.NEXT_ACTIVITY);
         }
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == MainActivity.RESULT_CANCELED && requestCode == MainActivity.NEXT_ACTIVITY) {
+            finish();
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
