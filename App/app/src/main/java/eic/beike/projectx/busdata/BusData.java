@@ -18,7 +18,7 @@ public class BusData {
     /**
      * Whether all fields have been populated.
      */
-    private boolean full = true;
+    private boolean full = false;
 
     /**
      * Sensors we consider in the app. These are initialized in the constructor.
