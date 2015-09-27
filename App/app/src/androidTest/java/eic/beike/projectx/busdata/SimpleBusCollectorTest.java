@@ -99,8 +99,12 @@ public class SimpleBusCollectorTest extends TestCase {
         assertTrue(!response.isFull());
     }
 
-    public void testHttpRequestNotOK() {
+    public void testHttpRequestNotOK() throws Exception {
         server.enqueue(
                 new MockResponse().setStatus("HTTP/1.1 401 Unauthorized"));
+        server.start();
+        reflectBaseUrl();
+        BusData response = collector.getBusData();
+        assertTrue(response != null);
     }
 }
