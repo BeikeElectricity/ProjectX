@@ -1,17 +1,12 @@
-package eic.beike.projectx;
+package eic.beike.projectx.activities;
 
+import eic.beike.projectx.R;
 import eic.beike.projectx.util.SystemUiHider;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.MenuItem;
-import android.support.v4.app.NavUtils;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -26,6 +21,11 @@ public class MenuActivity extends Activity {
         setContentView(R.layout.activity_menu);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResult(MenuActivity.RESULT_CANCELED);
+    }
 
     /**
      * @param v The input form the "Play" button. Not used, but required
