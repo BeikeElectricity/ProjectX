@@ -1,19 +1,15 @@
 package eic.beike.projectx;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.TouchUtils;
-import android.test.UiThreadTest;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
-import java.util.jar.Attributes;
+import eic.beike.projectx.activities.MainActivity;
+import eic.beike.projectx.activities.MenuActivity;
+import eic.beike.projectx.activities.NameSplashActivity;
 
 /**
  *@author Adam Ingmansson
