@@ -86,8 +86,8 @@ public class SimpleBusCollector implements BusCollector {
         data.setTimestamp(System.currentTimeMillis());
 
         //Retrieve a stream with the results for the last five seconds on the active bus.
-        long t1 = System.currentTimeMillis();
-        long t2 = t1 - 5000;
+        long t2 = System.currentTimeMillis();
+        long t1 = t2 - 5000;
         //TODO: remove hardcoded request.
         BufferedReader reader = retrieveReader(Constants.BASE_URL +
                 "?dgw=" + vinNumber + "&" + "t1=" + String.valueOf(t1) + "&t2=" + String.valueOf(t2));
