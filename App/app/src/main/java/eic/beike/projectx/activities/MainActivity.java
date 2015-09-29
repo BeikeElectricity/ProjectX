@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -19,13 +20,19 @@ public class MainActivity extends Activity {
 
     public static final String NAME_FIELD = "name";
     public static final String ID_FIELD = "id";
-    private static final int NEXT_ACTIVITY = 0;
+    public static final int NEXT_ACTIVITY = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main_splash);
+
+        //INput form the exit button in MenuActivity
+        if( getIntent().getBooleanExtra("exit", false)){
+            finish(); // exit application
+            return;
+        }
 
         SharedPreferences settings = getSharedPreferences(SETTINGS_FILE, 0);
 
@@ -46,15 +53,6 @@ public class MainActivity extends Activity {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
             startActivityForResult(intent, MainActivity.NEXT_ACTIVITY);
-        }
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == MainActivity.RESULT_CANCELED && requestCode == MainActivity.NEXT_ACTIVITY) {
-            finish();
         }
     }
 
