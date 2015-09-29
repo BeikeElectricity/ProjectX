@@ -6,6 +6,7 @@ import eic.beike.projectx.util.SystemUiHider;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 /**
@@ -40,7 +41,11 @@ public class MenuActivity extends Activity {
      */
 
     public void exit(View v) {
-        System.exit(0);
+        Intent main = new Intent(this, MainActivity.class);
+        main.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        main.putExtra("exit", true);
+        startActivity(main);
+        finish();
     }
 
 
