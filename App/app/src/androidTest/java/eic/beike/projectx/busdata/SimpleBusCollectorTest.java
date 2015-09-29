@@ -22,7 +22,7 @@ public class SimpleBusCollectorTest extends TestCase {
 
     MockWebServer server;
     SimpleBusCollector collector = new SimpleBusCollector();
-
+    long testTime = 1443513328000l;
     /**
      * Change the util.Constants.BASE_URL field to our mock server. This must be run after the server is started.
      */
@@ -62,47 +62,20 @@ public class SimpleBusCollectorTest extends TestCase {
      *
      ****************************************************************************************************************/
 
-    public void testLatestDataChosen() throws Exception {
-        //Add response and start server.
-        server.enqueue(
-                new MockResponse().setBody("[{\"resourceSpec\":\"Stop_Pressed\",\"timestamp\":\"1442391279000\",\"value\":\"false\",\"gatewayId\":\"Vin_Num_001\"}" +
-                                           " {\"resourceSpec\":\"Stop_Pressed\",\"timestamp\":\"1442391279999\",\"value\":\"true\",\"gatewayId\":\"Vin_Num_001\"} ]"));
-        server.start();
-        // reflectBaseUrl();
-        BusData response = collector.getBusData();
-        System.out.printf(response.toString());
-        assertTrue(response.isStopPressed());
-    }
 
     public void testBusDataStamped() {
-        long t1 =  System.currentTimeMillis();
-        BusData response = collector.getBusData();
-        long t2 = System.currentTimeMillis();
-        assertTrue(t1 <= response.getTimestamp() && response.getTimestamp() <= t2);
-
+        BusData response = collector.getBusData(testTime,Sensor.At_Stop);
+        assertTrue(response.getTimestamp() ==1443513325166l );
     }
 
-    public void testBusDataFilled() throws Exception {
-        //Add response and start server.
-        server.enqueue(
-                new MockResponse().setBody("[{\"resourceSpec\":\"Stop_Pressed\",\"timestamp\":\"1442391279000\",\"value\":\"false\",\"gatewayId\":\"Vin_Num_001\"}"  +
-                                           " {\"resourceSpec\":\"At_Stop\",\"timestamp\":\"1442391279999\",\"value\":\"true\",\"gatewayId\":\"Vin_Num_001\"} ]" +
-                                           " {\"resourceSpec\":\"Accelerator_Pedal_Position\",\"timestamp\":\"1442391279999\",\"value\":\"50\",\"gatewayId\":\"Vin_Num_001\"} ]" +
-                                           " {\"resourceSpec\":\"Ambient_Temperature\",\"timestamp\":\"1442391279999\",\"value\":\"25\",\"gatewayId\":\"Vin_Num_001\"} ]" +
-                                           " {\"resourceSpec\":\"Next_Stop\",\"timestamp\":\"1442391279999\",\"value\":\"Chalmers\",\"gatewayId\":\"Vin_Num_001\"} ]"));
-        server.start();
-        // reflectBaseUrl();
-        BusData response = collector.getBusData();
-        assertTrue(response.isFull());
-    }
 
     public void testEmptyResponse() throws Exception {
         server.enqueue(
                 new MockResponse().setBody("[]"));
         server.start();
         // reflectBaseUrl();
-        BusData response = collector.getBusData();
-        assertTrue(!response.isFull());
+        BusData response = collector.getBusData(testTime, Sensor.Ambient_Temperature);
+        assert(response.getSensor() == Sensor.UNKNOWN);
     }
 
     public void testHttpRequestNotOK() throws Exception {
@@ -110,7 +83,7 @@ public class SimpleBusCollectorTest extends TestCase {
                 new MockResponse().setStatus("HTTP/1.1 401 Unauthorized"));
         server.start();
         // reflectBaseUrl();
-        BusData response = collector.getBusData();
+        BusData response = collector.getBusData(testTime, Sensor.At_Stop);
         assertTrue(response != null);
     }
 }

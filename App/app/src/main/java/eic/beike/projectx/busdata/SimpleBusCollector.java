@@ -28,19 +28,13 @@ public class SimpleBusCollector implements BusCollector {
     /**
      * @param reader buffered reader for gson.
      * @return a list of sensor data sorted by timestamp. This is NULL if
-     *         there where no entries in the response.
+     * there where no entries in the response.
      */
     private List<ResponseEntry> fetchSensorData(BufferedReader reader) {
         //Parse the reader, gson needs the type which is weird below.
         Gson gson = new Gson();
-        Type listType = new TypeToken<List<ResponseEntry>>() {
-        }.getType();
-        List<ResponseEntry> response = gson.fromJson(reader, listType);
-
-        //Sort if there is something to sort.
-        if (response!=null) {
-            Collections.sort(response);
-        }
+        Type listType = new TypeToken<ArrayList<ResponseEntry>>() {}.getType();
+        List<ResponseEntry> response = (ArrayList<ResponseEntry>) gson.fromJson(reader, listType);
         return response;
     }
 
@@ -74,26 +68,26 @@ public class SimpleBusCollector implements BusCollector {
     }
 
     /**
-     * @return The stamped data. Check the boolean method busdata.isFull() to see if all sensors where
-     *         where set.
+     * @param sensor the sensor that we want to check.
+     * @param time the time in epoch seconds that the data should be centered at.
+     * @return The closest resource data that came from that given sensor.
      */
     @Override
-    public BusData getBusData() {
+    public BusData getBusData(long time, Sensor sensor) {
+
         BusData data = new BusData();
-        ResponseEntry entry;
 
-        //Stamp the data so that caller knows when we collected the sensor data.
-        data.setTimestamp(System.currentTimeMillis());
-
-        //Retrieve a stream with the results for the last five seconds on the active bus.
-        long t2 = System.currentTimeMillis();
-        long t1 = t2 - 5000;
+        //Retrieve a stream with the results for 10 seconds before to 10 seconds after the interesting time.
+        long t2 = time + 10000;
+        long t1 = time - 10000;
         //TODO: remove hardcoded request.
         BufferedReader reader = retrieveReader(Constants.BASE_URL +
-                "?dgw=" + vinNumber + "&" + "t1=" + String.valueOf(t1) + "&t2=" + String.valueOf(t2));
+                "?dgw=" + vinNumber +
+                "&sensorSpec=Ericsson$" + sensor.toString() +
+                "&t1=" + String.valueOf(t1) + "&t2=" + String.valueOf(t2));
 
-        //If request was successful fetch data and parse the result.
-        if(reader != null) {
+        //If request was successful fetch data and find best match.
+        if (reader != null) {
             List<ResponseEntry> response = fetchSensorData(reader);
             try {
                 reader.close();
@@ -101,17 +95,33 @@ public class SimpleBusCollector implements BusCollector {
                 Log.e(this.getClass().getSimpleName(), "Could not close reader!");
             }
 
-            //Try to fill in the response.
+            // Try to find best match on timestamp. And add all corresponding resources
+            // to the data.
             if (response != null) {
-                Iterator<ResponseEntry> iterator = response.iterator();
-                while (!data.isFull() && iterator.hasNext()) {
-                    entry = iterator.next();
-                    data.populateField(entry);
+
+                ArrayList<ResponseEntry> chosenEntrys = new ArrayList<ResponseEntry>();
+                long bestDiff = Long.MAX_VALUE;
+                long currentDiff;
+
+                // Go through the resources and see how well they match the desired time.
+                for (ResponseEntry e : response) {
+                    currentDiff = e.timestamp - time;
+                    if (Math.abs(currentDiff) < Math.abs(bestDiff)) {
+                        chosenEntrys.clear();
+                        chosenEntrys.add(e);
+                        bestDiff = currentDiff;
+                    } else if( bestDiff - currentDiff == 0 ){
+                        chosenEntrys.add(e);
+                    }
+                }
+
+                //Populate all resource fields of the found sensor.
+                for(ResponseEntry chosenEntry : chosenEntrys) {
+                    data.populate(chosenEntry);
                 }
             }
         }
-
-        //Return the stamped data, this is not necessarily complete.
+        //Return the stamped data, this is can be empty.
         return data;
     }
 
@@ -126,6 +136,7 @@ public class SimpleBusCollector implements BusCollector {
 
     /**
      * Choose which bus to retrieve data from.
+     *
      * @param vinNumber the Vin number of the bus that the app should use
      */
     @Override

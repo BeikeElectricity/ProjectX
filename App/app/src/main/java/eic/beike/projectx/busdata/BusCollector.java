@@ -7,11 +7,13 @@ package eic.beike.projectx.busdata;
  */
 public interface BusCollector {
     /**
-     * Get the latest timestamped data for the active bus.
+     * Get the closest data from the given sensor.
      *
-     * @return the sensor data wrapped in a BusData java object.
+     * @param sensor the sensor that we want to check.
+     * @param time time time in epoch seconds that the data should be centered at.
+     * @return The closest resource data that came from that given sensor.
      */
-    BusData getBusData();
+    BusData getBusData(long time, Sensor sensor);
 
     /**
      * Determine which bus the user is currently interested in. This is the active bus.
