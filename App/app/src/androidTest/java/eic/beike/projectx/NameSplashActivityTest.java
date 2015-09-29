@@ -5,16 +5,16 @@ import android.app.Instrumentation;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.TouchUtils;
 import android.test.UiThreadTest;
 import android.test.ViewAsserts;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import junit.framework.TestCase;
+import eic.beike.projectx.activities.MainActivity;
+import eic.beike.projectx.activities.MenuActivity;
+import eic.beike.projectx.activities.NameSplashActivity;
 
 /**
  * Test case for NameSplashActivity

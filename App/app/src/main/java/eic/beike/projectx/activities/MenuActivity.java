@@ -1,17 +1,12 @@
-package eic.beike.projectx;
+package eic.beike.projectx.activities;
 
+import eic.beike.projectx.R;
 import eic.beike.projectx.util.SystemUiHider;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.MenuItem;
-import android.support.v4.app.NavUtils;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.

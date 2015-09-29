@@ -1,7 +1,9 @@
-package eic.beike.projectx;
+package eic.beike.projectx.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+
+import eic.beike.projectx.R;
 
 /**
  * Created by Mikael on 2015-09-22.
