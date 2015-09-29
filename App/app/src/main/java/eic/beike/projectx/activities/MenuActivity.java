@@ -41,10 +41,7 @@ public class MenuActivity extends Activity {
      */
 
     public void exit(View v) {
-        Intent main = new Intent(this, MainActivity.class);
-        main.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        main.putExtra("exit", true);
-        startActivity(main);
+        onBackPressed();
         finish();
     }
 }

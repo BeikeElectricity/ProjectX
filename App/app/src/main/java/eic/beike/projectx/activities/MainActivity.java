@@ -77,4 +77,13 @@ public class MainActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
+       @Override
+      protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+               super.onActivityResult(requestCode, resultCode, data);
+                if (resultCode == MainActivity.RESULT_CANCELED && requestCode == MainActivity.NEXT_ACTIVITY) {
+                    finish();
+                    return;
+                    }
+            }
 }
