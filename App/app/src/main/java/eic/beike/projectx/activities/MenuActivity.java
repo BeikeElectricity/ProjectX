@@ -42,4 +42,14 @@ public class MenuActivity extends Activity {
     public void exit(View v) {
         System.exit(0);
     }
+
+
+    /**
+     *
+     * @param v
+     */
+    public void startHighscore(View v) {
+        startActivity(new Intent(this, HighscoreActivity.class));
+    }
+
 }

@@ -1,18 +1,45 @@
 package eic.beike.projectx.activities;
 
-import android.app.Activity;
+import android.app.ListActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import eic.beike.projectx.R;
+import eic.beike.projectx.util.HighscoreAdapter;
+import eic.beike.projectx.util.ScoreEntry;
 
-public class HighscoreActivity extends Activity {
+public class HighscoreActivity extends ListActivity {
+
+    HighscoreAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_highscore);
+
+        ScoreEntry[] data = getData();
+
+        adapter = new HighscoreAdapter(this,data);
+        setListAdapter(adapter);
+
+    }
+
+    private ScoreEntry[] getData() {
+
+        // TODO: Get data from database
+        ScoreEntry[] data = {
+                new ScoreEntry("Person 1", "10 000"),
+                new ScoreEntry("Person 2", "6"),
+                new ScoreEntry("Person 3", "6"),
+                new ScoreEntry("Person 4", "6"),
+                new ScoreEntry("Person 5", "6"),
+                new ScoreEntry("Person 6", "6"),
+                new ScoreEntry("Person 8", "6"),
+                new ScoreEntry("Person 9", "6"),
+                new ScoreEntry("Person 10", "6"),
+                new ScoreEntry("You", "iPhone")
+        };
+        return data;
     }
 
     @Override
