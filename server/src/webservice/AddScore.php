@@ -26,6 +26,9 @@ if(isset($_GET['player']) && intval($_GET['player'])) {
      	// insert failed.
      	$response["success"] = 0;
      	$response["message"] = "Score failed to record!"
+
+        // echoing JSON response
+        echo json_encode($response);
      }
 
 	/* disconnect from the db */
