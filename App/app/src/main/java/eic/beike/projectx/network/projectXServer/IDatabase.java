@@ -2,11 +2,13 @@ package eic.beike.projectx.network.projectXServer;
 
 import eic.beike.projectx.util.ScoreEntry;
 
+import java.util.List;
+
 /**
  * Used to interact with the database, these are long running network operations and should not be called
  * from the UI thread.
  *
- * Created by alex on 10/1/15.
+ * @Author alex
  */
 public interface IDatabase {
 
@@ -24,11 +26,11 @@ public interface IDatabase {
     /**
      * @return The best ten scores for all players on all buses.
      */
-    ScoreEntry[] getTopTen();
+    List<ScoreEntry> getTopTen();
 
     /**
      * @return The best ten scores for the given player.
      */
-    ScoreEntry[] getPlayerTopTen(String playerId);
+    List<ScoreEntry> getPlayerTopTen(String playerId);
 
 }
