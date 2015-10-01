@@ -1,19 +1,21 @@
+<?php
 /* require player and nickname as parameters */
 if(isset($_GET['player']) && intval($_GET['player']) &&
    isset($_GET['nickname']) &&& strval($_GET['nickname']) {
 
-	/* soak in the passed variables */
+	/* parse the input */
 	$player_id = intval($_GET['player']);
 	$nickname = strval($_GET['nickname']);
 
 	/* connect to the db */
-	$link = mysql_connect('localhost','root','root') or die('Cannot connect to the DB');
-	mysql_select_db('db_name',$link) or die('Cannot select the DB');
+	$link = mysql_connect('localhost','beike','beike') or die('Cannot connect to the DB');
+	mysql_select_db('ProjectX',$link) or die('Cannot select the DB');
 
-	/* grab the posts from the db */
+	/* insert the user */
 	$query = "INSERT Player (playerId, nickname) VALUES ($player_id,$nickname)";
 	$result = mysql_query($query,$link) or die('Errant query:  '.$query);
 
+    /* respond with status */
 	if($result){
  		// successfully insert
         $response["success"] = 1;
@@ -33,3 +35,4 @@ if(isset($_GET['player']) && intval($_GET['player']) &&
 	/* disconnect from the db */
 	@mysql_close($link);
 }
+?>

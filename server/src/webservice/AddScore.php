@@ -1,20 +1,25 @@
-/* require the user as the parameter */
-if(isset($_GET['player']) && intval($_GET['player'])) {
+<?php
+/* require score, player, time and bus as input */
+if( isset($_GET['score']) && intval($_GET['score']) &&
+    isset($_GET['player']) && intval($_GET['player']) &&
+    isset($_GET['time']) && intval($_GET['time']) &&
+    isset($_GET['bus']) && strval($_GET['bus']) {
 
-	/* soak in the passed variable or set our own */
-	$score = isset($_GET['score']) ? intval($_GET['score']) : 10; //10 is the default
-	$player_id = intval($_GET['user']); //no default
+	/* parse the input */
+	$score = intval($_GET['score']);
+	$player_id = intval($_GET['player']);
 	$time = intval($_GET['time']);
 	$bus = strval($_GET['bus']);
 
 	/* connect to the db */
-	$link = mysql_connect('localhost','root','root') or die('Cannot connect to the DB');
-	mysql_select_db('db_name',$link) or die('Cannot select the DB');
+	$link = mysql_connect('localhost','beike','beike') or die('Cannot connect to the DB');
+	mysql_select_db('ProjectX',$link) or die('Cannot select the DB');
 
-	/* grab the posts from the db */
+	/* insert the score*/
 	$query = "INSERT Score (player, time, score, bus) VALUES ($player_id,$time,$score,$bus)";
 	$result = mysql_query($query,$link) or die('Errant query:  '.$query);
 
+    /* respond with status */
 	if($result){
  		// successfully insert
         $response["success"] = 1;
@@ -34,3 +39,4 @@ if(isset($_GET['player']) && intval($_GET['player'])) {
 	/* disconnect from the db */
 	@mysql_close($link);
 }
+?>
