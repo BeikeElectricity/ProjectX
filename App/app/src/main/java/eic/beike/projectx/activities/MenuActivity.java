@@ -26,6 +26,7 @@ public class MenuActivity extends Activity {
     public void onBackPressed() {
         super.onBackPressed();
         setResult(MenuActivity.RESULT_CANCELED);
+        finish();
     }
 
     /**
