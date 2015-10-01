@@ -3,6 +3,7 @@ package eic.beike.projectx.network.busdata;
 import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import eic.beike.projectx.network.RetrieveReader;
 import eic.beike.projectx.util.Constants;
 import org.apache.http.HttpStatus;
 
@@ -38,34 +39,7 @@ public class SimpleBusCollector implements BusCollector {
         return response;
     }
 
-    /**
-     * Make a http request and return a reader for the response.
-     *
-     * @param url the formatted rest call
-     * @return an input stream with the server response, this needs to be parsed. NULL if something goes wrong.
-     */
-    private BufferedReader retrieveReader(String url) {
-        BufferedReader in = null;
-        try {
-            URL requestURL = new URL(url);
-            HttpsURLConnection con = (HttpsURLConnection) requestURL.openConnection();
-            con.setRequestMethod("GET");
-            con.setRequestProperty("Authorization", "Basic " + Constants.AUTHORIZATION);
-            int responseCode = con.getResponseCode();
 
-            //Check whether the request was successful.
-            if (responseCode != HttpStatus.SC_OK) {
-                Log.w(getClass().getSimpleName(),
-                        "Error " + responseCode + " for URL " + url);
-                return null;
-            }
-            in = new BufferedReader(new InputStreamReader(
-                    con.getInputStream()));
-        } catch (IOException e) {
-            Log.w(getClass().getSimpleName(), "Error for URL " + url, e);
-        }
-        return in;
-    }
 
     /**
      * @param sensor the sensor that we want to check.
@@ -78,10 +52,10 @@ public class SimpleBusCollector implements BusCollector {
         BusData data = new BusData();
 
         //Retrieve a stream with the results for 10 seconds before to 10 seconds after the interesting time.
+        //TODO: remove hardcoded request and interval.
         long t2 = time + 10000;
         long t1 = time - 10000;
-        //TODO: remove hardcoded request.
-        BufferedReader reader = retrieveReader(Constants.BASE_URL +
+        BufferedReader reader = RetrieveReader.get(Constants.BASE_URL +
                 "?dgw=" + vinNumber +
                 "&sensorSpec=Ericsson$" + sensor.toString() +
                 "&t1=" + String.valueOf(t1) + "&t2=" + String.valueOf(t2));
