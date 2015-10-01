@@ -1,4 +1,4 @@
-package eic.beike.projectx.projectXServer;
+package eic.beike.projectx.network.projectXServer;
 
 import eic.beike.projectx.util.ScoreEntry;
 
