@@ -5,19 +5,19 @@ CREATE TABLE Player(
 );
 
 CREATE TABLE Bus(
-   numberPlate VARCHAR(6),
+   vinNumber VARCHAR(40),
    motorType ENUM('Electric','Hybrid'),
-   PRIMARY KEY (numberPlate)
+   PRIMARY KEY (vinNumber)
 );
 
 CREATE TABLE Score(
    player VARCHAR (50),
-   time DATETIME,
+   time BIGINT,
    score INT,
-   bus VARCHAR(6),
+   bus VARCHAR(40),
    PRIMARY KEY (player, time),
    FOREIGN KEY (player) REFERENCES Player(playerId),
-   FOREIGN KEY (bus) REFERENCES Bus(numberPlate)
+   FOREIGN KEY (bus) REFERENCES Bus(vinNumber)
 );
 
 
