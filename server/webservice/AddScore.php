@@ -1,13 +1,16 @@
 <?php
-/* require score, player, time and bus as input */
+/* require score, player id, time and bus as input */
 if( isset($_GET['score']) && intval($_GET['score']) &&
-    isset($_GET['player']) && intval($_GET['player']) &&
+    isset($_GET['id']) && strval($_GET['id']) &&
     isset($_GET['time']) && intval($_GET['time']) &&
-    isset($_GET['bus']) && strval($_GET['bus']) {
+    isset($_GET['bus']) && strval($_GET['bus'])) {
+
+    /* set response header */
+	header('Content-type: application/json');
 
 	/* parse the input */
 	$score = intval($_GET['score']);
-	$player_id = intval($_GET['player']);
+	$player_id = strval($_GET['id']);
 	$time = intval($_GET['time']);
 	$bus = strval($_GET['bus']);
 
@@ -16,8 +19,8 @@ if( isset($_GET['score']) && intval($_GET['score']) &&
 	mysql_select_db('ProjectX',$link) or die('Cannot select the DB');
 
 	/* insert the score*/
-	$query = "INSERT Score (player, time, score, bus) VALUES ($player_id,$time,$score,$bus)";
-	$result = mysql_query($query,$link) or die('Errant query:  '.$query);
+	$query = "INSERT INTO Score (player, time, score, bus) VALUES ('$player_id','$time','$score','$bus')";
+	$result = mysql_query($query,$link);
 
     /* respond with status */
 	if($result){
@@ -30,7 +33,7 @@ if( isset($_GET['score']) && intval($_GET['score']) &&
      } else {
      	// insert failed.
      	$response["success"] = 0;
-     	$response["message"] = "Score failed to record!"
+     	$response["message"] = "Score failed to record!";
 
         // echoing JSON response
         echo json_encode($response);
