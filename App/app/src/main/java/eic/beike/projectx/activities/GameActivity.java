@@ -12,7 +12,8 @@ import eic.beike.projectx.model.UserEvent;
 import eic.beike.projectx.model.GameModel;
 
 /**
- *@author Mikael
+ * @author Mikael
+ * @author Adam
  */
 public class GameActivity extends Activity {
 
@@ -55,10 +56,15 @@ public class GameActivity extends Activity {
     }
 
 
+    /**
+     * Used to update the score
+     * @param score New score that the user got
+     */
     public void onNewScore(int score) {
         TextView scoreText = (TextView) findViewById(R.id.textScore);
         TextView scoreEventText = (TextView) findViewById(R.id.textScoreEvent);
 
+        // TODO: This will probably be done somewhere else.
         gameModel.addScore(score);
 
         scoreText.setText(String.valueOf(gameModel.getScore()));

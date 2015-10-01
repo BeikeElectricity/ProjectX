@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -19,7 +20,7 @@ public class MainActivity extends Activity {
 
     public static final String NAME_FIELD = "name";
     public static final String ID_FIELD = "id";
-    private static final int NEXT_ACTIVITY = 0;
+    public static final int NEXT_ACTIVITY = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,15 +50,6 @@ public class MainActivity extends Activity {
         }
     }
 
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == MainActivity.RESULT_CANCELED && requestCode == MainActivity.NEXT_ACTIVITY) {
-            finish();
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -79,4 +71,13 @@ public class MainActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
+       @Override
+      protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+               super.onActivityResult(requestCode, resultCode, data);
+                if (resultCode == MainActivity.RESULT_CANCELED) {
+                    finish();
+                    return;
+                    }
+            }
 }
