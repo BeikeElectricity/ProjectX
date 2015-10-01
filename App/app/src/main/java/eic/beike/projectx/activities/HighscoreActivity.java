@@ -45,8 +45,7 @@ public class HighscoreActivity extends ListActivity {
                 new ScoreEntry("Person 10", "6"),
                 new ScoreEntry("You", "iPhone")
         };
-        ArrayList<ScoreEntry> list = new ArrayList<ScoreEntry>(Arrays.asList(data));
-        return list;
+        return new ArrayList<ScoreEntry>(Arrays.asList(data));
     }
 
     public void setData(ArrayList<ScoreEntry> data) {
