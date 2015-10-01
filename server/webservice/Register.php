@@ -16,7 +16,7 @@ if(isset($_GET['id']) && strval($_GET['id']) &&
 
 	/* insert the user */
 	$query = "INSERT INTO Player (playerId, nickname) VALUES ('$player_id','$nickname')";
-	$result = mysql_query($query,$link) or die('Errant query:  '.$query);
+	$result = mysql_query($query,$link);
 
     /* respond with status */
 	if($result){
