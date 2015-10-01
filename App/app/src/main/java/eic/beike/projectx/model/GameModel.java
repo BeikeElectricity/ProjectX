@@ -19,6 +19,9 @@ public class GameModel extends Thread {
     private List<UserEvent> userEvents;
     private boolean isRunning;
 
+    private int score = 0;
+
+
     public GameModel(){
         super();
         busCollector = new SimpleBusCollector();
@@ -26,6 +29,9 @@ public class GameModel extends Thread {
         userEvents = new ArrayList();
         isRunning = true;
     }
+
+    public int getScore() { return score; }
+    public synchronized void addScore(int points) { score += points; }
 
     public void stopLoop(){
         isRunning = false;

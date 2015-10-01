@@ -1,54 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:columnCount="29"
     android:rowCount="17">
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="33dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:id="@+id/textScoreEvent"
+            android:layout_gravity="start|center_vertical"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="5dp"
+            android:textSize="20sp"
+            android:maxWidth="100dp"
+            android:minWidth="280dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="@string/game_score_init"
+            android:id="@+id/textScore"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_toRightOf="@+id/textScoreEvent"
+            android:layout_toEndOf="@+id/textScoreEvent" />
+    </RelativeLayout>
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Stop Button"
-            android:id="@+id/button"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
-            android:onClick="onStopButton" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Left Turn"
-            android:id="@+id/button3"
-            android:layout_weight="1"
-            android:onClick="onLeft" />
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Stop Button"
+                android:id="@+id/button"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:onClick="onStopButton" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Left Turn"
+                android:id="@+id/button3"
+                android:layout_weight="1"
+                android:onClick="onLeft" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Door Open"
+                android:id="@+id/button2"
+                android:layout_weight="1"
+                android:onClick="onDoorOpen" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Right Turn"
+                android:id="@+id/button4"
+                android:layout_weight="1"
+                android:onClick="onRight" />
+        </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
-
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Door Open"
-            android:id="@+id/button2"
-            android:layout_weight="1"
-            android:onClick="onDoorOpen" />
-
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Right Turn"
-            android:id="@+id/button4"
-            android:layout_weight="1"
-            android:onClick="onRight" />
-    </LinearLayout>
 </LinearLayout>
