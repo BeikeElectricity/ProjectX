@@ -17,14 +17,16 @@
             android:text="Stop Button"
             android:id="@+id/button"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:onClick="onStopButton" />
 
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Left Turn"
             android:id="@+id/button3"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:onClick="onLeft" />
     </LinearLayout>
 
     <LinearLayout
@@ -38,13 +40,15 @@
             android:layout_height="wrap_content"
             android:text="Door Open"
             android:id="@+id/button2"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:onClick="onDoorOpen" />
 
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Right Turn"
             android:id="@+id/button4"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:onClick="onRight" />
     </LinearLayout>
 </LinearLayout>

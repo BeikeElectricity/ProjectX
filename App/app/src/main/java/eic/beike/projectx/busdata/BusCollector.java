@@ -6,6 +6,9 @@ package eic.beike.projectx.busdata;
  * Created by alex on 9/22/15.
  */
 public interface BusCollector {
+
+    public static final String TEST_BUSS_VIN_NUMBER = "Ericsson$Vin_Num_001";
+
     /**
      * Get the closest data from the given sensor.
      *
