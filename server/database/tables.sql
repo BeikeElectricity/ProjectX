@@ -1,5 +1,5 @@
 CREATE TABLE Player(
-   playerId INT,
+   playerId VARCHAR (50),
    nickname VARCHAR(50),
    PRIMARY KEY (playerId) 
 );
@@ -11,7 +11,7 @@ CREATE TABLE Bus(
 );
 
 CREATE TABLE Score(
-   player INT,
+   player VARCHAR (50),
    time DATETIME,
    score INT,
    bus VARCHAR(6),
