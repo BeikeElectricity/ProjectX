@@ -51,7 +51,7 @@ public class MenuActivity extends Activity {
 
     /**
      *
-     * @param v
+     * @param v View of the triggering ui element
      */
     public void startHighscore(View v) {
         startActivity(new Intent(this, HighscoreActivity.class));

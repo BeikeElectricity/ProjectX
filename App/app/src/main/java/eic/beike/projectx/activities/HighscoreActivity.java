@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import eic.beike.projectx.R;
 import eic.beike.projectx.util.HighscoreAdapter;
 import eic.beike.projectx.util.ScoreEntry;
@@ -17,14 +20,17 @@ public class HighscoreActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ScoreEntry[] data = getData();
+        ArrayList<ScoreEntry> data = getData();
 
         adapter = new HighscoreAdapter(this,data);
         setListAdapter(adapter);
-
     }
 
-    private ScoreEntry[] getData() {
+    /**
+     * Fetches the current highscore from the database
+     * @return Array of ScoreEntry that contains the current highscore
+     */
+    private ArrayList<ScoreEntry> getData() {
 
         // TODO: Get data from database
         ScoreEntry[] data = {
@@ -39,7 +45,16 @@ public class HighscoreActivity extends ListActivity {
                 new ScoreEntry("Person 10", "6"),
                 new ScoreEntry("You", "iPhone")
         };
-        return data;
+        ArrayList<ScoreEntry> list = new ArrayList<ScoreEntry>(Arrays.asList(data));
+        return list;
+    }
+
+    public void setData(ArrayList<ScoreEntry> data) {
+        adapter.clear();
+        for (ScoreEntry se : data) {
+            adapter.add(se);
+        }
+        adapter.notifyDataSetChanged();
     }
 
     @Override
