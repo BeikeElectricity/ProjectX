@@ -28,12 +28,6 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.main_splash);
 
-        //INput form the exit button in MenuActivity
-        if( getIntent().getBooleanExtra("exit", false)){
-            finish(); // exit application
-            return;
-        }
-
         SharedPreferences settings = getSharedPreferences(SETTINGS_FILE, 0);
 
         // First time running?
@@ -77,4 +71,13 @@ public class MainActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
+       @Override
+      protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+               super.onActivityResult(requestCode, resultCode, data);
+                if (resultCode == MainActivity.RESULT_CANCELED) {
+                    finish();
+                    return;
+                    }
+            }
 }
