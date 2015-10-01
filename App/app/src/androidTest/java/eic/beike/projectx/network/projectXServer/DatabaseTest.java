@@ -30,7 +30,22 @@ public class DatabaseTest extends TestCase {
     }
 
     public void testRecordScore() throws Exception {
-
+        //Create two users.
+        String id1 = "test" + Long.toString(System.currentTimeMillis());
+        String id2 = "test" + Long.toString(System.currentTimeMillis() + 10);
+        //Register one of them.
+        if(db.register(id1, "alex")) {
+            //Record a valid score.
+            long t = System.currentTimeMillis();
+            boolean success = db.recordScore(id1,10,t,"Ericsson$100020");
+            assertTrue(success);
+            //Try again. This should not be allowed.
+            success = db.recordScore(id1,10,t,"Ericsson$100020");
+            assertFalse(success);
+            //Try with unknown player, should not be allowed.
+            success = db.recordScore(id2,10,System.currentTimeMillis(),"Ericsson$100020");
+            assertFalse(success);
+        }
     }
 
     public void testGetTopTen() throws Exception {
