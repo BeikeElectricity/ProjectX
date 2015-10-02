@@ -1,9 +1,13 @@
 package eic.beike.projectx.network.projectXServer;
 
+import eic.beike.projectx.util.ScoreEntry;
 import junit.framework.TestCase;
+
+import java.util.List;
 
 /**
  * Test the database interaction. As of now this is against the live server.
+ * TODO: Setup test database that resets after every test.
  * Created by alex on 10/1/15.
  */
 public class DatabaseTest extends TestCase {
@@ -49,10 +53,33 @@ public class DatabaseTest extends TestCase {
     }
 
     public void testGetTopTen() throws Exception {
+        //Get the high score
+        List<ScoreEntry> results = db.getTopTen();
+        //We should get ten entries
+        assertTrue(results.size() == 10 );
+        //All entries should be filled.
+        for(ScoreEntry entry : results){
+            assertTrue(entry.getName() != null);
+            assertTrue(entry.getScore() != null);
+        }
 
     }
 
     public void testGetPlayerTopTen() throws Exception {
 
+        //Get the high score for existing player
+        List<ScoreEntry> results = db.getPlayerTopTen("alex");
+        //We should get ten entries
+        assertTrue(results.size() != 0 );
+        //All entries should be filled.
+        for(ScoreEntry entry : results){
+            assertTrue(entry.getName() != null);
+            assertTrue(entry.getScore() != null);
+        }
+
+        //Try to get for player with no recorded scores.
+        results = db.getPlayerTopTen(Long.toString(System.currentTimeMillis()));
+        //We should get no results.
+        assertTrue(results.size() == 0);
     }
 }
