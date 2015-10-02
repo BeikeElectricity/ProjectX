@@ -3,7 +3,7 @@
 DELIMITER //
 CREATE PROCEDURE GetGlobalTopTen ()
    BEGIN 
-      SELECT nickname, score
+      SELECT nickname AS name, score
       FROM (Score
            JOIN Player ON Score.player = Player.playerId)
       ORDER BY score DESC
@@ -17,7 +17,7 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE GetPlayerTopTen (IN player VARCHAR(50))
    BEGIN 
-      SELECT nickname, score
+      SELECT nickname AS name, score
       FROM
        (SELECT *
         FROM (Score
