@@ -23,6 +23,7 @@ public class GameModel extends Thread {
 
     private BusCollector busCollector;
     private List<UserEvent> userEvents;
+    private List<BusData> matchedData;
     private boolean isRunning;
 
     /**
@@ -40,6 +41,7 @@ public class GameModel extends Thread {
         busCollector = new SimpleBusCollector();
         busCollector.chooseBus(BusCollector.TEST_BUSS_VIN_NUMBER);
         userEvents = new ArrayList();
+        matchedData = new ArrayList();
         isRunning = true;
     }
 
@@ -73,10 +75,16 @@ public class GameModel extends Thread {
                     removeUserEvent(e);
                     //TODO: Calculate real score
                     triggerNewScore(-10);
-                } else if (findMatch(e)) {
-                    removeUserEvent(e);
-                    //TODO: Calculate read score
-                    triggerNewScore(10);
+                }
+                else{
+                    BusData d = findMatch(e);
+                    //TODO: fix match to the same event, it seems the bus api is giving back different timestamps from the same event.
+                    if (isValidMatch(d, e)) {
+                        removeUserEvent(e);
+                        rememberMatchedData(d);
+                        //TODO: Calculate real score
+                        triggerNewScore(10);
+                    }
                 }
             }
             sleepThread(ONE_SECOND_IN_MILLI);
@@ -99,9 +107,41 @@ public class GameModel extends Thread {
         return System.currentTimeMillis() > e.timeStamp + USER_EVENT_EXPIRATION_TIME;
     }
 
-    private boolean findMatch(UserEvent e){
-        BusData d = busCollector.getBusData(e.timeStamp, e.sensor);
-        return d.getSensor() == e.sensor;
+    private boolean isToOld(BusData d){
+        return System.currentTimeMillis() > d.getTimestamp() + USER_EVENT_EXPIRATION_TIME;
+    }
+
+    private boolean isValidMatch(BusData d, UserEvent e){
+        return d.getSensor() == e.sensor && !isAlreadyMatched(d);
+    }
+
+    /**
+     * Checks if the busData already have bin matched to an UserEvent,
+     * and also frees up memory by removing no longer relevant already matched data.
+     * @param busData to be checked if it the same BusData that has bin matched before
+     */
+    private boolean isAlreadyMatched(BusData busData){
+        List<BusData> copy = new ArrayList(matchedData);
+        boolean result = false;
+        for(BusData d : copy){
+            if(isToOld(d)){
+                matchedData.remove(d);
+            }
+            if(busData.getSensor() == d.getSensor() && busData.getTimestamp() == busData.getTimestamp()){
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    // To keep the abstraction on the same level in run(). Might be overdoing the abstraction,
+    // but it states the purpose of the list matchedData.
+    private void rememberMatchedData(BusData d){
+        matchedData.add(d);
+    }
+
+    private BusData findMatch(UserEvent e){
+        return busCollector.getBusData(e.timeStamp, e.sensor);
     }
 
     private void sleepThread(long time){
