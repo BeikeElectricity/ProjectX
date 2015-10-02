@@ -1,8 +1,11 @@
 package eic.beike.projectx.activities;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -22,13 +25,17 @@ public class GameActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        Log.d("Score", Thread.currentThread().getName() + ":onCreate");
+        Handler h = makeHandler();
+
         gameModel = new GameModel();
+        gameModel.setHandler(h);
         gameModel.start();
         setContentView(R.layout.activity_game);
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
         gameModel.stopLoop();
     }
@@ -43,31 +50,47 @@ public class GameActivity extends Activity {
     /**
      * @param v The input form the "Door Open" button. Not used, but required
      */
-    public void onDoorOpen(View v){
+    public void onDoorOpen(View v) {
         gameModel.onClick(new UserEvent(System.currentTimeMillis(), Sensor.Opendoor));
     }
 
-    public void onLeft(View v){
+    public void onLeft(View v) {
 
     }
 
-    public void onRight(View v){
+    public void onRight(View v) {
 
     }
-
 
     /**
-     * Used to update the score
-     * @param score New score that the user got
+     * Creates a handler to update the ui
+     * @return The handler
      */
-    public void onNewScore(int score) {
+    private Handler makeHandler() {
+
+        return new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                Log.d("Score", Thread.currentThread().getName() + ":handleMessage");
+                Bundle data = msg.getData();
+                int totalScore = data.getInt("score");
+                int latestScore = data.getInt("latest_score");
+                onNewScore(latestScore, totalScore);
+            }
+        };
+
+    }
+    /**
+     * Used to update the score
+     * @param totalScore New score that the user got
+     */
+    public void onNewScore(int latestScore, int totalScore) {
+        Log.d("Score", Thread.currentThread().getName() + ":onNewScore");
         TextView scoreText = (TextView) findViewById(R.id.textScore);
         TextView scoreEventText = (TextView) findViewById(R.id.textScoreEvent);
 
-        // TODO: This will probably be done somewhere else.
-        gameModel.addScore(score);
 
-        scoreText.setText(String.valueOf(gameModel.getScore()));
-        scoreEventText.setText(String.format("Du fick %d poäng",score));
+        scoreText.setText(String.valueOf(totalScore));
+        scoreEventText.setText(String.format("Du fick %d poäng",latestScore));
     }
 }

@@ -1,9 +1,13 @@
 package eic.beike.projectx.model;
 
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import eic.beike.projectx.activities.GameActivity;
 import eic.beike.projectx.busdata.BusCollector;
 import eic.beike.projectx.busdata.BusData;
 import eic.beike.projectx.busdata.SimpleBusCollector;
@@ -15,25 +19,30 @@ import eic.beike.projectx.busdata.SimpleBusCollector;
 public class GameModel extends Thread {
 
     public static final long ONE_SECOND_IN_MILLI = 1000;
-    public static final long USER_EVENT_EXPIRATION_TIME = 10 * ONE_SECOND_IN_MILLI;
+    public static final long USER_EVENT_EXPIRATION_TIME = 1 * ONE_SECOND_IN_MILLI;
 
     private BusCollector busCollector;
     private List<UserEvent> userEvents;
     private boolean isRunning;
 
+    /**
+     * Persistent total score
+     */
     private int score = 0;
+
+
+    private Handler handler;
 
 
     public GameModel(){
         super();
+
         busCollector = new SimpleBusCollector();
         busCollector.chooseBus(BusCollector.TEST_BUSS_VIN_NUMBER);
         userEvents = new ArrayList();
         isRunning = true;
     }
 
-    public int getScore() { return score; }
-    public synchronized void addScore(int points) { score += points; }
 
     /**
      * Lets the thread die a natural way.(not killing it in the middle of a loop)
@@ -62,12 +71,12 @@ public class GameModel extends Thread {
             for(UserEvent e : events) {
                 if (isToOld(e)) {
                     removeUserEvent(e);
-                    //TODO: give negative score
-                    System.out.println("Score: -10");
+                    //TODO: Calculate real score
+                    triggerNewScore(-10);
                 } else if (findMatch(e)) {
                     removeUserEvent(e);
-                    //TODO: give positive score
-                    System.out.println("Score: +10");
+                    //TODO: Calculate read score
+                    triggerNewScore(10);
                 }
             }
             sleepThread(ONE_SECOND_IN_MILLI);
@@ -101,5 +110,33 @@ public class GameModel extends Thread {
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
+    }
+
+    /**
+     * Add a handler that handles
+     * @param h The handler to be added
+     */
+    public synchronized void setHandler(Handler h) {
+        handler = h;
+    }
+
+    /**
+     * Used to notify the handlers about a new score
+     * @param latestScore The latest score the player received
+     */
+    private synchronized void triggerNewScore(int latestScore) {
+        if (handler == null) {
+            return;
+        }
+        Log.d("Score", Thread.currentThread().getName() + ":triggerNewScore");
+        this.score += latestScore;
+        Message msg = handler.obtainMessage();
+        Bundle data = new Bundle();
+
+        data.putInt("score", this.score);
+        data.putInt("latest_score", latestScore);
+
+        msg.setData(data);
+        msg.sendToTarget();
     }
 }
