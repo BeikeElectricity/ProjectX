@@ -2,17 +2,20 @@ package eic.beike.projectx.network.projectXServer;
 
 import android.util.Log;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import eic.beike.projectx.network.RetrieveReader;
 import eic.beike.projectx.util.Constants;
 import eic.beike.projectx.util.ScoreEntry;
 
 import java.io.BufferedReader;
+import java.io.Reader;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Used to interact with our database.
- * Created by alex on 10/1/15.
+ * @Author alex
  */
 public class Database implements IDatabase {
 
@@ -71,19 +74,57 @@ public class Database implements IDatabase {
     }
 
     /**
+     * Get the ten best scores in the database.
+     *
      * @return The best ten scores for all players on all buses.
      */
     @Override
     public List<ScoreEntry> getTopTen() {
-        return new ArrayList<ScoreEntry>();
+        //Make request.
+        BufferedReader in = RetrieveReader.get(
+                Constants.SERVER_URL+"GetHighscore.php"
+        );
+
+        //Parse the result
+        return parseResultsFromReader(in);
     }
 
     /**
-     * @param playerId
-     * @return The best ten scores for the given player.
+     * Get the ten best scores for a specific player.
+     *
+     * @param playerId the id of the player that we want the high score for.
+     * @return An list of ScoreEntry:s of the players best scores.
      */
     @Override
     public List<ScoreEntry> getPlayerTopTen(String playerId) {
-        return new ArrayList<ScoreEntry>();
+        //Make request.
+        BufferedReader in = RetrieveReader.get(
+                Constants.SERVER_URL+"GetHighscore.php?id=" + playerId
+        );
+
+        //Parse the result
+        return parseResultsFromReader(in);
+    }
+
+    /**
+     *  Helper method that converts the json to an array of ScoreEntry:s
+     *
+     *  @param in reader hooked to a response from the GetHighscore.php script.
+     *  @return
+     */
+    private List<ScoreEntry> parseResultsFromReader(Reader in){
+
+        ArrayList<ScoreEntry> results = new ArrayList<ScoreEntry>();
+
+        //If server connection succeeded try to get an array of ScoreEntry:s
+        if (in != null) {
+            Gson gson = new Gson();
+            Type listType = new TypeToken<ArrayList<ScoreEntry>>() {}.getType();
+            results = gson.fromJson(in, listType);
+            Log.d(this.getClass().getSimpleName(),"Got answer from server.");
+            return results;
+        }
+        Log.w(this.getClass().getSimpleName(),"Failed to contact the database.");
+        return results;
     }
 }
