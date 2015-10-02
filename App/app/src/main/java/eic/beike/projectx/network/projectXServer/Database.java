@@ -22,7 +22,7 @@ public class Database implements IDatabase {
     /**
      * Register a name for the given id.
      *
-     * @return True if registration succeded, false if it failed.
+     * @return True if registration succeeded, false if it failed.
      */
     @Override
     public boolean register(String id, String name) {
@@ -30,15 +30,9 @@ public class Database implements IDatabase {
         BufferedReader in = RetrieveReader.get(
                 Constants.SERVER_URL+"Register.php?id="+ id + "&name=" + name
         );
-        //If server connection succeeded see if the registration did as well.
-        if (in != null) {
-            Gson gson = new Gson();
-            InsertResponse response = gson.fromJson(in, InsertResponse.class);
-            Log.d(this.getClass().getSimpleName(),"Got answer from server, message:" + response.getMessage());
-            return (response.getSuccess() == 1);
-        }
-        Log.w(this.getClass().getSimpleName(),"Failed to contact the database.");
-        return false;
+
+        return parseInsertFromReader(in);
+
     }
 
     /**
@@ -62,14 +56,21 @@ public class Database implements IDatabase {
                         "&time=" + Long.toString(time) +
                         "&bus=" + bus
         );
-        //If connection established see if the score was recorded.
+        return parseInsertFromReader(in);
+    }
+
+    /**
+     * Helper method that converts json to InsertResponse and then to boolean.
+     */
+    private boolean parseInsertFromReader(Reader in) {
+        //If server connection succeeded see if the registration did as well.
         if (in != null) {
             Gson gson = new Gson();
             InsertResponse response = gson.fromJson(in, InsertResponse.class);
-            Log.d(this.getClass().getSimpleName(),"Got answer from server, message:" + response.getMessage());
+            Log.d(this.getClass().getSimpleName(), "Got answer from server, message:" + response.getMessage());
             return (response.getSuccess() == 1);
         }
-        Log.w(this.getClass().getSimpleName(),"Failed to contact the database.");
+        Log.w(this.getClass().getSimpleName(), "Failed to contact the database.");
         return false;
     }
 
@@ -86,7 +87,7 @@ public class Database implements IDatabase {
         );
 
         //Parse the result
-        return parseResultsFromReader(in);
+        return parseHighScoreFromReader(in);
     }
 
     /**
@@ -103,7 +104,7 @@ public class Database implements IDatabase {
         );
 
         //Parse the result
-        return parseResultsFromReader(in);
+        return parseHighScoreFromReader(in);
     }
 
     /**
@@ -112,7 +113,7 @@ public class Database implements IDatabase {
      *  @param in reader hooked to a response from the GetHighscore.php script.
      *  @return
      */
-    private List<ScoreEntry> parseResultsFromReader(Reader in){
+    private List<ScoreEntry> parseHighScoreFromReader(Reader in){
 
         ArrayList<ScoreEntry> results = new ArrayList<ScoreEntry>();
 
