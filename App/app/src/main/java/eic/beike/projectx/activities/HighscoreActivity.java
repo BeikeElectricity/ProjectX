@@ -35,7 +35,7 @@ public class HighscoreActivity extends ListActivity {
 
         db = new Database();
 
-        // Un the asynchronous task to get the top list.
+        // Use the asynchronous task to get the top list.
         new TopListFetchTask().execute();
 
         adapter = new HighscoreAdapter(this, new ArrayList<ScoreEntry>());
@@ -83,7 +83,6 @@ public class HighscoreActivity extends ListActivity {
 
         protected List<ScoreEntry> doInBackground(String... urls) {
             try {
-                Thread.sleep(5000);
                 if (db == null) {
                     throw new Exception("No database object");
                 }
