@@ -9,12 +9,12 @@ public class Button {
 
     public Colour colour;
     public int score;
-    public boolean same;
+    public boolean counted;
 
     public Button(Colour colour, int score) {
         this.colour = colour;
         this.score = score;
-        this.same = false;
+        this.counted = false;
     }
 
 }

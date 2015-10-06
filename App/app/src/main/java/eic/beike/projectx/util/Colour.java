@@ -5,6 +5,18 @@ package eic.beike.projectx.util;
  */
 public enum Colour {
     GREEN,
-    BULUE,
-    RED
+    BLUE,
+    RED;
+
+
+    public static Colour colour(int val) {
+    if (val == 0) {
+        return GREEN;
+    } else if(val == 1) {
+        return BLUE;
+    } else if (val == 2) {
+        return RED;
+    }
+    return GREEN;
+   }
 }

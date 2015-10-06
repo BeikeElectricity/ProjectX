@@ -7,10 +7,12 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import eic.beike.projectx.busdata.BusCollector;
 import eic.beike.projectx.busdata.BusData;
 import eic.beike.projectx.busdata.SimpleBusCollector;
+import eic.beike.projectx.util.Colour;
 
 /**
  * @author Mikael
@@ -44,7 +46,7 @@ public class GameModel extends Thread {
         userEvents = new ArrayList();
         matchedData = new ArrayList();
         isRunning = true;
-        buttons = new Button[3][3];
+        buttons = generateNewButtons();
     }
 
 
@@ -80,7 +82,7 @@ public class GameModel extends Thread {
                 }
                 else{
                     BusData d = findMatch(e);
-                    //TODO: fix match to the same event, it seems the bus api is giving back different timestamps from the same event.
+                    //TODO: fix match to the counted event, it seems the bus api is giving back different timestamps from the counted event.
                     if (isValidMatch(d, e)) {
                         removeUserEvent(e);
                         rememberMatchedData(d);
@@ -120,7 +122,7 @@ public class GameModel extends Thread {
     /**
      * Checks if the busData already have bin matched to an UserEvent,
      * and also frees up memory by removing no longer relevant already matched data.
-     * @param busData to be checked if it the same BusData that has bin matched before
+     * @param busData to be checked if it the counted BusData that has bin matched before
      */
     private boolean isAlreadyMatched(BusData busData){
         List<BusData> copy = new ArrayList(matchedData);
@@ -136,7 +138,7 @@ public class GameModel extends Thread {
         return result;
     }
 
-    // To keep the abstraction on the same level in run(). Might be overdoing the abstraction,
+    // To keep the abstraction on the counted level in run(). Might be overdoing the abstraction,
     // but it states the purpose of the list matchedData.
     private void rememberMatchedData(BusData d){
         matchedData.add(d);
@@ -194,9 +196,9 @@ public class GameModel extends Thread {
                    && buttons[i][i].colour == buttons[i][i+2].colour) {
 
                count += buttons[i][i].score + buttons[i][i+1].score +  buttons[i][i+2].score;
-               buttons[i][i].same = true;
-               buttons[i][i+1].same = true;
-               buttons[i][i+2].same = true;
+               buttons[i][i].counted = true;
+               buttons[i][i+1].counted = true;
+               buttons[i][i+2].counted = true;
            }
         }
         return count;
@@ -208,14 +210,37 @@ public class GameModel extends Thread {
      */
     private int rows() {
         int count = 0;
-        for(int i = 0; i < buttons.length-1; i++) {
-            if(buttons[i][i].colour == buttons[i+1][i].colour
-                    && buttons[i][i].colour == buttons[i+2][i].colour) {
-                count += buttons[i][i].score + buttons[i+1][i].score +  buttons[i+2][i].score;
-                buttons[i][i].same = true;
-                buttons[i+1][i].same = true;
-                buttons[i+2][i].same = true;
+        for (int i = 0; i < buttons.length - 1; i++) {
+            if (buttons[i][i].colour == buttons[i + 1][i].colour
+                    && buttons[i][i].colour == buttons[i + 2][i].colour) {
+                count += buttons[i][i].score + buttons[i + 1][i].score + buttons[i + 2][i].score;
+                buttons[i][i].counted = true;
+                buttons[i + 1][i].counted = true;
+                buttons[i + 2][i].counted = true;
             }
         }
         return count;
+    }
+
+    private void generateButtons() {
+        Random random = new Random();
+        for (int i = 0; i < buttons.length-1; i++) {
+            for (int j = 0; j < buttons.length-1; j++) {
+                if (buttons[i][j].counted) {
+                    buttons[i][j] = new Button(Colour.colour(random.nextInt(3)), random.nextInt(100));
+                }
+            }
+        }
+    }
+
+    private Button[][] generateNewButtons() {
+        Button[][] tempList = new Button[3][3];
+        Random random = new Random();
+        for (int i = 0; i < tempList.length-1; i++) {
+            for (int j = 0; j < tempList.length-1; j++) {
+                tempList[i][j] = new Button(Colour.colour(random.nextInt(3)), random.nextInt(100));
+            }
+        }
+        return tempList;
+    }
 }
