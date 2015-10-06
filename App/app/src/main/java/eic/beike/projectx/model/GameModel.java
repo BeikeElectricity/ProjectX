@@ -25,6 +25,7 @@ public class GameModel extends Thread {
     private List<UserEvent> userEvents;
     private List<BusData> matchedData;
     private boolean isRunning;
+    private Button[][] buttons;
 
     /**
      * Persistent total score
@@ -43,6 +44,7 @@ public class GameModel extends Thread {
         userEvents = new ArrayList();
         matchedData = new ArrayList();
         isRunning = true;
+        buttons = new Button[3][3];
     }
 
 
@@ -179,4 +181,41 @@ public class GameModel extends Thread {
         msg.setData(data);
         msg.sendToTarget();
     }
+
+    /**
+     *
+     * @return returns the score fomr all buttons that are "three of a kind"
+     *         it also sets that they are counted so they can be generated again
+     */
+    private int columns() {
+        int count = 0;
+        for(int i = 0; i < buttons.length-1; i++) {
+           if(buttons[i][i].colour == buttons[i][i+1].colour
+                   && buttons[i][i].colour == buttons[i][i+2].colour) {
+
+               count += buttons[i][i].score + buttons[i][i+1].score +  buttons[i][i+2].score;
+               buttons[i][i].same = true;
+               buttons[i][i+1].same = true;
+               buttons[i][i+2].same = true;
+           }
+        }
+        return count;
+    }
+    /**
+     *
+     * @return returns the score fomr all buttons that are "three of a kind"
+     *         it also sets that they are counted so they can be generated again
+     */
+    private int rows() {
+        int count = 0;
+        for(int i = 0; i < buttons.length-1; i++) {
+            if(buttons[i][i].colour == buttons[i+1][i].colour
+                    && buttons[i][i].colour == buttons[i+2][i].colour) {
+                count += buttons[i][i].score + buttons[i+1][i].score +  buttons[i+2][i].score;
+                buttons[i][i].same = true;
+                buttons[i+1][i].same = true;
+                buttons[i+2][i].same = true;
+            }
+        }
+        return count;
 }
