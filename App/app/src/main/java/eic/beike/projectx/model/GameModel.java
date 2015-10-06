@@ -34,6 +34,8 @@ public class GameModel extends Thread {
      */
     private int score = 0;
 
+    private int bonus = 0;
+
 
     private Handler handler;
 
@@ -182,6 +184,22 @@ public class GameModel extends Thread {
 
         msg.setData(data);
         msg.sendToTarget();
+    }
+
+    private synchronized void triggerNewBonus(int bonus) {
+        if (handler == null) {
+            return;
+        }
+
+        this.bonus += bonus;
+        Message msg = handler.obtainMessage();
+        Bundle data = new Bundle();
+
+        data.putInt("bonus", this.bonus);
+
+        msg.setData(data);
+        msg.sendToTarget();
+
     }
 
     /**
