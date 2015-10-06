@@ -2,13 +2,14 @@ package eic.beike.projectx.network.projectXServer;
 
 import eic.beike.projectx.util.ScoreEntry;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Used to interact with the database, these are long running network operations and should not be called
  * from the UI thread.
  *
- * @Author alex
+ * @author alex
  */
 public interface IDatabase {
 

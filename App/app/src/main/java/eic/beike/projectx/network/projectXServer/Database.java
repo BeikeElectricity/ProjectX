@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * Used to interact with our database.
- * @Author alex
+ * @author alex
  */
 public class Database implements IDatabase {
 
@@ -128,4 +128,5 @@ public class Database implements IDatabase {
         Log.w(this.getClass().getSimpleName(),"Failed to contact the database.");
         return results;
     }
+
 }

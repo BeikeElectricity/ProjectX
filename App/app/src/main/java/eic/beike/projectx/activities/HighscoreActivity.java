@@ -5,24 +5,34 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 import eic.beike.projectx.R;
+import eic.beike.projectx.network.projectXServer.Database;
+import eic.beike.projectx.network.projectXServer.IDatabase;
 import eic.beike.projectx.util.HighscoreAdapter;
 import eic.beike.projectx.util.ScoreEntry;
 
+
+/**
+ * @author Adam
+ */
 public class HighscoreActivity extends ListActivity {
 
     HighscoreAdapter adapter;
+    IDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ArrayList<ScoreEntry> data = getData();
+        Bundle extras = getIntent().getExtras();
 
-        adapter = new HighscoreAdapter(this,data);
+        db = new Database();
+
+        List<ScoreEntry> data = getData();
+
+        adapter = new HighscoreAdapter(this, data);
         setListAdapter(adapter);
     }
 
@@ -30,25 +40,11 @@ public class HighscoreActivity extends ListActivity {
      * Fetches the current highscore from the database
      * @return Array of ScoreEntry that contains the current highscore
      */
-    private ArrayList<ScoreEntry> getData() {
-
-        // TODO: Get data from database
-        ScoreEntry[] data = {
-                new ScoreEntry("Person 1", "10 000"),
-                new ScoreEntry("Person 2", "6"),
-                new ScoreEntry("Person 3", "6"),
-                new ScoreEntry("Person 4", "6"),
-                new ScoreEntry("Person 5", "6"),
-                new ScoreEntry("Person 6", "6"),
-                new ScoreEntry("Person 8", "6"),
-                new ScoreEntry("Person 9", "6"),
-                new ScoreEntry("Person 10", "6"),
-                new ScoreEntry("You", "iPhone")
-        };
-        return new ArrayList<ScoreEntry>(Arrays.asList(data));
+    private List<ScoreEntry> getData() {
+        return db.getTopTen();
     }
 
-    public void setData(ArrayList<ScoreEntry> data) {
+    public void setData(List<ScoreEntry> data) {
         adapter.clear();
         for (ScoreEntry se : data) {
             adapter.add(se);

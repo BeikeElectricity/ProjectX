@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import eic.beike.projectx.R;
 
@@ -16,10 +17,10 @@ import eic.beike.projectx.R;
  */
 public class HighscoreAdapter extends ArrayAdapter<ScoreEntry> {
 
-    ArrayList<ScoreEntry> values;
+    List<ScoreEntry> values;
     Context context;
 
-    public HighscoreAdapter(Context context, ArrayList<ScoreEntry> values) {
+    public HighscoreAdapter(Context context, List<ScoreEntry> values) {
         super(context, R.layout.highscore_row, values);
         this.context = context;
         this.values = values;
