@@ -1,5 +1,7 @@
 <resources>
 
     <color name="black_overlay">#66000000</color>
+    <color name="activity_background">#FF0099CC</color>
+    <color name="button_border">#FF000000</color>
 
 </resources>

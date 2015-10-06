@@ -1,11 +1,13 @@
 <resources>
-    <string name="app_name">projectx</string>
+    <string name="app_name">The Bus Factor</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_name_splash">Name Splash Activity</string>
+    <string name="title_activity_name_splash">Välj smeknamn</string>
     <string name="title_activity_menu">Menu</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="Switch_Menu" />
+    <string name="name_splash_main_text">Välj smeknamn</string>
+    <string name="name_splash_button_text">Ok</string>
 </resources>
