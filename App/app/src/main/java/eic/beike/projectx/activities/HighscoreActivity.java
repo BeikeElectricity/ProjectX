@@ -1,10 +1,14 @@
 package eic.beike.projectx.activities;
 
 import android.app.ListActivity;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import eic.beike.projectx.R;
@@ -28,21 +32,17 @@ public class HighscoreActivity extends ListActivity {
 
         Bundle extras = getIntent().getExtras();
 
+
         db = new Database();
 
-        List<ScoreEntry> data = getData();
+        // Un the asynchronous task to get the top list.
+        new TopListFetchTask().execute();
 
-        adapter = new HighscoreAdapter(this, data);
+        adapter = new HighscoreAdapter(this, new ArrayList<ScoreEntry>());
         setListAdapter(adapter);
     }
 
-    /**
-     * Fetches the current highscore from the database
-     * @return Array of ScoreEntry that contains the current highscore
-     */
-    private List<ScoreEntry> getData() {
-        return db.getTopTen();
-    }
+
 
     public void setData(List<ScoreEntry> data) {
         adapter.clear();
@@ -72,5 +72,36 @@ public class HighscoreActivity extends ListActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Inner class to asynchronously fetch the table.
+     */
+    class TopListFetchTask extends AsyncTask<String, Void, List<ScoreEntry>> {
+
+        private Exception exception;
+
+        protected List<ScoreEntry> doInBackground(String... urls) {
+            try {
+                Thread.sleep(5000);
+                if (db == null) {
+                    throw new Exception("No database object");
+                }
+                List<ScoreEntry> data = db.getTopTen();
+                return data;
+            } catch (Exception e) {
+                this.exception = e;
+                return null;
+            }
+        }
+
+        protected void onPostExecute(List<ScoreEntry> data) {
+            if (this.exception != null) {
+                Log.d("Score", "Exeption while fetching top list: " + this.exception.getMessage());
+                finish();
+            } else {
+                setData(data);
+            }
+        }
     }
 }
