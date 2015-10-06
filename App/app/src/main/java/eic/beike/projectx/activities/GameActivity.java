@@ -32,7 +32,7 @@ public class GameActivity extends Activity {
         gameModel = new GameModel();
         gameModel.setHandler(h);
         gameModel.start();
-        setContentView(R.layout.activity_game);
+        setContentView(R.layout.game);
     }
 
     @Override
