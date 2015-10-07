@@ -14,7 +14,8 @@
                 android:layout_height="120sp"
                 android:text="@string/game_score_init"
                 android:id="@+id/claimBonus"
-                android:layout_centerVertical="true" android:layout_centerHorizontal="true" android:textSize="48sp"/>
+                android:layout_centerVertical="true" android:layout_centerHorizontal="true" android:textSize="48sp"
+                android:onClick="onBonusButtonClick"/>
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
@@ -59,30 +60,30 @@
                  android:layout_marginRight="@dimen/activity_vertical_margin"
                  android:layout_marginBottom="@dimen/activity_horizontal_margin">
         <TableRow android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight=".3"
-                  android:id="@+id/tableRow">
+                  android:id="@+id/">
             <ImageButton android:layout_width="wrap_content" android:layout_height="fill_parent"
-                         android:id="@+id/imageButton10" android:layout_weight=".3"/>
+                         android:id="@+id/topLeft" android:layout_weight=".3" android:onClick="onGridButtonClick"/>
             <ImageButton android:layout_width="wrap_content" android:layout_height="fill_parent"
-                         android:id="@+id/imageButton11" android:layout_weight=".3"/>
+                         android:id="@+id/topMiddle" android:layout_weight=".3" android:onClick="onGridButtonClick"/>
             <ImageButton android:layout_width="wrap_content" android:layout_height="fill_parent"
-                         android:id="@+id/imageButton12" android:layout_weight=".3"/>
+                         android:id="@+id/topRight" android:layout_weight=".3" android:onClick="onGridButtonClick"/>
         </TableRow>
         <TableRow android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight=".3"
-                  android:id="@+id/tableRow2">
+                  android:id="@+id/">
             <ImageButton android:layout_width="wrap_content" android:layout_height="fill_parent"
-                         android:id="@+id/imageButton13" android:layout_weight=".3"/>
+                         android:id="@+id/middleLeft" android:layout_weight=".3" android:onClick="onGridButtonClick"/>
             <ImageButton android:layout_width="wrap_content" android:layout_height="fill_parent"
-                         android:id="@+id/imageButton14" android:layout_weight=".3"/>
+                         android:id="@+id/middleMiddle" android:layout_weight=".3" android:onClick="onGridButtonClick"/>
             <ImageButton android:layout_width="wrap_content" android:layout_height="fill_parent"
-                         android:id="@+id/imageButton15" android:layout_weight=".3"/>
+                         android:id="@+id/middleRight" android:layout_weight=".3" android:onClick="onGridButtonClick"/>
         </TableRow>
         <TableRow android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight=".3">
             <ImageButton android:layout_width="wrap_content" android:layout_height="fill_parent"
-                         android:id="@+id/imageButton16" android:layout_weight=".3"/>
+                         android:id="@+id/bottomLeft" android:layout_weight=".3" android:onClick="onGridButtonClick"/>
             <ImageButton android:layout_width="wrap_content" android:layout_height="fill_parent"
-                         android:id="@+id/imageButton17" android:layout_weight=".3"/>
+                         android:id="@+id/bottomMiddle" android:layout_weight=".3" android:onClick="onGridButtonClick"/>
             <ImageButton android:layout_width="wrap_content" android:layout_height="fill_parent"
-                         android:id="@+id/imageButton18" android:layout_weight=".3"/>
+                         android:id="@+id/bottomRight" android:layout_weight=".3" android:onClick="onGridButtonClick"/>
         </TableRow>
     </TableLayout>
 </LinearLayout>
