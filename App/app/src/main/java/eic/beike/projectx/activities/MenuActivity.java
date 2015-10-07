@@ -45,4 +45,14 @@ public class MenuActivity extends Activity {
         onBackPressed();
         finish();
     }
+
+
+    /**
+     *
+     * @param v View of the triggering ui element
+     */
+    public void startHighscore(View v) {
+        startActivity(new Intent(this, HighscoreActivity.class));
+    }
+
 }

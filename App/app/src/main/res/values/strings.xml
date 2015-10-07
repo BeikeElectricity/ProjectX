@@ -8,4 +8,8 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="Switch_Menu" />
+    <string name="title_activity_highscore">Highscore</string>
+    <string name="menu_button_highscore">Highscore</string>
+    <string name="ok">OK</string>
+    <string name="highscore_unavailable">Kunde inte hämta topplistan.</string>
 </resources>
