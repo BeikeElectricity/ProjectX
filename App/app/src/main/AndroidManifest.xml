@@ -21,16 +21,20 @@
         </activity>
         <activity
             android:name=".activities.NameSplashActivity"
-            android:label="@string/title_activity_name_splash">
+            android:label="@string/name_splash_activity_title" >
         </activity>
         <activity
             android:name=".activities.MenuActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_menu"
+            android:label="@string/menu_activity_title"
             >
         </activity>
+        <activity android:name=".activities.GameActivity" >
+        </activity>
         <activity
-            android:name=".activities.GameActivity">
+            android:name=".activities.HighscoreActivity"
+            android:label="@string/highscore_title_activity" >
         </activity>
     </application>
+
 </manifest>
