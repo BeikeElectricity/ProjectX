@@ -1,12 +1,12 @@
 package eic.beike.projectx.activities;
 
+import android.app.DialogFragment;
 import android.app.ListActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,13 +15,16 @@ import eic.beike.projectx.R;
 import eic.beike.projectx.network.projectXServer.Database;
 import eic.beike.projectx.network.projectXServer.IDatabase;
 import eic.beike.projectx.util.HighscoreAdapter;
+import eic.beike.projectx.util.MessageDialog;
 import eic.beike.projectx.util.ScoreEntry;
 
 
 /**
  * @author Adam
  */
-public class HighscoreActivity extends ListActivity {
+public class HighscoreActivity extends ListActivity
+        implements MessageDialog.MessageDialogListener
+{
 
     HighscoreAdapter adapter;
     IDatabase db;
@@ -43,7 +46,10 @@ public class HighscoreActivity extends ListActivity {
     }
 
 
-
+    /**
+     * Updates the adapter with new data, clearing old.
+     * @param data New data for the adapter
+     */
     public void setData(List<ScoreEntry> data) {
         adapter.clear();
         for (ScoreEntry se : data) {
@@ -75,6 +81,31 @@ public class HighscoreActivity extends ListActivity {
     }
 
     /**
+     * Used to finish the activity of ok is clicked.
+     * @param dialog The triggering dialog.
+     */
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        finish();
+    }
+
+    /**
+     * Used to finish the activity if the dialog is dismissed, i.e. user pressed beside the dialog.
+     * @param dialog The triggering dialog.
+     */
+    @Override
+    public void onDialogDismiss(DialogFragment dialog) {
+        finish();
+    }
+
+    /**
+     * If the negative (no) button is clicked. Not used.
+     * @param dialog
+     */
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) { /* Unused. */ }
+
+    /**
      * Inner class to asynchronously fetch the table.
      */
     class TopListFetchTask extends AsyncTask<String, Void, List<ScoreEntry>> {
@@ -83,11 +114,14 @@ public class HighscoreActivity extends ListActivity {
 
         protected List<ScoreEntry> doInBackground(String... urls) {
             try {
+
                 if (db == null) {
                     throw new Exception("No database object");
                 }
+
                 List<ScoreEntry> data = db.getTopTen();
                 return data;
+
             } catch (Exception e) {
                 this.exception = e;
                 return null;
@@ -96,8 +130,9 @@ public class HighscoreActivity extends ListActivity {
 
         protected void onPostExecute(List<ScoreEntry> data) {
             if (this.exception != null) {
-                Log.d("Score", "Exeption while fetching top list: " + this.exception.getMessage());
-                finish();
+                MessageDialog dialog = new MessageDialog();
+                dialog.show(getFragmentManager(), "highscore_unavailable");
+                Log.d("Score", "Exception while fetching top list: " + this.exception.getMessage());
             } else {
                 setData(data);
             }
