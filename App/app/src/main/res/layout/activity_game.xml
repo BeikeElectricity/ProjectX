@@ -27,7 +27,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Last score:"
-                    android:id="@+id/"/>
+                    android:id="@+id/row1"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -59,8 +59,7 @@
                  android:layout_marginLeft="@dimen/activity_vertical_margin"
                  android:layout_marginRight="@dimen/activity_vertical_margin"
                  android:layout_marginBottom="@dimen/activity_horizontal_margin">
-        <TableRow android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight=".3"
-                  android:id="@+id/">
+        <TableRow android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight=".3">
             <ImageButton android:layout_width="wrap_content" android:layout_height="fill_parent"
                          android:id="@+id/topLeft" android:layout_weight=".3" android:onClick="onGridButtonClick"/>
             <ImageButton android:layout_width="wrap_content" android:layout_height="fill_parent"
@@ -68,8 +67,7 @@
             <ImageButton android:layout_width="wrap_content" android:layout_height="fill_parent"
                          android:id="@+id/topRight" android:layout_weight=".3" android:onClick="onGridButtonClick"/>
         </TableRow>
-        <TableRow android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight=".3"
-                  android:id="@+id/">
+        <TableRow android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight=".3">
             <ImageButton android:layout_width="wrap_content" android:layout_height="fill_parent"
                          android:id="@+id/middleLeft" android:layout_weight=".3" android:onClick="onGridButtonClick"/>
             <ImageButton android:layout_width="wrap_content" android:layout_height="fill_parent"
