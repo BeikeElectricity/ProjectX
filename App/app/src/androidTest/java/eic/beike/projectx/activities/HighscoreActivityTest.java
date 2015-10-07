@@ -1,15 +1,11 @@
 package eic.beike.projectx.activities;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.Adapter;
 import android.widget.ListView;
-
-import junit.framework.TestCase;
 
 import java.util.ArrayList;
 import java.util.Arrays;

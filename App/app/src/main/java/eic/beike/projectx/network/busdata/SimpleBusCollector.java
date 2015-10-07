@@ -5,12 +5,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import eic.beike.projectx.network.RetrieveReader;
 import eic.beike.projectx.util.Constants;
-import org.apache.http.HttpStatus;
 
-import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.lang.reflect.Type;
-import java.net.URL;
 import java.util.*;
 
 /**
@@ -35,8 +32,8 @@ public class SimpleBusCollector implements BusCollector {
         //Parse the reader, gson needs the type which is weird below.
         Gson gson = new Gson();
         Type listType = new TypeToken<ArrayList<ResponseEntry>>() {}.getType();
-        List<ResponseEntry> response = (ArrayList<ResponseEntry>) gson.fromJson(reader, listType);
-        return response;
+        return (ArrayList<ResponseEntry>) gson.fromJson(reader, listType);
+
     }
 
 
@@ -47,7 +44,9 @@ public class SimpleBusCollector implements BusCollector {
      * @return The closest resource data that came from that given sensor.
      */
     @Override
-    public BusData getBusData(long time, Sensor sensor) {
+    public BusData getBusData(long time, Sensor sensor)
+            throws Exception
+    {
 
         BusData data = new BusData();
 

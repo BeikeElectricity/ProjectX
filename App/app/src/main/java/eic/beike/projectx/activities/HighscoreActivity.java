@@ -100,7 +100,7 @@ public class HighscoreActivity extends ListActivity
 
     /**
      * If the negative (no) button is clicked. Not used.
-     * @param dialog
+     * @param dialog Triggering dialog
      */
     @Override
     public void onDialogNegativeClick(DialogFragment dialog) { /* Unused. */ }
@@ -119,8 +119,7 @@ public class HighscoreActivity extends ListActivity
                     throw new Exception("No database object");
                 }
 
-                List<ScoreEntry> data = db.getTopTen();
-                return data;
+                return db.getTopTen();
 
             } catch (Exception e) {
                 this.exception = e;

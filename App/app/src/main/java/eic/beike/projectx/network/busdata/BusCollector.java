@@ -13,7 +13,7 @@ public interface BusCollector {
      * @param time time time in epoch seconds that the data should be centered at.
      * @return The closest resource data that came from that given sensor.
      */
-    BusData getBusData(long time, Sensor sensor);
+    BusData getBusData(long time, Sensor sensor) throws Exception;
 
     /**
      * Determine which bus the user is currently interested in. This is the active bus.

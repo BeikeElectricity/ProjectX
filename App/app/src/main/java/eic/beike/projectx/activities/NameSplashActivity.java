@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,7 +45,7 @@ public class NameSplashActivity extends Activity {
 
     /**
      * Handles clicks form the button in the view
-     * @param view
+     * @param view Unused (Triggering view)
      */
     public void onClick(View view) {
         EditText editBox = (EditText) findViewById(R.id.nameInputField);

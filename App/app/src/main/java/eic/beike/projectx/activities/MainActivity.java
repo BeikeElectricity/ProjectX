@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -33,7 +32,7 @@ public class MainActivity extends Activity {
         // First time running?
         String name = settings.getString(NAME_FIELD,"");
 
-        if (name == "") {
+        if (name.equals("")) {
             startActivityForResult(
                 new Intent(this, NameSplashActivity.class),
                 MainActivity.NEXT_ACTIVITY
@@ -72,12 +71,11 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-       @Override
-      protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-               super.onActivityResult(requestCode, resultCode, data);
-                if (resultCode == MainActivity.RESULT_CANCELED) {
-                    finish();
-                    return;
-                    }
-            }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == MainActivity.RESULT_CANCELED) {
+            finish();
+        }
+    }
 }
