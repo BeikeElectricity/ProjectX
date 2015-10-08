@@ -2,16 +2,21 @@ package eic.beike.projectx.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.ScaleAnimation;
+import android.widget.Button;
 import android.widget.TextView;
 
 import eic.beike.projectx.R;
 import eic.beike.projectx.handlers.GameHandler;
 import eic.beike.projectx.model.GameModel;
 import eic.beike.projectx.model.IGameModel;
+import eic.beike.projectx.util.Colour;
 
 /**
  * @author Mikael
@@ -20,20 +25,49 @@ import eic.beike.projectx.model.IGameModel;
  */
 public class GameActivity extends Activity {
 
+    /**
+     * The model used to decide what should be run
+     */
     private IGameModel gameModel;
+    private Animation bumpButton;
+    private Animation fadeAnimition;
+    private int gridButton[][] = new int[3][3];
+
 
     /**********************************************************************
-     *                  Methods dealing with the life cycle
+     * Methods dealing with the life cycle
      **********************************************************************/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("Score", Thread.currentThread().getName() + ":onCreate");
-        Handler h = makeHandler();
 
-        gameModel = new GameModel();
+        //TODO: Decide how to create.
+       // gameModel = new GameModel().setHandler(new GameHandler(Looper.getMainLooper(), this));
         setContentView(R.layout.activity_game);
+
+        //Get the ids of the grid buttons
+        gridButton[0][0] = R.id.topLeft;
+        gridButton[0][1] = R.id.topMiddle;
+        gridButton[0][2] = R.id.topRight;
+        gridButton[1][0] = R.id.middleLeft;
+        gridButton[1][1] = R.id.middleMiddle;
+        gridButton[1][2] = R.id.middleRight;
+        gridButton[2][0] = R.id.bottomLeft;
+        gridButton[2][1] = R.id.bottomMiddle;
+        gridButton[2][2] = R.id.bottomRight;
+
+        //Initiate bump animation.
+        bumpButton = new ScaleAnimation(1f, 1.2f, 1f, 1.2f, 50f, 50f);
+        bumpButton.setDuration(250);
+        bumpButton.setRepeatMode(Animation.REVERSE);
+        bumpButton.setRepeatCount(1);
+        bumpButton.setInterpolator(new DecelerateInterpolator());
+
+        //Initiate fade animation.
+        fadeAnimition = new AlphaAnimation(1,0);
+        fadeAnimition.setDuration(250);
     }
 
     @Override
@@ -50,6 +84,7 @@ public class GameActivity extends Activity {
      */
     public void onBonusButtonClick(View view) {
         if (view.getId() == R.id.claimBonus) {
+            view.startAnimation(bumpButton);
             gameModel.claimBonus();
         }
     }
@@ -58,39 +93,18 @@ public class GameActivity extends Activity {
      * Called when a grid button is pressed. Gets the position an delegates to the model.
      */
     public void onGridButtonClick(View view) {
-        switch (view.getId()){
-            case R.id.topLeft:
-                gameModel.pressButton(0,0);
-                break;
-            case R.id.topMiddle:
-                gameModel.pressButton(0,1);
-                break;
-            case R.id.topRight:
-                gameModel.pressButton(0,2);
-                break;
-            case R.id.middleLeft:
-                gameModel.pressButton(1,0);
-                break;
-            case R.id.middleMiddle:
-                gameModel.pressButton(1,1);
-                break;
-            case R.id.middleRight:
-                gameModel.pressButton(1,2);
-                break;
-            case R.id.bottomLeft:
-                gameModel.pressButton(2,0);
-                break;
-            case R.id.bottomMiddle:
-                gameModel.pressButton(2,1);
-                break;
-            case R.id.bottomRight:
-                gameModel.pressButton(2,2);
-                break;
-            default:
-                Log.e(this.getClass().getSimpleName(), "Unknown gridbutton pressed!");
-                break;
+        //Loop through the grid buttons to see which one was clicked
+        for (int r = 0; r <= gridButton.length; r++) {
+            for (int c = 0; c <= gridButton[r].length; c++) {
+                if (view.getId() == gridButton[r][c]) {
+                    gameModel.pressButton(r, c);
+                    return;
+                }
+            }
         }
-
+        //Couldn't find matching button. This is an error!
+        Log.e(this.getClass().getSimpleName(), "Unknown gridbutton pressed!");
+        return;
     }
 
     /***********************************************************************
@@ -100,43 +114,58 @@ public class GameActivity extends Activity {
 
     /**
      * Used to update the score
-     *
-     * @param totalScore New score that the user got
      */
-    public void showScore(int latestScore, int totalScore) {
-        Log.d("Score", Thread.currentThread().getName() + ":onNewScore");
-        TextView scoreText = (TextView) findViewById(R.id.textScore);
-        TextView scoreEventText = (TextView) findViewById(R.id.textScoreEvent);
+    public void updateScore(int latestScore, int bonusScore, int totalScore) {
+        TextView total = (TextView) findViewById(R.id.totalScore);
+        TextView last = (TextView) findViewById(R.id.lastScore);
+        Button bonus = (Button) findViewById(R.id.claimBonus);
 
-
-        scoreText.setText(String.valueOf(totalScore));
-        scoreEventText.setText(String.format("Du fick %d poäng", latestScore));
+        total.setText(String.valueOf(totalScore));
+        last.setText(String.valueOf(latestScore));
+        bonus.setText(String.valueOf(bonusScore));
     }
 
+    /**
+     * Replaces the button to one in the specified colour.
+     */
+    public void replaceGridButtons(int row, int column, Colour colour ) {
+        if ((0 <= row && row < gridButton.length) &&
+                (0 <= column && column < gridButton[0].length )){
+            //Find button play animation and set new colour.
+            Button button = (Button) findViewById(gridButton[row][column]);
+            button.startAnimation(fadeAnimition);
+            button.setBackgroundColor(colour.getAndroidColor());
+        } else {
+            Log.e(getClass().getSimpleName(), "Invalid argument when replacing button!");
+        }
 
-    /*******************************************************************************
-     *                  Utility private methods
-     *******************************************************************************/
-
+    }
 
     /**
-     * Creates a handler to update the ui
-     *
-     * @return The handler
+     * Highlights the specified grid button.
      */
-    private Handler makeHandler() {
+    public void selectButton(int row, int column) {
+        //Check for valid position and change alpha.
+        if ((0 <= row && row < gridButton.length) &&
+                (0 <= column && column < gridButton[0].length)) {
+            Button button = (Button) findViewById(gridButton[row][column]);
+            button.setAlpha(.7f);
+        } else {
+            Log.e(getClass().getSimpleName(), "Invalid argument when selecting button!");
+        }
+    }
 
-        return new GameHandler(Looper.getMainLooper(), this);
-//        new Handler(Looper.getMainLooper()) {
-//            @Override
-//            public void handleMessage(Message msg) {
-//                Log.d("Score", Thread.currentThread().getName() + ":handleMessage");
-//                Bundle data = msg.getData();
-//                int totalScore = data.getInt("score");
-//                int latestScore = data.getInt("latest_score");
-//                onNewScore(latestScore, totalScore);
-//            }
-//        };
-
+    /**
+     * Deselect the specified button so that it is no longer highlighted.
+     */
+    public void deselectButton(int row, int column) {
+        //Check for valid position and change alpha.
+        if ((0 <= row && row < gridButton.length) &&
+                (0 <= column && column < gridButton[0].length)) {
+            Button button = (Button) findViewById(gridButton[row][column]);
+            button.setAlpha(1);
+        } else {
+            Log.e(getClass().getSimpleName(), "Invalid argument when deselecting button!");
+        }
     }
 }
