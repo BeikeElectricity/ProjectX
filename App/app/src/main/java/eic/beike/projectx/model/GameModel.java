@@ -13,6 +13,7 @@ import eic.beike.projectx.busdata.BusCollector;
 import eic.beike.projectx.busdata.BusData;
 import eic.beike.projectx.busdata.SimpleBusCollector;
 import eic.beike.projectx.util.Colour;
+import eic.beike.projectx.util.Constants;
 
 /**
  * @author Mikael
@@ -179,8 +180,10 @@ public class GameModel extends Thread {
         Message msg = handler.obtainMessage();
         Bundle data = new Bundle();
 
+        data.putString("operation", Constants.UPDATESCORE);
         data.putInt("score", this.score);
         data.putInt("latest_score", latestScore);
+        data.putInt("bonus_score", 0);
 
         msg.setData(data);
         msg.sendToTarget();
