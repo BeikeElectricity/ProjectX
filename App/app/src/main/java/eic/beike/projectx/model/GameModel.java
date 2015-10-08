@@ -11,6 +11,7 @@ import java.util.Random;
 
 import eic.beike.projectx.busdata.BusCollector;
 import eic.beike.projectx.busdata.BusData;
+import eic.beike.projectx.busdata.Sensor;
 import eic.beike.projectx.busdata.SimpleBusCollector;
 import eic.beike.projectx.util.Colour;
 import eic.beike.projectx.util.Constants;
@@ -19,7 +20,7 @@ import eic.beike.projectx.util.Constants;
  * @author Mikael
  * @author Adam
  */
-public class GameModel extends Thread {
+public class GameModel extends Thread implements IGameModel{
 
     public static final long ONE_SECOND_IN_MILLI = 1000;
     public static final long USER_EVENT_EXPIRATION_TIME = 1 * ONE_SECOND_IN_MILLI;
@@ -29,6 +30,9 @@ public class GameModel extends Thread {
     private List<BusData> matchedData;
     private boolean isRunning;
     private Button[][] buttons;
+    private Count count;
+    private int pressedC = -1;
+    private int pressedR = -1;
 
     /**
      * Persistent total score
@@ -36,7 +40,6 @@ public class GameModel extends Thread {
     private int score = 0;
 
     private int bonus = 0;
-
 
     private Handler handler;
 
@@ -50,6 +53,7 @@ public class GameModel extends Thread {
         matchedData = new ArrayList();
         isRunning = true;
         buttons = generateNewButtons();
+        count = new Count();
     }
 
 
@@ -198,6 +202,7 @@ public class GameModel extends Thread {
         Message msg = handler.obtainMessage();
         Bundle data = new Bundle();
 
+        data.putString("operation", Constants.BONUSBUTTON);
         data.putInt("bonus", this.bonus);
 
         msg.setData(data);
@@ -205,45 +210,97 @@ public class GameModel extends Thread {
 
     }
 
-    /**
-     *
-     * @return returns the score fomr all buttons that are "three of a kind"
-     *         it also sets that they are counted so they can be generated again
-     */
-    private int columns() {
-        int count = 0;
-        for(int i = 0; i < buttons.length-1; i++) {
-           if(buttons[i][i].colour == buttons[i][i+1].colour
-                   && buttons[i][i].colour == buttons[i][i+2].colour) {
-
-               count += buttons[i][i].score + buttons[i][i+1].score +  buttons[i][i+2].score;
-               buttons[i][i].counted = true;
-               buttons[i][i+1].counted = true;
-               buttons[i][i+2].counted = true;
-           }
+    private synchronized void triggerDeselectButton(int row,int column) {
+        if(handler == null) {
+            return;
         }
-        return count;
+
+        Message msg = handler.obtainMessage();
+        Bundle data = new Bundle();
+
+        data.putString("operation", Constants.DESELECTBUTTON);
+        data.putInt("row", row);
+        data.putInt("column", column);
+
+        msg.setData(data);
+        msg.sendToTarget();
     }
-    /**
-     *
-     * @return returns the score fomr all buttons that are "three of a kind"
-     *         it also sets that they are counted so they can be generated again
-     */
-    private int rows() {
-        int count = 0;
-        for (int i = 0; i < buttons.length - 1; i++) {
-            if (buttons[i][i].colour == buttons[i + 1][i].colour
-                    && buttons[i][i].colour == buttons[i + 2][i].colour) {
-                count += buttons[i][i].score + buttons[i + 1][i].score + buttons[i + 2][i].score;
-                buttons[i][i].counted = true;
-                buttons[i + 1][i].counted = true;
-                buttons[i + 2][i].counted = true;
+
+    private synchronized void triggerSelectButton(int row, int column) {
+        if(handler == null) {
+            return;
+        }
+
+        Message msg = handler.obtainMessage();
+        Bundle data = new Bundle();
+
+        data.putString("operation", Constants.SELECTBUTTON);
+        data.putInt("row", row);
+        data.putInt("column", column);
+
+        msg.setData(data);
+        msg.sendToTarget();
+    }
+
+    private synchronized void triggerNewBoard(int row, int column) {
+        if(handler == null) {
+            return;
+        }
+
+        Message msg = handler.obtainMessage();
+        Bundle data = new Bundle();
+
+        data.putString("operation", Constants.UPDATEBOARD);
+        data.putInt("row1", pressedR);
+        data.putInt("row2", row);
+        data.putInt("column1", pressedC);
+        data.putInt("column2", column);
+
+        msg.setData(data);
+        msg.sendToTarget();
+    }
+
+
+
+    @Override
+    public void claimBonus() {
+        Long currentTime = System.currentTimeMillis();
+        BusData data = busCollector.getBusData(currentTime, Sensor.Stop_Pressed);
+        triggerNewScore(count.count(currentTime, data.timestamp));
+    }
+
+    @Override
+    public void pressButton(int row, int column) {
+        if(pressedR < 0 && pressedC < 0) {
+            pressedR = row;
+            pressedC = column;
+            triggerSelectButton(row,column);
+        } else if(isSame(row, column)) {
+            triggerDeselectButton(row, column);
+            pressedR = -1;
+            pressedC = -1;
+        } else if (isNeighbour(row, column)) {
+            triggerNewBoard(row, column);
+            swapButtons(row, column);
+           int bonus = count.sum(buttons);
+            if(bonus > 0) {
+                triggerNewBonus(bonus);
             }
+
         }
-        return count;
     }
 
-    private void generateButtons() {
+    private boolean isSame(int row, int column) {
+       return pressedR == row && pressedC == column;
+    }
+
+    private void swapButtons(int row, int column) {
+        Button temp = buttons[pressedR][pressedC];
+        buttons[pressedR][pressedC] = buttons[row][column];
+        buttons[row][column] = temp;
+    }
+
+    public void generateButtons() {
         Random random = new Random();
         for (int i = 0; i < buttons.length-1; i++) {
             for (int j = 0; j < buttons.length-1; j++) {
@@ -264,4 +321,16 @@ public class GameModel extends Thread {
         }
         return tempList;
     }
+
+     private boolean isNeighbour(int row, int column) {
+
+         if(row == pressedR && (column+1 == pressedC || column-1 == pressedC)) {
+            return true;
+         } else if(column == pressedC && (row+1 == pressedR || row-1 == pressedR)) {
+             return true;
+         } else {
+             return false;
+         }
+     }
+
 }

@@ -42,7 +42,11 @@ public class GameHandler extends Handler {
         } else if (operation.equals(Constants.UPDATEBOARD)) {
             updateBoard(data);
 
-        } else {
+        } else if (operation.equals(Constants.BONUSBUTTON)) {
+            updateBonus(data);
+        }
+
+        else {
             if (operation != null) {
                 Log.d(getClass().getSimpleName(), "Tried to perform unknown operation!");
 
@@ -53,6 +57,11 @@ public class GameHandler extends Handler {
         }
     }
 
+    private void updateBonus(Bundle data) {
+        int bonus = data.getInt("bonus");
+
+        game.updateBonus(bonus);
+    }
 
     private void updateScore(Bundle data){
         //TODO: Add sanity checks!
@@ -67,10 +76,17 @@ public class GameHandler extends Handler {
     }
 
     private void deselectButton(Bundle data){
-        //TODO: Implement this stub!
+        int row = data.getInt("row");
+        int column = data.getInt("column");
+        game.deselectButton(row, column);
     }
 
     private void updateBoard(Bundle data){
-        //TODO: Implement this stub!
+        int row1 = data.getInt("row1");
+        int row2 = data.getInt("row2");
+        int column1 = data.getInt("column1");
+        int column2 = data.getInt("column2");
+
+        game.swopButtons(row1, ro2, column1, column2);
     }
 }

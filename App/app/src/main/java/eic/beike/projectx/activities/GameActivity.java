@@ -1,6 +1,8 @@
 package eic.beike.projectx.activities;
 
 import android.app.Activity;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
@@ -44,7 +46,8 @@ public class GameActivity extends Activity {
         Log.d("Score", Thread.currentThread().getName() + ":onCreate");
 
         //TODO: Decide how to create.
-       // gameModel = new GameModel().setHandler(new GameHandler(Looper.getMainLooper(), this));
+        gameModel = new GameModel();
+        gameModel.setHandler(new GameHandler(Looper.getMainLooper(), this));
         setContentView(R.layout.activity_game);
 
         //Get the ids of the grid buttons
@@ -125,6 +128,12 @@ public class GameActivity extends Activity {
         bonus.setText(String.valueOf(bonusScore));
     }
 
+    public void updateBonus(int bonusScore) {
+        Button bonus = (Button) findViewById(R.id.claimBonus);
+
+        bonus.setText(String.valueOf(bonusScore));
+    }
+
     /**
      * Update the whole button board.
      */
@@ -144,6 +153,20 @@ public class GameActivity extends Activity {
                 }
             }
         }
+    }
+
+    public void swopButtons(int row1, int row2, int column1, int column2) {
+        Button button1 = (Button) findViewById(gridButton[row1][column1]);
+        Button button2 = (Button) findViewById(gridButton[row2][column2]);
+
+        ColorDrawable button1Background = (ColorDrawable) button1.getBackground();
+        ColorDrawable button2Background = (ColorDrawable) button2.getBackground();
+
+        button1.startAnimation(fadeAnimition);
+        button1.setBackgroundColor(button2Background.getColor());
+
+        button2.startAnimation(fadeAnimition);
+        button2.setBackgroundColor(button1Background.getColor());
     }
 
     /**
