@@ -103,7 +103,7 @@ public class GameActivity extends Activity {
             }
         }
         //Couldn't find matching button. This is an error!
-        Log.e(this.getClass().getSimpleName(), "Unknown gridbutton pressed!");
+        Log.e(this.getClass().getSimpleName(), "Unknown grid button pressed!");
         return;
     }
 
@@ -126,19 +126,24 @@ public class GameActivity extends Activity {
     }
 
     /**
-     * Replaces the button to one in the specified colour.
+     * Update the whole button board.
      */
-    public void replaceGridButtons(int row, int column, Colour colour ) {
-        if ((0 <= row && row < gridButton.length) &&
-                (0 <= column && column < gridButton[0].length )){
-            //Find button play animation and set new colour.
-            Button button = (Button) findViewById(gridButton[row][column]);
-            button.startAnimation(fadeAnimition);
-            button.setBackgroundColor(colour.getAndroidColor());
-        } else {
-            Log.e(getClass().getSimpleName(), "Invalid argument when replacing button!");
+    public void updateGridButtons(Colour[][] colour ) {
+        //Walk through the input
+        for(int r = 0 ; r < colour.length ; r++) {
+            for (int c = 0; c < colour[r].length; c++) {
+                if ((r < gridButton.length) && (c < gridButton[r].length)) {
+                    //Input is valid, update the button.
+                    Button button = (Button) findViewById(gridButton[r][c]);
+                    //Do silly blink animation before colour change.
+                    button.startAnimation(fadeAnimition);
+                    button.setBackgroundColor(colour[r][c].getAndroidColor());
+                } else {
+                    //Input was not in the correct form, log error.
+                    Log.e(getClass().getSimpleName(), "Invalid argument when replacing buttons!");
+                }
+            }
         }
-
     }
 
     /**
