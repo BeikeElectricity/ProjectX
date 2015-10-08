@@ -11,4 +11,5 @@ package eic.beike.projectx.util;
 public class Constants {
     public static final String BASE_URL = new String("https://ece01.ericsson.net:4443/ecity");
     public static final String AUTHORIZATION = new String("Z3JwMjU6cnZyMkMqT25kNw==");
+    public static final long ONE_SECOND_IN_MILLI = 1000;
 }
