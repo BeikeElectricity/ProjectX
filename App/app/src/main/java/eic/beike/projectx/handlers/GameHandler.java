@@ -30,27 +30,26 @@ public class GameHandler extends Handler {
 
         //See what operation to perform.
         String operation = data.getString("operation");
-        switch (operation) {
-            case Constants.UPDATESCORE:
-                updateScore(data);
-                break;
-            case Constants.SELECTBUTTON:
-                selectButton(data);
-                break;
-            case Constants.DESELECTBUTTON:
-                deselectButton(data);
-                break;
-            case Constants.UPDATEBOARD:
-                updateBoard(data);
-                break;
-            default:
-                if(operation != null) {
-                    Log.d(getClass().getSimpleName(), "Tried to perform unknown operation!");
-                    break;
-                } else {
-                    Log.d(getClass().getSimpleName(), "Malformed operation message!");
-                    break;
-                }
+        if (operation.equals(Constants.UPDATESCORE)) {
+            updateScore(data);
+
+        } else if (operation.equals(Constants.SELECTBUTTON)) {
+            selectButton(data);
+
+        } else if (operation.equals(Constants.DESELECTBUTTON)) {
+            deselectButton(data);
+
+        } else if (operation.equals(Constants.UPDATEBOARD)) {
+            updateBoard(data);
+
+        } else {
+            if (operation != null) {
+                Log.d(getClass().getSimpleName(), "Tried to perform unknown operation!");
+
+            } else {
+                Log.d(getClass().getSimpleName(), "Malformed operation message!");
+
+            }
         }
     }
 
