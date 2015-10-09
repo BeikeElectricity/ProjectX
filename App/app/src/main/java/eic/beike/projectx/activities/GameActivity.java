@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import eic.beike.projectx.R;
 import eic.beike.projectx.busdata.Sensor;
+import eic.beike.projectx.handlers.GameHandler;
 import eic.beike.projectx.model.UserEvent;
 import eic.beike.projectx.model.GameModel;
 
@@ -68,28 +69,29 @@ public class GameActivity extends Activity {
      */
     private Handler makeHandler() {
 
-        return new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                Log.d("Score", Thread.currentThread().getName() + ":handleMessage");
-                Bundle data = msg.getData();
-                int totalScore = data.getInt("score");
-                int latestScore = data.getInt("latest_score");
-                onNewScore(latestScore, totalScore);
-            }
-        };
+        return new GameHandler(Looper.getMainLooper(), this);
+//        new Handler(Looper.getMainLooper()) {
+//            @Override
+//            public void handleMessage(Message msg) {
+//                Log.d("Score", Thread.currentThread().getName() + ":handleMessage");
+//                Bundle data = msg.getData();
+//                int totalScore = data.getInt("score");
+//                int latestScore = data.getInt("latest_score");
+//                onNewScore(latestScore, totalScore);
+//            }
+//        };
 
     }
     /**
      * Used to update the score
      * @param totalScore New score that the user got
      */
-    public void onNewScore(int latestScore, int totalScore) {
+    public void showScore(int latestScore, int totalScore) {
         Log.d("Score", Thread.currentThread().getName() + ":onNewScore");
         TextView scoreText = (TextView) findViewById(R.id.textScore);
         TextView scoreEventText = (TextView) findViewById(R.id.textScoreEvent);
 
         scoreText.setText(String.valueOf(totalScore));
-        scoreEventText.setText(String.format("Du fick %d poäng",latestScore));
+        scoreEventText.setText(String.format("Du fick %d poäng", latestScore));
     }
 }
