@@ -17,4 +17,19 @@ public class Button {
         this.counted = false;
     }
 
+    @Override
+    public boolean equals(Object o) {
+
+        if(o instanceof Button) {
+            Button other = (Button) o;
+            if (this.colour == other.colour) {
+                if(this.score == other.score) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
 }

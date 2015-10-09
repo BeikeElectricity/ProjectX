@@ -85,7 +85,6 @@ public class GameModel extends Thread implements IGameModel{
                 if (isToOld(e)) {
                     removeUserEvent(e);
                     //TODO: Calculate real score
-                    triggerNewScore(-10);
                 }
                 else{
                     BusData d = findMatch(e);
@@ -94,7 +93,6 @@ public class GameModel extends Thread implements IGameModel{
                         removeUserEvent(e);
                         rememberMatchedData(d);
                         //TODO: Calculate real score
-                        triggerNewScore(10);
                     }
                 }
             }
@@ -242,7 +240,25 @@ public class GameModel extends Thread implements IGameModel{
         msg.sendToTarget();
     }
 
-    private synchronized void triggerNewBoard(int row, int column) {
+    private synchronized void triggerSwopButtons(int row, int column) {
+        if(handler == null) {
+            return;
+        }
+
+        Message msg = handler.obtainMessage();
+        Bundle data = new Bundle();
+
+        data.putString("operation", Constants.SWOPBUTTON);
+        data.putInt("row1", pressedR);
+        data.putInt("row2", row);
+        data.putInt("column1", pressedC);
+        data.putInt("column2", column);
+
+        msg.setData(data);
+        msg.sendToTarget();
+    }
+
+    private synchronized void triggerNewButton(int row, int column, int androidColor) {
         if(handler == null) {
             return;
         }
@@ -251,10 +267,8 @@ public class GameModel extends Thread implements IGameModel{
         Bundle data = new Bundle();
 
         data.putString("operation", Constants.UPDATEBOARD);
-        data.putInt("row1", pressedR);
-        data.putInt("row2", row);
-        data.putInt("column1", pressedC);
-        data.putInt("column2", column);
+        data.putInt("row", row);
+        data.putInt("column", column);
 
         msg.setData(data);
         msg.sendToTarget();
@@ -280,11 +294,14 @@ public class GameModel extends Thread implements IGameModel{
             pressedR = -1;
             pressedC = -1;
         } else if (isNeighbour(row, column)) {
-            triggerNewBoard(row, column);
+            triggerSwopButtons(row, column);
             swapButtons(row, column);
+            pressedR = -1;
+            pressedC = -1;
            int bonus = count.sum(buttons);
             if(bonus > 0) {
                 triggerNewBonus(bonus);
+                generateButtons();
             }
 
         }
@@ -306,6 +323,7 @@ public class GameModel extends Thread implements IGameModel{
             for (int j = 0; j < buttons.length-1; j++) {
                 if (buttons[i][j].counted) {
                     buttons[i][j] = new Button(Colour.colour(random.nextInt(3)), random.nextInt(100));
+                    triggerNewButton(i, j, buttons[i][j].colour.getAndroidColor());
                 }
             }
         }

@@ -155,6 +155,17 @@ public class GameActivity extends Activity {
         }
     }
 
+    public void updateButton(int row, int column, int colour) {
+        if(row < gridButton.length && column < gridButton[row].length) {
+            Button button = (Button) findViewById(gridButton[row][column]);
+            button.startAnimation(fadeAnimition);
+            button.setBackgroundColor(colour);
+        } else {
+            //Input was not in the correct form, log error.
+            Log.e(getClass().getSimpleName(), "Invalid argument when replacing buttons!");
+        }
+    }
+
     public void swopButtons(int row1, int row2, int column1, int column2) {
         Button button1 = (Button) findViewById(gridButton[row1][column1]);
         Button button2 = (Button) findViewById(gridButton[row2][column2]);

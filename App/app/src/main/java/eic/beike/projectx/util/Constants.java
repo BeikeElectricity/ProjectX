@@ -24,4 +24,5 @@ public class Constants {
     public static final String SELECTBUTTON = "SELECTBUTTON";
     public static final String DESELECTBUTTON = "DESELECTBUTTON";
     public static final String BONUSBUTTON = "BONUSBUTTON";
+    public static final String SWOPBUTTON = "SWOPBUTTON";
 }

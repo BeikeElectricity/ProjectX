@@ -44,6 +44,8 @@ public class GameHandler extends Handler {
 
         } else if (operation.equals(Constants.BONUSBUTTON)) {
             updateBonus(data);
+        } else if (operation.equals(Constants.SWOPBUTTON)) {
+            swopButton(data);
         }
 
         else {
@@ -55,6 +57,15 @@ public class GameHandler extends Handler {
 
             }
         }
+    }
+
+    private void swopButton(Bundle data) {
+        int row1 = data.getInt("row1");
+        int row2 = data.getInt("row2");
+        int column1 = data.getInt("column1");
+        int column2 = data.getInt("column2");
+
+        game.swopButtons(row1, row2, column1, column2);
     }
 
     private void updateBonus(Bundle data) {
@@ -72,7 +83,10 @@ public class GameHandler extends Handler {
     }
 
     private void selectButton(Bundle data){
-        //TODO: Implement this stub!
+        int row = data.getInt("row");
+        int column = data.getInt("column");
+
+        game.selectButton(row, column);
     }
 
     private void deselectButton(Bundle data){
@@ -82,11 +96,10 @@ public class GameHandler extends Handler {
     }
 
     private void updateBoard(Bundle data){
-        int row1 = data.getInt("row1");
-        int row2 = data.getInt("row2");
-        int column1 = data.getInt("column1");
-        int column2 = data.getInt("column2");
+        int row = data.getInt("row");
+        int column = data.getInt("column");
+        int colour = data.getInt("colour");
 
-        game.swopButtons(row1, ro2, column1, column2);
+        game.updateButton(row, column, colour);
     }
 }
