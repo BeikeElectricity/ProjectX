@@ -1,4 +1,4 @@
-package eic.beike.projectx.busdata;
+package eic.beike.projectx.network.busdata;
 
 /**
  * The name of the resources from the bus coupled with their sensor.

@@ -9,9 +9,13 @@ package eic.beike.projectx.util;
  * Created by alex on 9/22/15.
  */
 public class Constants {
+<<<<<<< HEAD
     /**
      * Network constants.
      */
+=======
+    public static final String SERVER_URL = new String("http://ec2-52-28-202-131.eu-central-1.compute.amazonaws.com/");
+>>>>>>> d888b9646419f1b3bf3a08e59ffc74c38123f02c
     public static final String BASE_URL = new String("https://ece01.ericsson.net:4443/ecity");
     public static final String AUTHORIZATION = new String(!!!!!!!!!!!);
 

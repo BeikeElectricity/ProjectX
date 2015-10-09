@@ -1,0 +1,24 @@
+INSTRUCTIONS
+
+1.
+
+The server is intended to run on the LAMP stack, 
+so make shure you have that installed on your system.
+For example using ubuntu run 
+ 	
+	sudo apt-get update
+ 	sudo apt-get install apache2 mysql-server php5 php5-mysql
+
+2.
+
+Run the setup.sh script in the database folder, this should
+create a database ProjectX with the correct tables and a user 
+beike with password beike which is granted all to said database. 
+
+3.
+
+Put the php scripts from the webservice directory in your
+document root and restart the apache2 service.
+
+	sudo cp webservice/* /var/www/html
+	sudo service apache2 restart

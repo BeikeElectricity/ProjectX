@@ -37,9 +37,11 @@
             <Button
                 android:layout_width="266dp"
                 android:layout_height="wrap_content"
-                android:text="New Button"
+                android:text="@string/menu_button_highscore"
                 android:id="@+id/button3"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:clickable="true"
+                android:onClick="startHighscore" />
 
             <Button
                 android:layout_width="266dp"
