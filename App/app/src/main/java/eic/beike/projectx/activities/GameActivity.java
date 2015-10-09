@@ -1,7 +1,6 @@
 package eic.beike.projectx.activities;
 
 import android.app.Activity;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Looper;
@@ -12,13 +11,13 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import eic.beike.projectx.R;
 import eic.beike.projectx.handlers.GameHandler;
 import eic.beike.projectx.model.GameModel;
 import eic.beike.projectx.model.IGameModel;
-import eic.beike.projectx.util.Colour;
 
 /**
  * @author Mikael
@@ -32,7 +31,7 @@ public class GameActivity extends Activity {
      */
     private IGameModel gameModel;
     private Animation bumpButton;
-    private Animation fadeAnimition;
+    private Animation fadeAnimation;
     private int gridButton[][] = new int[3][3];
 
 
@@ -69,8 +68,12 @@ public class GameActivity extends Activity {
         bumpButton.setInterpolator(new DecelerateInterpolator());
 
         //Initiate fade animation.
-        fadeAnimition = new AlphaAnimation(1,0);
-        fadeAnimition.setDuration(250);
+        fadeAnimation = new AlphaAnimation(1,0);
+        fadeAnimation.setDuration(250);
+        bumpButton.setRepeatMode(Animation.REVERSE);
+        bumpButton.setRepeatCount(1);
+        bumpButton.setInterpolator(new DecelerateInterpolator());
+
     }
 
     @Override
@@ -97,8 +100,8 @@ public class GameActivity extends Activity {
      */
     public void onGridButtonClick(View view) {
         //Loop through the grid buttons to see which one was clicked
-        for (int r = 0; r <= gridButton.length; r++) {
-            for (int c = 0; c <= gridButton[r].length; c++) {
+        for (int r = 0; r < gridButton.length; r++) {
+            for (int c = 0; c < gridButton[r].length; c++) {
                 if (view.getId() == gridButton[r][c]) {
                     gameModel.pressButton(r, c);
                     return;
@@ -134,32 +137,13 @@ public class GameActivity extends Activity {
         bonus.setText(String.valueOf(bonusScore));
     }
 
-    /**
-     * Update the whole button board.
-     */
-    public void updateGridButtons(Colour[][] colour ) {
-        //Walk through the input
-        for(int r = 0 ; r < colour.length ; r++) {
-            for (int c = 0; c < colour[r].length; c++) {
-                if ((r < gridButton.length) && (c < gridButton[r].length)) {
-                    //Input is valid, update the button.
-                    Button button = (Button) findViewById(gridButton[r][c]);
-                    //Do silly blink animation before colour change.
-                    button.startAnimation(fadeAnimition);
-                    button.setBackgroundColor(colour[r][c].getAndroidColor());
-                } else {
-                    //Input was not in the correct form, log error.
-                    Log.e(getClass().getSimpleName(), "Invalid argument when replacing buttons!");
-                }
-            }
-        }
-    }
 
     public void updateButton(int row, int column, int colour) {
         if(row < gridButton.length && column < gridButton[row].length) {
-            Button button = (Button) findViewById(gridButton[row][column]);
-            button.startAnimation(fadeAnimition);
-            button.setBackgroundColor(colour);
+            ImageButton button = (ImageButton) findViewById(gridButton[row][column]);
+            button.startAnimation(fadeAnimation);
+
+            button.setImageResource(colour);
         } else {
             //Input was not in the correct form, log error.
             Log.e(getClass().getSimpleName(), "Invalid argument when replacing buttons!");
@@ -167,17 +151,17 @@ public class GameActivity extends Activity {
     }
 
     public void swopButtons(int row1, int row2, int column1, int column2) {
-        Button button1 = (Button) findViewById(gridButton[row1][column1]);
-        Button button2 = (Button) findViewById(gridButton[row2][column2]);
+        ImageButton button1 = (ImageButton) findViewById(gridButton[row1][column1]);
+        ImageButton button2 = (ImageButton) findViewById(gridButton[row2][column2]);
 
-        ColorDrawable button1Background = (ColorDrawable) button1.getBackground();
-        ColorDrawable button2Background = (ColorDrawable) button2.getBackground();
+        Drawable color1 = (Drawable) button1.getDrawable();
+        Drawable color2= (Drawable) button2.getDrawable();
 
-        button1.startAnimation(fadeAnimition);
-        button1.setBackgroundColor(button2Background.getColor());
+        button1.startAnimation(fadeAnimation);
+        button1.setImageDrawable(color2);
 
-        button2.startAnimation(fadeAnimition);
-        button2.setBackgroundColor(button1Background.getColor());
+        button2.startAnimation(fadeAnimation);
+        button2.setImageDrawable(color1);
     }
 
     /**
@@ -187,8 +171,9 @@ public class GameActivity extends Activity {
         //Check for valid position and change alpha.
         if ((0 <= row && row < gridButton.length) &&
                 (0 <= column && column < gridButton[0].length)) {
-            Button button = (Button) findViewById(gridButton[row][column]);
+            ImageButton button = (ImageButton) findViewById(gridButton[row][column]);
             button.setAlpha(.7f);
+            button.setSelected(true);
         } else {
             Log.e(getClass().getSimpleName(), "Invalid argument when selecting button!");
         }
@@ -201,8 +186,9 @@ public class GameActivity extends Activity {
         //Check for valid position and change alpha.
         if ((0 <= row && row < gridButton.length) &&
                 (0 <= column && column < gridButton[0].length)) {
-            Button button = (Button) findViewById(gridButton[row][column]);
-            button.setAlpha(1);
+            ImageButton button = (ImageButton) findViewById(gridButton[row][column]);
+            button.setAlpha(1f);
+            button.setSelected(false);
         } else {
             Log.e(getClass().getSimpleName(), "Invalid argument when deselecting button!");
         }
