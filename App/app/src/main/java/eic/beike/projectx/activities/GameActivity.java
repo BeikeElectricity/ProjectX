@@ -91,7 +91,6 @@ public class GameActivity extends Activity {
         TextView scoreText = (TextView) findViewById(R.id.textScore);
         TextView scoreEventText = (TextView) findViewById(R.id.textScoreEvent);
 
-
         scoreText.setText(String.valueOf(totalScore));
         scoreEventText.setText(String.format("Du fick %d poäng", latestScore));
     }

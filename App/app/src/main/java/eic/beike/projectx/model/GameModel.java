@@ -11,6 +11,7 @@ import java.util.List;
 import eic.beike.projectx.busdata.BusCollector;
 import eic.beike.projectx.busdata.BusData;
 import eic.beike.projectx.busdata.SimpleBusCollector;
+import eic.beike.projectx.util.Constants;
 
 /**
  * @author Mikael
@@ -18,8 +19,7 @@ import eic.beike.projectx.busdata.SimpleBusCollector;
  */
 public class GameModel extends Thread {
 
-    public static final long ONE_SECOND_IN_MILLI = 1000;
-    public static final long USER_EVENT_EXPIRATION_TIME = 1 * ONE_SECOND_IN_MILLI;
+    public static final long USER_EVENT_EXPIRATION_TIME = 1 * Constants.ONE_SECOND_IN_MILLI;
 
     private BusCollector busCollector;
     private List<UserEvent> userEvents;
@@ -38,7 +38,7 @@ public class GameModel extends Thread {
     public GameModel(){
         super();
 
-        busCollector = new SimpleBusCollector();
+        busCollector = SimpleBusCollector.getInstance();
         busCollector.chooseBus(BusCollector.TEST_BUSS_VIN_NUMBER);
         userEvents = new ArrayList();
         matchedData = new ArrayList();
@@ -87,7 +87,7 @@ public class GameModel extends Thread {
                     }
                 }
             }
-            sleepThread(ONE_SECOND_IN_MILLI);
+            sleepThread(Constants.ONE_SECOND_IN_MILLI);
         }
     }
 
