@@ -1,4 +1,4 @@
-package eic.beike.projectx.busdata;
+package eic.beike.projectx.network.busdata;
 
 /**
  * Small data class used by gson, comparation on timestamp

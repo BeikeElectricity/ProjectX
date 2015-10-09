@@ -1,4 +1,4 @@
-package eic.beike.projectx.busdata;
+package eic.beike.projectx.network.busdata;
 
 import android.content.Context;
 import android.location.Location;
@@ -6,6 +6,7 @@ import android.location.LocationManager;
 import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import eic.beike.projectx.network.RetrieveReader;
 import eic.beike.projectx.util.Constants;
 import org.apache.http.HttpStatus;
 
@@ -46,12 +47,14 @@ public class SimpleBusCollector implements BusCollector {
     private SimpleBusCollector(){
     }
 
+
     /**
      * To get access to this API (the singleton).
      */
     public static BusCollector getInstance(){
         return instance;
     }
+
 
     @Override
     public BusData getBusData(long time, Sensor sensor) {
@@ -102,6 +105,7 @@ public class SimpleBusCollector implements BusCollector {
         return Constants.BASE_URL + dgw + sensorSpec + timeSpan;
     }
 
+
     private List<ResponseEntry> getResponse(String url){
         List<ResponseEntry> response = null;
         try {
@@ -119,6 +123,7 @@ public class SimpleBusCollector implements BusCollector {
             return response;
         }
     }
+
 
     /**
      * Make a http request and return a reader for the response.
@@ -150,6 +155,7 @@ public class SimpleBusCollector implements BusCollector {
         return in;
     }
 
+
     /**
      * @param reader buffered reader for gson.
      * @return a list of sensor data sorted by timestamp. This is NULL if
@@ -162,6 +168,7 @@ public class SimpleBusCollector implements BusCollector {
         List<ResponseEntry> response = (ArrayList<ResponseEntry>) gson.fromJson(reader, listType);
         return response;
     }
+
 
     /**
      * Determine which bus the player is on.
@@ -185,6 +192,7 @@ public class SimpleBusCollector implements BusCollector {
         }
     }
 
+
     /**
      * Removes all ResponseEntries with a lower timestamp that have the same id.
      * @param response list of ResponseEntries to filter
@@ -202,6 +210,7 @@ public class SimpleBusCollector implements BusCollector {
         return new ArrayList<ResponseEntry>(latestData.values());
     }
 
+
     private ResponseEntry getBestLocationMatch(List<ResponseEntry> response, Location location){
         double shortestDistance = Double.MAX_VALUE;
         ResponseEntry bestMatch = null;
@@ -217,9 +226,11 @@ public class SimpleBusCollector implements BusCollector {
         return bestMatch;
     }
 
+
     private boolean busIsCloseEnough(ResponseEntry entry, Location location){
         return getLocationDifference(entry, location) <= MAX_DISTANCE_ALLOWED;
     }
+
 
     private double getLocationDifference(ResponseEntry entry, Location location){
         try {
@@ -235,17 +246,20 @@ public class SimpleBusCollector implements BusCollector {
         }
     }
 
+
     private double parseNorthCoordinate(String s){
         int stopIndex = s.indexOf(",N");
         int startIndex = s.indexOf("A,") + 2;
         return Double.parseDouble(s.substring(startIndex, stopIndex));
     }
 
+
     private double parseEastCoordinate(String s){
         int stopIndex = s.indexOf(",E");
         int startIndex = s.indexOf("N,") + 2;
         return Double.parseDouble(s.substring(startIndex, stopIndex));
     }
+
 
     /**
      * Choose which bus to retrieve data from.

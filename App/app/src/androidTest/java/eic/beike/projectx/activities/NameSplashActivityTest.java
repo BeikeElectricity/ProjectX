@@ -1,4 +1,4 @@
-package eic.beike.projectx;
+package eic.beike.projectx.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Instrumentation;
@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import eic.beike.projectx.R;
 import eic.beike.projectx.activities.MainActivity;
 import eic.beike.projectx.activities.MenuActivity;
 import eic.beike.projectx.activities.NameSplashActivity;
