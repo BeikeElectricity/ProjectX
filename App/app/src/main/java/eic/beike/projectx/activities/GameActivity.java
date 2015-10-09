@@ -45,8 +45,7 @@ public class GameActivity extends Activity {
         Log.d("Score", Thread.currentThread().getName() + ":onCreate");
 
         //TODO: Decide how to create.
-        gameModel = new GameModel();
-        gameModel.setHandler(new GameHandler(Looper.getMainLooper(), this));
+        gameModel = new GameModel(new GameHandler(Looper.getMainLooper(), this));
         setContentView(R.layout.activity_game);
 
         //Get the ids of the grid buttons

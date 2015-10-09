@@ -13,8 +13,6 @@ public interface IGameModel {
      */
     void claimBonus();
 
-    void setHandler(Handler h);
-
     /**
      * Press the grid button at the specified position. First row is 0 and first column is 0.
      */

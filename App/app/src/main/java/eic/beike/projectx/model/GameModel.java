@@ -22,13 +22,7 @@ import eic.beike.projectx.util.Constants;
  */
 public class GameModel extends Thread implements IGameModel{
 
-    public static final long ONE_SECOND_IN_MILLI = 1000;
-    public static final long USER_EVENT_EXPIRATION_TIME = 1 * ONE_SECOND_IN_MILLI;
-
     private BusCollector busCollector;
-    private List<UserEvent> userEvents;
-    private List<BusData> matchedData;
-    private boolean isRunning;
     private Button[][] buttons;
     private Count count;
     private int pressedC = -1;
@@ -44,136 +38,21 @@ public class GameModel extends Thread implements IGameModel{
     private Handler handler;
 
 
-    public GameModel(){
+    public GameModel(Handler handler){
         super();
 
         busCollector = new SimpleBusCollector();
         busCollector.chooseBus(BusCollector.TEST_BUSS_VIN_NUMBER);
-        userEvents = new ArrayList();
-        matchedData = new ArrayList();
-        isRunning = true;
+        this.handler = handler;
         buttons = generateNewButtons();
         count = new Count();
-    }
-
-
-    /**
-     * Lets the thread die a natural way.(not killing it in the middle of a loop)
-     */
-    public void stopLoop(){
-        isRunning = false;
-    }
-
-    /**
-     * Called by the buttons from GameActivity
-     * @param e Sent from the GameActivity when a button is clicked, to be processed in the thread.
-     */
-    public void onClick(UserEvent e){
-        synchronized (userEvents){
-            userEvents.add(e);
-        }
-    }
-
-    /**
-     * The GameModels main loop which takes user events and gives score based upon them.
-     */
-    @Override
-    public void run() {
-        while (isRunning) {
-            List<UserEvent> events = getUserEvents();
-            for(UserEvent e : events) {
-                if (isToOld(e)) {
-                    removeUserEvent(e);
-                    //TODO: Calculate real score
-                }
-                else{
-                    BusData d = findMatch(e);
-                    //TODO: fix match to the counted event, it seems the bus api is giving back different timestamps from the counted event.
-                    if (isValidMatch(d, e)) {
-                        removeUserEvent(e);
-                        rememberMatchedData(d);
-                        //TODO: Calculate real score
-                    }
-                }
-            }
-            sleepThread(ONE_SECOND_IN_MILLI);
-        }
-    }
-
-    private List<UserEvent> getUserEvents(){
-        synchronized (userEvents) {
-            return new ArrayList(userEvents);
-        }
-    }
-
-    private void removeUserEvent(UserEvent e){
-        synchronized (userEvents) {
-            userEvents.remove(e);
-        }
-    }
-
-    private boolean isToOld(UserEvent e){
-        return System.currentTimeMillis() > e.timeStamp + USER_EVENT_EXPIRATION_TIME;
-    }
-
-    private boolean isToOld(BusData d){
-        return System.currentTimeMillis() > d.getTimestamp() + USER_EVENT_EXPIRATION_TIME;
-    }
-
-    private boolean isValidMatch(BusData d, UserEvent e){
-        return d.getSensor() == e.sensor && !isAlreadyMatched(d);
-    }
-
-    /**
-     * Checks if the busData already have bin matched to an UserEvent,
-     * and also frees up memory by removing no longer relevant already matched data.
-     * @param busData to be checked if it the counted BusData that has bin matched before
-     */
-    private boolean isAlreadyMatched(BusData busData){
-        List<BusData> copy = new ArrayList(matchedData);
-        boolean result = false;
-        for(BusData d : copy){
-            if(isToOld(d)){
-                matchedData.remove(d);
-            }
-            if(busData.getSensor() == d.getSensor() && busData.getTimestamp() == busData.getTimestamp()){
-                result = true;
-            }
-        }
-        return result;
-    }
-
-    // To keep the abstraction on the counted level in run(). Might be overdoing the abstraction,
-    // but it states the purpose of the list matchedData.
-    private void rememberMatchedData(BusData d){
-        matchedData.add(d);
-    }
-
-    private BusData findMatch(UserEvent e){
-        return busCollector.getBusData(e.timeStamp, e.sensor);
-    }
-
-    private void sleepThread(long time){
-        try {
-            Thread.sleep(time);
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    /**
-     * Add a handler that handles
-     * @param h The handler to be added
-     */
-    public synchronized void setHandler(Handler h) {
-        handler = h;
     }
 
     /**
      * Used to notify the handlers about a new score
      * @param latestScore The latest score the player received
      */
-    private synchronized void triggerNewScore(int latestScore) {
+    protected synchronized void triggerNewScore(int latestScore) {
         if (handler == null) {
             return;
         }
@@ -269,6 +148,7 @@ public class GameModel extends Thread implements IGameModel{
         data.putString("operation", Constants.UPDATEBOARD);
         data.putInt("row", row);
         data.putInt("column", column);
+        data.putInt("colour", androidColor);
 
         msg.setData(data);
         msg.sendToTarget();
@@ -280,7 +160,7 @@ public class GameModel extends Thread implements IGameModel{
     public void claimBonus() {
         Long currentTime = System.currentTimeMillis();
         BusData data = busCollector.getBusData(currentTime, Sensor.Stop_Pressed);
-        triggerNewScore(count.count(currentTime, data.timestamp));
+        count.count(currentTime, data.timestamp);
     }
 
     @Override
@@ -294,16 +174,19 @@ public class GameModel extends Thread implements IGameModel{
             pressedR = -1;
             pressedC = -1;
         } else if (isNeighbour(row, column)) {
+            //Valid swap, swap and deselect and remember to update ui
             triggerSwopButtons(row, column);
             swapButtons(row, column);
+            triggerDeselectButton(pressedR, pressedC);
             pressedR = -1;
             pressedC = -1;
-           int bonus = count.sum(buttons);
-            if(bonus > 0) {
-                triggerNewBonus(bonus);
-                generateButtons();
-            }
-
+            count.sum(buttons);
+        } else {
+            // Clicked button far away, select it and deselect prev selected.
+            triggerDeselectButton(pressedR,pressedC);
+            pressedR = row;
+            pressedC = column;
+            triggerSelectButton(pressedR, pressedC);
         }
     }
 
@@ -335,6 +218,7 @@ public class GameModel extends Thread implements IGameModel{
         for (int i = 0; i < tempList.length; i++) {
             for (int j = 0; j < tempList.length; j++) {
                 tempList[i][j] = new Button(Colour.colour(random.nextInt(3)), random.nextInt(100));
+                triggerNewButton(i, j, tempList[i][j].colour.getAndroidColor());
             }
         }
         return tempList;
