@@ -8,9 +8,9 @@ import eic.beike.projectx.R;
  */
 public enum Colour {
 
-    GREEN(R.color.green),
-    BLUE(R.color.blue),
-    RED(R.color.red);
+    GREEN(R.drawable.green),
+    BLUE(R.drawable.blue),
+    RED(R.drawable.red);
 
     /**
      * Carried color code initiated at first use.
@@ -23,7 +23,7 @@ public enum Colour {
     /**
      * @return the value of the android color.
      */
-    public int getAndroidColor(){ return  this.androidColor; }
+    public int getAndroidColor(){ return androidColor; }
 
 
     public static Colour colour(int val) {
