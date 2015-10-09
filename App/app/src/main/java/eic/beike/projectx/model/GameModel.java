@@ -319,8 +319,8 @@ public class GameModel extends Thread implements IGameModel{
 
     public void generateButtons() {
         Random random = new Random();
-        for (int i = 0; i < buttons.length-1; i++) {
-            for (int j = 0; j < buttons.length-1; j++) {
+        for (int i = 0; i < buttons.length; i++) {
+            for (int j = 0; j < buttons.length; j++) {
                 if (buttons[i][j].counted) {
                     buttons[i][j] = new Button(Colour.colour(random.nextInt(3)), random.nextInt(100));
                     triggerNewButton(i, j, buttons[i][j].colour.getAndroidColor());
@@ -332,8 +332,8 @@ public class GameModel extends Thread implements IGameModel{
     private Button[][] generateNewButtons() {
         Button[][] tempList = new Button[3][3];
         Random random = new Random();
-        for (int i = 0; i < tempList.length-1; i++) {
-            for (int j = 0; j < tempList.length-1; j++) {
+        for (int i = 0; i < tempList.length; i++) {
+            for (int j = 0; j < tempList.length; j++) {
                 tempList[i][j] = new Button(Colour.colour(random.nextInt(3)), random.nextInt(100));
             }
         }

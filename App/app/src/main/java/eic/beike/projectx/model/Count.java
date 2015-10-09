@@ -28,13 +28,13 @@ public class Count implements ScoreCountApi{
     private int columns(Button[][] buttons) {
         int count = 0;
         for(int i = 0; i < buttons.length-1; i++) {
-            if(buttons[i][i].colour == buttons[i][i+1].colour
-                    && buttons[i][i].colour == buttons[i][i+2].colour) {
+            if(buttons[i][0].colour == buttons[i][1].colour
+                    && buttons[i][0].colour == buttons[i][2].colour) {
 
-                count += buttons[i][i].score + buttons[i][i+1].score +  buttons[i][i+2].score;
-                buttons[i][i].counted = true;
-                buttons[i][i+1].counted = true;
-                buttons[i][i+2].counted = true;
+                count += buttons[i][0].score + buttons[i][1].score +  buttons[i][2].score;
+                buttons[i][0].counted = true;
+                buttons[i][1].counted = true;
+                buttons[i][2].counted = true;
             }
         }
         return count;
@@ -47,12 +47,12 @@ public class Count implements ScoreCountApi{
     private int rows(Button[][] buttons) {
         int count = 0;
         for (int i = 0; i < buttons.length - 1; i++) {
-            if (buttons[i][i].colour == buttons[i + 1][i].colour
-                    && buttons[i][i].colour == buttons[i + 2][i].colour) {
-                count += buttons[i][i].score + buttons[i + 1][i].score + buttons[i + 2][i].score;
-                buttons[i][i].counted = true;
-                buttons[i + 1][i].counted = true;
-                buttons[i + 2][i].counted = true;
+            if (buttons[0][i].colour == buttons[1][i].colour
+                    && buttons[1][i].colour == buttons[2][i].colour) {
+                count += buttons[0][i].score + buttons[1][i].score + buttons[2][i].score;
+                buttons[0][i].counted = true;
+                buttons[1][i].counted = true;
+                buttons[2][i].counted = true;
             }
         }
         return count;
