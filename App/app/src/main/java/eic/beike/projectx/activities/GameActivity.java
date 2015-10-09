@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import eic.beike.projectx.R;
-import eic.beike.projectx.busdata.Sensor;
+import eic.beike.projectx.network.busdata.Sensor;
 import eic.beike.projectx.handlers.GameHandler;
 import eic.beike.projectx.model.UserEvent;
 import eic.beike.projectx.model.GameModel;

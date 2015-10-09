@@ -14,8 +14,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import eic.beike.projectx.R;
-import eic.beike.projectx.busdata.BusCollector;
-import eic.beike.projectx.busdata.SimpleBusCollector;
+import eic.beike.projectx.network.busdata.BusCollector;
+import eic.beike.projectx.network.busdata.SimpleBusCollector;
 import eic.beike.projectx.util.Constants;
 
 /**

@@ -8,9 +8,9 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import eic.beike.projectx.busdata.BusCollector;
-import eic.beike.projectx.busdata.BusData;
-import eic.beike.projectx.busdata.SimpleBusCollector;
+import eic.beike.projectx.network.busdata.BusCollector;
+import eic.beike.projectx.network.busdata.BusData;
+import eic.beike.projectx.network.busdata.SimpleBusCollector;
 import eic.beike.projectx.util.Constants;
 
 /**
