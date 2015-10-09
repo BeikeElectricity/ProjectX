@@ -18,7 +18,7 @@ import java.lang.reflect.Field;
 public class SimpleBusCollectorTest extends TestCase {
 
     MockWebServer server;
-    SimpleBusCollector collector = new SimpleBusCollector();
+    BusCollector collector = SimpleBusCollector.getInstance();
     long testTime = 1443513328000l;
     /**
      * Change the util.Constants.BASE_URL field to our mock server. This must be run after the server is started.

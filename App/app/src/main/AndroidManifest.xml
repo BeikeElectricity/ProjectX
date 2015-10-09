@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
 
     <application
         android:allowBackup="true"
@@ -35,6 +36,9 @@
         <activity
             android:name=".activities.HighscoreActivity"
             android:label="@string/title_activity_highscore" >
+        </activity>
+        <activity
+            android:name=".activities.BusWaitingActivity">
         </activity>
     </application>
 
