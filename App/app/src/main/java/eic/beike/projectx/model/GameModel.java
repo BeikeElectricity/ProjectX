@@ -40,14 +40,31 @@ public class GameModel extends Thread implements IGameModel{
 
     public GameModel(Handler handler){
         super();
-
         busCollector = new SimpleBusCollector();
         busCollector.chooseBus(BusCollector.TEST_BUSS_VIN_NUMBER);
         triggers = new UITriggers(handler);
         buttons = generateNewButtons();
-        count = new Count();
+        count = new Count(this);
     }
-    
+
+    /**
+     * Adds points to the bonus count.
+     *
+     * @param bonus The new bonus points.
+     */
+    protected synchronized void addBonus(int bonus){
+        this.bonus += bonus;
+        triggers.triggerNewBonus(this.bonus);
+    }
+
+    /**
+     * Adds to the total scores.
+     * @param latestScore the extra points that should be added.
+     */
+    protected synchronized void addScore(int latestScore){
+        score += latestScore;
+        triggers.triggerNewScore(latestScore, score);
+    }
 
     @Override
     public void claimBonus() {
@@ -74,6 +91,8 @@ public class GameModel extends Thread implements IGameModel{
             pressedR = -1;
             pressedC = -1;
             count.sum(buttons);
+            //We might have counted buttons and need to regenerate the board.
+            generateButtons();
         } else {
             // Clicked button far away, select it and deselect prev selected.
             triggers.triggerDeselectButton(pressedR,pressedC);

@@ -5,7 +5,15 @@ package eic.beike.projectx.model;
  */
 public class Count implements ScoreCountApi{
 
+    /**
+     * The game that uses this counter.
+     */
+    private GameModel game;
     public int currentBonus = 0;
+
+    public Count(GameModel game){
+        this.game = game;
+    }
 
     @Override
     public int count(long t1, long t2) {
@@ -16,8 +24,8 @@ public class Count implements ScoreCountApi{
         }
     }
 
-    public int sum(Button[][] buttons) {
-        return columns(buttons) + rows(buttons);
+    public void sum(Button[][] buttons) {
+        game.addBonus(columns(buttons) + rows(buttons));
     }
 
     /**
