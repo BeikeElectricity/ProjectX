@@ -35,7 +35,7 @@ public class GameModel extends Thread implements IGameModel{
 
     private int bonus = 0;
 
-    private Handler handler;
+    private UITriggers triggers;
 
 
     public GameModel(Handler handler){
@@ -43,118 +43,11 @@ public class GameModel extends Thread implements IGameModel{
 
         busCollector = new SimpleBusCollector();
         busCollector.chooseBus(BusCollector.TEST_BUSS_VIN_NUMBER);
-        this.handler = handler;
+        triggers = new UITriggers(handler);
         buttons = generateNewButtons();
         count = new Count();
     }
-
-    /**
-     * Used to notify the handlers about a new score
-     * @param latestScore The latest score the player received
-     */
-    protected synchronized void triggerNewScore(int latestScore) {
-        if (handler == null) {
-            return;
-        }
-        Log.d("Score", Thread.currentThread().getName() + ":triggerNewScore");
-        this.score += latestScore;
-        Message msg = handler.obtainMessage();
-        Bundle data = new Bundle();
-
-        data.putString("operation", Constants.UPDATESCORE);
-        data.putInt("score", this.score);
-        data.putInt("latest_score", latestScore);
-        data.putInt("bonus_score", 0);
-
-        msg.setData(data);
-        msg.sendToTarget();
-    }
-
-    private synchronized void triggerNewBonus(int bonus) {
-        if (handler == null) {
-            return;
-        }
-
-        this.bonus += bonus;
-        Message msg = handler.obtainMessage();
-        Bundle data = new Bundle();
-
-        data.putString("operation", Constants.BONUSBUTTON);
-        data.putInt("bonus", this.bonus);
-
-        msg.setData(data);
-        msg.sendToTarget();
-
-    }
-
-    private synchronized void triggerDeselectButton(int row,int column) {
-        if(handler == null) {
-            return;
-        }
-
-        Message msg = handler.obtainMessage();
-        Bundle data = new Bundle();
-
-        data.putString("operation", Constants.DESELECTBUTTON);
-        data.putInt("row", row);
-        data.putInt("column", column);
-
-        msg.setData(data);
-        msg.sendToTarget();
-    }
-
-    private synchronized void triggerSelectButton(int row, int column) {
-        if(handler == null) {
-            return;
-        }
-
-        Message msg = handler.obtainMessage();
-        Bundle data = new Bundle();
-
-        data.putString("operation", Constants.SELECTBUTTON);
-        data.putInt("row", row);
-        data.putInt("column", column);
-
-        msg.setData(data);
-        msg.sendToTarget();
-    }
-
-    private synchronized void triggerSwopButtons(int row, int column) {
-        if(handler == null) {
-            return;
-        }
-
-        Message msg = handler.obtainMessage();
-        Bundle data = new Bundle();
-
-        data.putString("operation", Constants.SWOPBUTTON);
-        data.putInt("row1", pressedR);
-        data.putInt("row2", row);
-        data.putInt("column1", pressedC);
-        data.putInt("column2", column);
-
-        msg.setData(data);
-        msg.sendToTarget();
-    }
-
-    private synchronized void triggerNewButton(int row, int column, int androidColor) {
-        if(handler == null) {
-            return;
-        }
-
-        Message msg = handler.obtainMessage();
-        Bundle data = new Bundle();
-
-        data.putString("operation", Constants.UPDATEBOARD);
-        data.putInt("row", row);
-        data.putInt("column", column);
-        data.putInt("colour", androidColor);
-
-        msg.setData(data);
-        msg.sendToTarget();
-    }
-
-
+    
 
     @Override
     public void claimBonus() {
@@ -168,25 +61,25 @@ public class GameModel extends Thread implements IGameModel{
         if(pressedR < 0 && pressedC < 0) {
             pressedR = row;
             pressedC = column;
-            triggerSelectButton(row,column);
+            triggers.triggerSelectButton(row,column);
         } else if(isSame(row, column)) {
-            triggerDeselectButton(row, column);
+            triggers.triggerDeselectButton(row, column);
             pressedR = -1;
             pressedC = -1;
         } else if (isNeighbour(row, column)) {
             //Valid swap, swap and deselect and remember to update ui
-            triggerSwopButtons(row, column);
+            triggers.triggerSwopButtons(row, column, pressedR, pressedC);
             swapButtons(row, column);
-            triggerDeselectButton(pressedR, pressedC);
+            triggers.triggerDeselectButton(pressedR, pressedC);
             pressedR = -1;
             pressedC = -1;
             count.sum(buttons);
         } else {
             // Clicked button far away, select it and deselect prev selected.
-            triggerDeselectButton(pressedR,pressedC);
+            triggers.triggerDeselectButton(pressedR,pressedC);
             pressedR = row;
             pressedC = column;
-            triggerSelectButton(pressedR, pressedC);
+            triggers.triggerSelectButton(pressedR, pressedC);
         }
     }
 
@@ -206,7 +99,7 @@ public class GameModel extends Thread implements IGameModel{
             for (int j = 0; j < buttons.length; j++) {
                 if (buttons[i][j].counted) {
                     buttons[i][j] = new Button(Colour.colour(random.nextInt(3)), random.nextInt(100));
-                    triggerNewButton(i, j, buttons[i][j].colour.getAndroidColor());
+                    triggers.triggerNewButton(i, j, buttons[i][j].colour.getAndroidColor());
                 }
             }
         }
@@ -218,7 +111,7 @@ public class GameModel extends Thread implements IGameModel{
         for (int i = 0; i < tempList.length; i++) {
             for (int j = 0; j < tempList.length; j++) {
                 tempList[i][j] = new Button(Colour.colour(random.nextInt(3)), random.nextInt(100));
-                triggerNewButton(i, j, tempList[i][j].colour.getAndroidColor());
+                triggers.triggerNewButton(i, j, tempList[i][j].colour.getAndroidColor());
             }
         }
         return tempList;
