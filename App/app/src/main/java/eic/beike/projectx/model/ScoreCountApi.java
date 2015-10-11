@@ -5,5 +5,5 @@ package eic.beike.projectx.model;
  */
 public interface ScoreCountApi {
 
-    public int count(long t1, long t2);
+    public void count(long t1);
 }

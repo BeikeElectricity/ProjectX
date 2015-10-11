@@ -69,8 +69,7 @@ public class GameModel extends Thread implements IGameModel{
     @Override
     public void claimBonus() {
         Long currentTime = System.currentTimeMillis();
-        BusData data = busCollector.getBusData(currentTime, Sensor.Stop_Pressed);
-        count.count(currentTime, data.timestamp);
+        count.count(currentTime);
     }
 
     @Override
@@ -146,5 +145,9 @@ public class GameModel extends Thread implements IGameModel{
              return false;
          }
      }
+
+    public int getBonus() {
+        return bonus;
+    }
 
 }
