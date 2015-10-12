@@ -1,11 +1,16 @@
 package eic.beike.projectx.network.busdata;
 
+import android.location.Location;
+
 /**
  * Interface for communicating with the Electricity API.
  *
  * Created by alex on 9/22/15.
  */
 public interface BusCollector {
+
+    public static final String TEST_BUSS_VIN_NUMBER = "Ericsson$Vin_Num_001";
+
     /**
      * Get the closest data from the given sensor.
      *
@@ -18,7 +23,7 @@ public interface BusCollector {
     /**
      * Determine which bus the user is currently interested in. This is the active bus.
      */
-    void determineBus();
+    boolean determineBus(Location location);
 
     /**
      * Manually pick a bus as active.

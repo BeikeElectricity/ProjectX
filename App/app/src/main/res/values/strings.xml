@@ -8,6 +8,7 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="Switch_Menu" />
+    <string name="game_score_init">0</string>
     <string name="title_activity_highscore">Highscore</string>
     <string name="menu_button_highscore">Highscore</string>
     <string name="ok">OK</string>
