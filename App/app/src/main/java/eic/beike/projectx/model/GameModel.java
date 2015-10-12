@@ -14,6 +14,8 @@ import eic.beike.projectx.network.busdata.BusData;
 import eic.beike.projectx.network.busdata.Sensor;
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
 import eic.beike.projectx.util.Colour;
+
+import eic.beike.projectx.network.busdata.SimpleBusCollector;
 import eic.beike.projectx.util.Constants;
 
 /**
@@ -21,6 +23,9 @@ import eic.beike.projectx.util.Constants;
  * @author Adam
  */
 public class GameModel extends Thread implements IGameModel{
+
+
+    public static final long USER_EVENT_EXPIRATION_TIME = 1 * Constants.ONE_SECOND_IN_MILLI;
 
     private BusCollector busCollector;
     private Button[][] buttons;
@@ -40,7 +45,7 @@ public class GameModel extends Thread implements IGameModel{
 
     public GameModel(Handler handler){
         super();
-        busCollector = new SimpleBusCollector();
+        busCollector = SimpleBusCollector.getInstance();
         busCollector.chooseBus(BusCollector.TEST_BUSS_VIN_NUMBER);
         triggers = new UITriggers(handler);
         buttons = generateNewButtons();
@@ -71,6 +76,7 @@ public class GameModel extends Thread implements IGameModel{
         Long currentTime = System.currentTimeMillis();
         count.count(currentTime);
     }
+
 
     @Override
     public void pressButton(int row, int column) {

@@ -1,5 +1,7 @@
 package eic.beike.projectx.network.busdata;
 
+import android.location.Location;
+
 /**
  * Interface for communicating with the Electricity API.
  *
@@ -21,7 +23,7 @@ public interface BusCollector {
     /**
      * Determine which bus the user is currently interested in. This is the active bus.
      */
-    void determineBus();
+    boolean determineBus(Location location);
 
     /**
      * Manually pick a bus as active.

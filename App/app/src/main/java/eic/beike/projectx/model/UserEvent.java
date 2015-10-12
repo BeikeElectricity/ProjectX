@@ -1,6 +1,6 @@
 package eic.beike.projectx.model;
 
-import eic.beike.projectx.busdata.Sensor;
+import eic.beike.projectx.network.busdata.Sensor;
 
 /**
  * Created by Mikael on 2015-09-30.

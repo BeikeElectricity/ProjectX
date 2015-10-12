@@ -33,7 +33,7 @@ public class Count implements ScoreCountApi {
              */
             @Override
             public void run() {
-                BusCollector bus = new SimpleBusCollector();
+                BusCollector bus = SimpleBusCollector.getInstance();
                 bus.chooseBus("Ericsson$Vin_Num_001");
                 long t2 = bus.getBusData(t1, Sensor.Stop_Pressed).timestamp;
                 if (t2 > 0) {

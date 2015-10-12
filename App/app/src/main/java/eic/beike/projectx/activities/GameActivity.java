@@ -23,6 +23,7 @@ import eic.beike.projectx.model.IGameModel;
  * @author Mikael
  * @author Adam
  * @author Alex
+ * @author Simon
  */
 public class GameActivity extends Activity {
 

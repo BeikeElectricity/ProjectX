@@ -14,9 +14,7 @@ public class Constants {
      */
     public static final String SERVER_URL = new String("http://ec2-52-28-202-131.eu-central-1.compute.amazonaws.com/");
     public static final String BASE_URL = new String("https://ece01.ericsson.net:4443/ecity");
-    public static final String AUTHORIZATION = new String(!!!!!!!!!!!);
-
-    /**
+        /**
      * Bundle operation types. Used when passing messages in a bundle to an activity.
      */
 
@@ -26,4 +24,6 @@ public class Constants {
     public static final String DESELECTBUTTON = "DESELECTBUTTON";
     public static final String BONUSBUTTON = "BONUSBUTTON";
     public static final String SWOPBUTTON = "SWOPBUTTON";
+    public static final String AUTHORIZATION = new String("Z3JwMjU6cnZyMkMqT25kNw==");
+    public static final long ONE_SECOND_IN_MILLI = 1000;
 }
