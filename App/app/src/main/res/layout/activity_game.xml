@@ -1,50 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:columnCount="29"
-    android:rowCount="17">
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
-
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:layout_gravity="center_horizontal" android:layout_weight=".3"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_vertical_margin">
         <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Stop Button"
-            android:id="@+id/button"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1" />
-
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Left Turn"
-            android:id="@+id/button3"
-            android:layout_weight="1" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
-
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Door Open"
-            android:id="@+id/button2"
-            android:layout_weight="1" />
-
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Right Turn"
-            android:id="@+id/button4"
-            android:layout_weight="1" />
-    </LinearLayout>
+                android:layout_width="120sp"
+                android:layout_height="120sp"
+                android:text="@string/game_score_init"
+                android:id="@+id/claimBonus"
+                android:layout_centerVertical="true" android:layout_centerHorizontal="true" android:textSize="48sp"
+                android:onClick="onBonusButtonClick"/>
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true" android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Last score:"
+                    android:id="@+id/row1"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/game_score_init"
+                    android:id="@+id/lastScore"
+                    android:textSize="32sp" android:layout_alignParentBottom="true" android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" android:layout_gravity="bottom|center_horizontal"/>
+        </LinearLayout>
+        <LinearLayout android:orientation="vertical" android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_alignParentBottom="true" android:layout_alignParentRight="true"
+                      android:layout_alignParentEnd="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:textAppearance="?android:attr/textAppearanceSmall" android:text="Total score:"
+                      android:id="@+id/textView2"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/game_score_init"
+                    android:id="@+id/totalScore" android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true" android:layout_alignParentEnd="true" android:textSize="32sp"
+                    android:layout_gravity="bottom|center_horizontal"/>
+        </LinearLayout>
+    </RelativeLayout>
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+                 android:layout_height="match_parent" android:layout_weight=".15"
+                 android:layout_marginLeft="@dimen/activity_vertical_margin"
+                 android:layout_marginRight="@dimen/activity_vertical_margin"
+                 android:layout_marginBottom="@dimen/activity_horizontal_margin">
+        <TableRow android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight=".3">
+            <ImageButton android:layout_width="wrap_content" android:layout_height="fill_parent"
+                         android:id="@+id/topLeft" android:layout_weight=".3" android:onClick="onGridButtonClick"
+                android:padding="2dp" />
+            <ImageButton android:layout_width="wrap_content" android:layout_height="fill_parent"
+                         android:id="@+id/topMiddle" android:layout_weight=".3" android:onClick="onGridButtonClick"
+                android:padding="2dp" />
+            <ImageButton android:layout_width="wrap_content" android:layout_height="fill_parent"
+                         android:id="@+id/topRight" android:layout_weight=".3" android:onClick="onGridButtonClick"
+                android:padding="2dp" />
+        </TableRow>
+        <TableRow android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight=".3">
+            <ImageButton android:layout_width="wrap_content" android:layout_height="fill_parent"
+                         android:id="@+id/middleLeft" android:layout_weight=".3" android:onClick="onGridButtonClick"
+                android:padding="2dp" />
+            <ImageButton android:layout_width="wrap_content" android:layout_height="fill_parent"
+                         android:id="@+id/middleMiddle" android:layout_weight=".3" android:onClick="onGridButtonClick"
+                android:padding="2dp" />
+            <ImageButton android:layout_width="wrap_content" android:layout_height="fill_parent"
+                         android:id="@+id/middleRight" android:layout_weight=".3" android:onClick="onGridButtonClick"
+                android:padding="2dp" />
+        </TableRow>
+        <TableRow android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight=".3">
+            <ImageButton android:layout_width="wrap_content" android:layout_height="fill_parent"
+                         android:id="@+id/bottomLeft" android:layout_weight=".3" android:onClick="onGridButtonClick"
+                android:padding="2dp" />
+            <ImageButton android:layout_width="wrap_content" android:layout_height="fill_parent"
+                         android:id="@+id/bottomMiddle" android:layout_weight=".3" android:onClick="onGridButtonClick"
+                android:padding="2dp" />
+            <ImageButton android:layout_width="wrap_content" android:layout_height="fill_parent"
+                         android:id="@+id/bottomRight" android:layout_weight=".3" android:onClick="onGridButtonClick"
+                android:padding="2dp" />
+        </TableRow>
+    </TableLayout>
 </LinearLayout>

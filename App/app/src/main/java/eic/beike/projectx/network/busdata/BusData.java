@@ -20,7 +20,7 @@ public class BusData {
      * The time that the sensor data was recorded on the bus. Zero if no data was found.
      */
     @Getter
-    private Long timestamp = 0l;
+    public Long timestamp = 0l;
 
 
     /**

@@ -10,6 +10,7 @@
     <!-- Name picker splash -->
     <string name="name_splash_activity_title">Välj smeknamn</string>
     <string name="name_splash_main_text">Välj smeknamn</string>
+    <string name="name_splash_button_text">Ok</string>
 
     <!-- Highscore activity -->
     <string name="highscore_title_activity">Highscore</string>
@@ -18,4 +19,5 @@
 
     <!-- Misc -->
     <string name="ok">OK</string>
+    <string name="game_score_init">0</string>
 </resources>
