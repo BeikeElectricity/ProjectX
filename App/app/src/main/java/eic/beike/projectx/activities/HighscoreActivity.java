@@ -33,9 +33,6 @@ public class HighscoreActivity extends ListActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Bundle extras = getIntent().getExtras();
-
-
         db = new Database();
 
         // Use the asynchronous task to get the top list.
@@ -112,6 +109,11 @@ public class HighscoreActivity extends ListActivity
 
         private Exception exception;
 
+        /**
+         * Runs in the asynchronous thread
+         * @param urls
+         * @return The list from the database.
+         */
         protected List<ScoreEntry> doInBackground(String... urls) {
             try {
 
@@ -127,11 +129,17 @@ public class HighscoreActivity extends ListActivity
             }
         }
 
+        /**
+         * Runs after doInBackground and is run in the ui-thread.
+         * @param data The result from doInBackground (The top list)
+         */
         protected void onPostExecute(List<ScoreEntry> data) {
             if (this.exception != null) {
+
                 MessageDialog dialog = new MessageDialog();
                 dialog.show(getFragmentManager(), "highscore_unavailable");
                 Log.d("Score", "Exception while fetching top list: " + this.exception.getMessage());
+
             } else {
                 setData(data);
             }

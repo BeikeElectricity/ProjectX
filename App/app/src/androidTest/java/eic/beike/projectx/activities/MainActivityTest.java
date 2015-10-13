@@ -7,9 +7,7 @@ import android.content.SharedPreferences;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
 
-import eic.beike.projectx.activities.MainActivity;
-import eic.beike.projectx.activities.MenuActivity;
-import eic.beike.projectx.activities.NameSplashActivity;
+import eic.beike.projectx.util.Constants;
 
 /**
  *@author Adam Ingmansson
@@ -30,7 +28,7 @@ public class MainActivityTest
 
         // Clear name from settings
         Context context = getInstrumentation().getTargetContext();
-        SharedPreferences settings = context.getSharedPreferences(MainActivity.SETTINGS_FILE, 0);
+        SharedPreferences settings = context.getSharedPreferences(Constants.SETTINGS_FILE, 0);
         settings.edit().clear().commit();
 
 
@@ -47,7 +45,7 @@ public class MainActivityTest
 
         // Clear settings
         Context context = getInstrumentation().getTargetContext();
-        SharedPreferences settings = context.getSharedPreferences(MainActivity.SETTINGS_FILE, 0);
+        SharedPreferences settings = context.getSharedPreferences(Constants.SETTINGS_FILE, 0);
         settings.edit().clear().commit();
 
 
@@ -99,9 +97,9 @@ public class MainActivityTest
 
         // Add the test name
         Context context = getInstrumentation().getTargetContext();
-        SharedPreferences settings = context.getSharedPreferences(MainActivity.SETTINGS_FILE, 0);
+        SharedPreferences settings = context.getSharedPreferences(Constants.SETTINGS_FILE, 0);
         settings.edit()
-                .putString(MainActivity.NAME_FIELD, "testName")
+                .putString(Constants.NAME_FIELD, "testName")
                 .commit();
 
         activity = getActivity();

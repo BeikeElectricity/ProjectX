@@ -10,6 +10,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import eic.beike.projectx.util.Constants;
 import eic.beike.projectx.util.HighscoreAdapter;
 import eic.beike.projectx.util.ScoreEntry;
 
@@ -50,7 +51,7 @@ public class HighscoreActivityTest extends ActivityInstrumentationTestCase2<High
 
         // Clear settings
         Context context = getInstrumentation().getTargetContext();
-        SharedPreferences settings = context.getSharedPreferences(MainActivity.SETTINGS_FILE, 0);
+        SharedPreferences settings = context.getSharedPreferences(Constants.SETTINGS_FILE, 0);
         settings.edit().clear().commit();
 
 

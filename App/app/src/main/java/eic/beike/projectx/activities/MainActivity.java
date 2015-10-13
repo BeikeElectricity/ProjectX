@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import eic.beike.projectx.R;
+import eic.beike.projectx.util.Constants;
 
 
 /**
@@ -15,10 +16,6 @@ import eic.beike.projectx.R;
  */
 public class MainActivity extends Activity {
 
-    public static final String SETTINGS_FILE = "settings";
-
-    public static final String NAME_FIELD = "name";
-    public static final String ID_FIELD = "id";
     public static final int NEXT_ACTIVITY = 0;
 
     @Override
@@ -27,24 +24,27 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.main_splash);
 
-        SharedPreferences settings = getSharedPreferences(SETTINGS_FILE, 0);
+        SharedPreferences settings = getSharedPreferences(Constants.SETTINGS_FILE, 0);
+
+        String name = settings.getString(Constants.NAME_FIELD,"");
 
         // First time running?
-        String name = settings.getString(NAME_FIELD,"");
-
         if (name.equals("")) {
+
+            // Start the name picker activity
             startActivityForResult(
                 new Intent(this, NameSplashActivity.class),
                 MainActivity.NEXT_ACTIVITY
             );
         } else {
-            // Start menu
 
+            // Start the menu
             Intent intent = new Intent(this, MenuActivity.class);
 
             // Set so there is no history for back button
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
+            // Off we go
             startActivityForResult(intent, MainActivity.NEXT_ACTIVITY);
         }
     }
@@ -71,6 +71,13 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Handles the result from any activity started by this.
+     *
+     * @param requestCode The code identifying which request
+     * @param resultCode The result code of that request
+     * @param data The intent
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
