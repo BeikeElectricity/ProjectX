@@ -32,8 +32,8 @@ public class MenuActivity extends Activity {
      * @param v The input form the "Play" button. Not used, but required
      */
     public void play(View v) {
-        Intent intentPlay = new Intent(this, GameActivity.class);
-        startActivity(intentPlay);
+        Intent intentBusWaiting = new Intent(this, BusWaitingActivity.class);
+        startActivity(intentBusWaiting);
     }
 
     /**

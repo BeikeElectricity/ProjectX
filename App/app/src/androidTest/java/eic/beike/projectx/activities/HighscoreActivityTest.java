@@ -3,6 +3,9 @@ package eic.beike.projectx.activities;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.Adapter;
 import android.widget.ListView;
@@ -80,9 +83,26 @@ public class HighscoreActivityTest extends ActivityInstrumentationTestCase2<High
         Adapter adapter = listView.getAdapter();
 
         assertNotNull(adapter);
-        activity.setData(data);
+        Handler handler = activity.makeHandler();
+        Bundle bundle = new Bundle();
+        StringBuilder sb = new StringBuilder();
 
-        assertSame(adapter.getCount(), HighscoreAdapter.class);
+        for (ScoreEntry entry : data) {
+            String row = entry.getName() + ":" + entry.getScore();
+            sb.append(row).append(",");
+        }
+
+        sb.deleteCharAt(sb.lastIndexOf(","));
+
+        bundle.putString("scores", sb.toString());
+        bundle.putBoolean("update_data", true);
+
+        Message msg = handler.obtainMessage();
+        msg.setData(bundle);
+
+        msg.sendToTarget();
+
+        assertSame(adapter.getClass(), HighscoreAdapter.class);
         assertEquals(adapter.getCount(),data.size());
     }
 

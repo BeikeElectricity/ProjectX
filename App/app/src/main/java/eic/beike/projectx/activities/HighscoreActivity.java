@@ -4,6 +4,9 @@ import android.app.DialogFragment;
 import android.app.ListActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,6 +56,10 @@ public class HighscoreActivity extends ListActivity
             adapter.add(se);
         }
         adapter.notifyDataSetChanged();
+    }
+
+    public Handler makeHandler() {
+        return new HighscoreHandler(Looper.getMainLooper());
     }
 
     @Override
@@ -137,11 +144,40 @@ public class HighscoreActivity extends ListActivity
             if (this.exception != null) {
 
                 MessageDialog dialog = new MessageDialog();
+                dialog.setMessage(R.string.highscore_unavailable);
                 dialog.show(getFragmentManager(), "highscore_unavailable");
                 Log.d("Score", "Exception while fetching top list: " + this.exception.getMessage());
 
             } else {
                 setData(data);
+            }
+        }
+    }
+
+    class HighscoreHandler extends Handler {
+
+        public HighscoreHandler(Looper l) {
+            super(l);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Bundle bundle = msg.getData();
+            if (bundle.getBoolean("update_data",false)) {
+                String rawData = bundle.getString("scores","");
+                if (rawData.equals("")) {
+                    return;
+                }
+                List<ScoreEntry> data = new ArrayList<ScoreEntry>();
+                String[] rows = rawData.split(",");
+
+                for (String row : rows) {
+                    String[] entry = row.split(":");
+                    if (entry.length != 2) continue;
+                    data.add(new ScoreEntry(entry[0],entry[1]));
+                }
+                HighscoreActivity.this.setData(data);
             }
         }
     }

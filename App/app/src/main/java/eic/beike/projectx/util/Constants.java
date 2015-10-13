@@ -15,4 +15,5 @@ public class Constants {
     public static final String SETTINGS_FILE = "settings";
     public static final String NAME_FIELD = "name";
     public static final String ID_FIELD = "id";
+    public static final long ONE_SECOND_IN_MILLI = 1000;
 }
