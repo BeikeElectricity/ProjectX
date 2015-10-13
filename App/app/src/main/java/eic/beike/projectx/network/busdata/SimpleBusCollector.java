@@ -1,12 +1,9 @@
 package eic.beike.projectx.network.busdata;
 
-import android.content.Context;
 import android.location.Location;
-import android.location.LocationManager;
 import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import eic.beike.projectx.network.RetrieveReader;
 import eic.beike.projectx.util.Constants;
 import org.apache.http.HttpStatus;
 
@@ -14,7 +11,6 @@ import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.URL;
-import java.text.ParseException;
 import java.util.*;
 
 /**
