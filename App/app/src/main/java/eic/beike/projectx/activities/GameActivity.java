@@ -6,10 +6,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.ScaleAnimation;
+import android.view.animation.*;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -32,6 +29,7 @@ public class GameActivity extends Activity {
      */
     private IGameModel gameModel;
     private Animation bumpButton;
+
     private Animation fadeAnimation;
     private int gridButton[][] = new int[3][3];
 
@@ -73,7 +71,6 @@ public class GameActivity extends Activity {
         bumpButton.setRepeatMode(Animation.REVERSE);
         bumpButton.setRepeatCount(1);
         bumpButton.setInterpolator(new DecelerateInterpolator());
-
     }
 
     @Override

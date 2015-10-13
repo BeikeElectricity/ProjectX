@@ -68,6 +68,7 @@ public class GameModel extends Thread implements IGameModel{
      */
     protected synchronized void addScore(int latestScore){
         score += latestScore;
+        bonus = 0;
         triggers.triggerNewScore(latestScore, score);
     }
 
@@ -119,14 +120,22 @@ public class GameModel extends Thread implements IGameModel{
 
     public void generateButtons() {
         Random random = new Random();
-        for (int i = 0; i < buttons.length; i++) {
-            for (int j = 0; j < buttons.length; j++) {
-                if (buttons[i][j].counted) {
-                    buttons[i][j] = new Button(Colour.colour(random.nextInt(3)), random.nextInt(100));
-                    triggers.triggerNewButton(i, j, buttons[i][j].colour.getAndroidColor());
+        int generated;
+
+        // While there exists rows or columns of the same color, count them and generate new.
+        do {
+            generated = 0;
+            for (int i = 0; i < buttons.length; i++) {
+                for (int j = 0; j < buttons.length; j++) {
+                    if (buttons[i][j].counted) {
+                        buttons[i][j] = new Button(Colour.colour(random.nextInt(3)), random.nextInt(100));
+                        generated++;
+                        triggers.triggerNewButton(i, j, buttons[i][j].colour.getAndroidColor());
+                    }
                 }
             }
-        }
+            count.sum(buttons);
+        } while (generated > 0);
     }
 
     private Button[][] generateNewButtons() {
