@@ -1,6 +1,7 @@
 package eic.beike.projectx.activities;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -14,12 +15,15 @@ import eic.beike.projectx.network.busdata.Sensor;
 import eic.beike.projectx.handlers.GameHandler;
 import eic.beike.projectx.model.UserEvent;
 import eic.beike.projectx.model.GameModel;
+import eic.beike.projectx.util.MessageDialog;
 
 /**
  * @author Mikael
  * @author Adam
  */
-public class GameActivity extends Activity {
+public class GameActivity extends Activity
+        implements MessageDialog.MessageDialogListener
+{
 
     private GameModel gameModel;
 
@@ -68,19 +72,7 @@ public class GameActivity extends Activity {
      * @return The handler
      */
     private Handler makeHandler() {
-
         return new GameHandler(Looper.getMainLooper(), this);
-//        new Handler(Looper.getMainLooper()) {
-//            @Override
-//            public void handleMessage(Message msg) {
-//                Log.d("Score", Thread.currentThread().getName() + ":handleMessage");
-//                Bundle data = msg.getData();
-//                int totalScore = data.getInt("score");
-//                int latestScore = data.getInt("latest_score");
-//                onNewScore(latestScore, totalScore);
-//            }
-//        };
-
     }
     /**
      * Used to update the score
@@ -94,4 +86,40 @@ public class GameActivity extends Activity {
         scoreText.setText(String.valueOf(totalScore));
         scoreEventText.setText(String.format("Du fick %d poäng", latestScore));
     }
+
+    /**
+     *
+     */
+    public void showErrorDialog() {
+        MessageDialog dialog = new MessageDialog();
+        dialog.show(getFragmentManager(), "bus_data_unavailable");
+    }
+
+
+
+    /**
+     * Used to finish the activity of ok is clicked.
+     * @param dialog The triggering dialog.
+     */
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        finish();
+    }
+
+    /**
+     * Used to finish the activity if the dialog is dismissed, i.e. user pressed beside the dialog.
+     * @param dialog The triggering dialog.
+     */
+    @Override
+    public void onDialogDismiss(DialogFragment dialog) {
+        finish();
+    }
+
+    /**
+     * If the negative (no) button is clicked. Not used.
+     * @param dialog Triggering dialog
+     */
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) { /* Unused. */ }
+
 }

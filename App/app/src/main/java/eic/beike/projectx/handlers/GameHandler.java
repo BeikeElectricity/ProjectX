@@ -25,9 +25,12 @@ public class GameHandler extends Handler {
         Log.d("Score", Thread.currentThread().getName() + ":handleMessage");
 
         Bundle data = msg.getData();
+        if (data.getBoolean("error",false)) {
+            game.showErrorDialog();
+            game.finish();
+        }
         int totalScore = data.getInt("score");
         int latestScore = data.getInt("latest_score");
-
         game.showScore(latestScore, totalScore);
     }
 

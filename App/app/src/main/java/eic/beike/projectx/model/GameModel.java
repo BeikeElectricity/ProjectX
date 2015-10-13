@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +23,8 @@ public class GameModel extends Thread {
     public static final long USER_EVENT_EXPIRATION_TIME = 1 * Constants.ONE_SECOND_IN_MILLI;
 
     private BusCollector busCollector;
-    private List<UserEvent> userEvents;
-    private List<BusData> matchedData;
+    private final ArrayList<UserEvent> userEvents;
+    private final ArrayList<BusData> matchedData;
     private boolean isRunning;
 
     /**
@@ -40,8 +41,8 @@ public class GameModel extends Thread {
 
         busCollector = SimpleBusCollector.getInstance();
         busCollector.chooseBus(BusCollector.TEST_BUSS_VIN_NUMBER);
-        userEvents = new ArrayList();
-        matchedData = new ArrayList();
+        userEvents = new ArrayList<UserEvent>();
+        matchedData = new ArrayList<BusData>();
         isRunning = true;
     }
 
@@ -77,13 +78,25 @@ public class GameModel extends Thread {
                     triggerNewScore(-10);
                 }
                 else{
-                    BusData d = findMatch(e);
-                    //TODO: fix match to the same event, it seems the bus api is giving back different timestamps from the same event.
-                    if (isValidMatch(d, e)) {
-                        removeUserEvent(e);
-                        rememberMatchedData(d);
-                        //TODO: Calculate real score
-                        triggerNewScore(10);
+                    try {
+                        BusData d = findMatch(e);
+
+                        //TODO: fix match to the same event, it seems the bus api is giving back different timestamps from the same event.
+                        if (isValidMatch(d, e)) {
+                            removeUserEvent(e);
+                            rememberMatchedData(d);
+                            //TODO: Calculate real score
+                            triggerNewScore(10);
+                        }
+                    } catch (Exception ex) {
+                        Message msg = handler.obtainMessage();
+                        Bundle data = new Bundle();
+
+                        data.putString("exception", ex.getMessage());
+                        data.putBoolean("error", true);
+
+                        msg.setData(data);
+                        msg.sendToTarget();
                     }
                 }
             }
@@ -93,7 +106,7 @@ public class GameModel extends Thread {
 
     private List<UserEvent> getUserEvents(){
         synchronized (userEvents) {
-            return new ArrayList(userEvents);
+            return new ArrayList<UserEvent>(userEvents);
         }
     }
 
@@ -121,7 +134,7 @@ public class GameModel extends Thread {
      * @param busData to be checked if it the same BusData that has bin matched before
      */
     private boolean isAlreadyMatched(BusData busData){
-        List<BusData> copy = new ArrayList(matchedData);
+        List<BusData> copy = new ArrayList<BusData>(matchedData);
         boolean result = false;
         for(BusData d : copy){
             if(isToOld(d)){
@@ -140,7 +153,7 @@ public class GameModel extends Thread {
         matchedData.add(d);
     }
 
-    private BusData findMatch(UserEvent e){
+    private BusData findMatch(UserEvent e) throws Exception {
         return busCollector.getBusData(e.timeStamp, e.sensor);
     }
 
@@ -175,6 +188,7 @@ public class GameModel extends Thread {
 
         data.putInt("score", this.score);
         data.putInt("latest_score", latestScore);
+        data.putBoolean("error", false);
 
         msg.setData(data);
         msg.sendToTarget();
