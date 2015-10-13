@@ -1,4 +1,4 @@
-package eic.beike.projectx.model;
+package eic.beike.projectx.handlers;
 
 import android.os.Bundle;
 import android.os.Handler;

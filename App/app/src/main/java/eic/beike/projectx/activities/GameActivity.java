@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import eic.beike.projectx.R;
 import eic.beike.projectx.handlers.GameHandler;
+import eic.beike.projectx.handlers.UITriggers;
 import eic.beike.projectx.model.GameModel;
 import eic.beike.projectx.model.IGameModel;
 
@@ -44,7 +45,10 @@ public class GameActivity extends Activity {
         Log.d("Score", Thread.currentThread().getName() + ":onCreate");
 
         //TODO: Decide how to create.
-        gameModel = new GameModel(new GameHandler(Looper.getMainLooper(), this));
+        GameHandler handler  = new GameHandler(Looper.getMainLooper(), this);
+        UITriggers triggers = new UITriggers(handler);
+        gameModel = new GameModel(triggers);
+
         setContentView(R.layout.activity_game);
 
         //Get the ids of the grid buttons

@@ -4,6 +4,7 @@ import android.os.Handler;
 
 import java.util.Random;
 
+import eic.beike.projectx.handlers.UITriggers;
 import eic.beike.projectx.network.busdata.BusCollector;
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
 import eic.beike.projectx.util.GameColor;
@@ -35,11 +36,11 @@ public class GameModel extends Thread implements IGameModel{
     private UITriggers triggers;
 
 
-    public GameModel(Handler handler){
+    public GameModel(UITriggers triggers){
         super();
         busCollector = SimpleBusCollector.getInstance();
         busCollector.chooseBus(BusCollector.TEST_BUSS_VIN_NUMBER);
-        triggers = new UITriggers(handler);
+        this.triggers = triggers;
         buttons = generateNewButtons();
         count = new Count(this);
     }
