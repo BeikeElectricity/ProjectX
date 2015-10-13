@@ -98,7 +98,7 @@ public class GameHandler extends Handler {
     private void updateBoard(Bundle data){
         int row = data.getInt("row");
         int column = data.getInt("column");
-        int colour = data.getInt("colour");
+        int colour = data.getInt("color");
 
         game.updateButton(row, column, colour);
     }

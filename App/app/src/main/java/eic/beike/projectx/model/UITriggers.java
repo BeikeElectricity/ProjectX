@@ -115,7 +115,7 @@ public class UITriggers {
         data.putString("operation", Constants.UPDATEBOARD);
         data.putInt("row", row);
         data.putInt("column", column);
-        data.putInt("colour", androidColor);
+        data.putInt("color", androidColor);
 
         msg.setData(data);
         msg.sendToTarget();

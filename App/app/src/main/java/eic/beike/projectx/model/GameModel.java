@@ -1,21 +1,13 @@
 package eic.beike.projectx.model;
 
-import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import eic.beike.projectx.network.busdata.BusCollector;
-import eic.beike.projectx.network.busdata.BusData;
-import eic.beike.projectx.network.busdata.Sensor;
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
-import eic.beike.projectx.util.Colour;
+import eic.beike.projectx.util.GameColor;
 
-import eic.beike.projectx.network.busdata.SimpleBusCollector;
 import eic.beike.projectx.util.Constants;
 
 /**
@@ -128,7 +120,7 @@ public class GameModel extends Thread implements IGameModel{
             for (int i = 0; i < buttons.length; i++) {
                 for (int j = 0; j < buttons.length; j++) {
                     if (buttons[i][j].counted) {
-                        buttons[i][j] = new Button(Colour.colour(random.nextInt(3)), random.nextInt(100));
+                        buttons[i][j] = new Button(GameColor.color(random.nextInt(3)), random.nextInt(100));
                         generated++;
                         triggers.triggerNewButton(i, j, buttons[i][j].colour.getAndroidColor());
                     }
@@ -143,7 +135,7 @@ public class GameModel extends Thread implements IGameModel{
         Random random = new Random();
         for (int i = 0; i < tempList.length; i++) {
             for (int j = 0; j < tempList.length; j++) {
-                tempList[i][j] = new Button(Colour.colour(random.nextInt(3)), random.nextInt(100));
+                tempList[i][j] = new Button(GameColor.color(random.nextInt(3)), random.nextInt(100));
                 triggers.triggerNewButton(i, j, tempList[i][j].colour.getAndroidColor());
             }
         }
