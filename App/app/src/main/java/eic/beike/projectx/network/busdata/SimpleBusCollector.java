@@ -109,7 +109,7 @@ public class SimpleBusCollector implements BusCollector {
     private List<ResponseEntry> getResponse(String url){
         List<ResponseEntry> response = null;
         try {
-            BufferedReader reader = retrieveReader(url);
+            BufferedReader reader = RetrieveReader.get(url);
             response = fetchSensorData(reader);
             reader.close();
         } catch (IOException e) {
@@ -122,37 +122,6 @@ public class SimpleBusCollector implements BusCollector {
         else{
             return response;
         }
-    }
-
-
-    /**
-     * Make a http request and return a reader for the response.
-     *
-     * @param url the formatted rest call
-     * @return an input stream with the server response, this needs to be parsed. NULL if something goes wrong.
-     */
-    private BufferedReader retrieveReader(String url)
-            throws IOException
-    {
-        BufferedReader in = null;
-        try {
-            URL requestURL = new URL(url);
-            HttpsURLConnection con = (HttpsURLConnection) requestURL.openConnection();
-            con.setRequestMethod("GET");
-            con.setRequestProperty("Authorization", "Basic " + Constants.AUTHORIZATION);
-            int responseCode = con.getResponseCode();
-
-            //Check whether the request was successful.
-            if (responseCode != HttpStatus.SC_OK) {
-                Log.w(getClass().getSimpleName(), "Error " + responseCode + " for URL " + url);
-                return null;
-            }
-            in = new BufferedReader(new InputStreamReader(
-                    con.getInputStream()));
-        } catch (IOException e) {
-            throw new IOException("Error for URL" + url, e);
-        }
-        return in;
     }
 
 
