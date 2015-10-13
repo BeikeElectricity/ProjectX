@@ -1,16 +1,13 @@
-package eic.beike.projectx.busdata;
+package eic.beike.projectx.network.busdata;
 
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
-import com.squareup.okhttp.mockwebserver.RecordedRequest;
 import eic.beike.projectx.util.Constants;
 import junit.framework.TestCase;
 
 import javax.net.ssl.SSLSocketFactory;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.net.URL;
 
 /**
  * Test our SimpleBusCollector class, we mock the server so make
@@ -21,7 +18,7 @@ import java.net.URL;
 public class SimpleBusCollectorTest extends TestCase {
 
     MockWebServer server;
-    SimpleBusCollector collector = new SimpleBusCollector();
+    BusCollector collector = SimpleBusCollector.getInstance();
     long testTime = 1443513328000l;
     /**
      * Change the util.Constants.BASE_URL field to our mock server. This must be run after the server is started.

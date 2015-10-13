@@ -1,4 +1,4 @@
-package eic.beike.projectx.busdata;
+package eic.beike.projectx.network.busdata;
 
 /**
  * The different sensors that can be fetched from the bus.
