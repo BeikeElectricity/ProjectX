@@ -1,5 +1,7 @@
 package eic.beike.projectx.model;
 
+import android.util.Log;
+
 import eic.beike.projectx.network.busdata.BusCollector;
 import eic.beike.projectx.network.busdata.Sensor;
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
@@ -44,9 +46,13 @@ public class Count implements ScoreCountApi {
                 if (t2 == 0) {
                     game.addScore(0);
                 } else if (t1 > t2) {
-                        game.addScore(Math.abs((int) (t1 / t2) * game.getBonus()));
+                    t1 -= Long.getLong("1444800000000");
+                    t2 -= Long.getLong("1444800000000");
+                        game.addScore(Math.abs((int) (t1 - t2) * game.getBonus()));
                 } else {
-                        game.addScore(Math.abs((int) (t2 / t1) * game.getBonus()));
+                    t1 -= Long.getLong("1444800000000");
+                    t2 -= Long.getLong("1444800000000");
+                        game.addScore(Math.abs((int) (t2 - t1) * game.getBonus()));
                     }
                 }
         }.count(t1);

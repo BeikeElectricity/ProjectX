@@ -64,7 +64,7 @@ public class HighscoreActivityTest extends ActivityInstrumentationTestCase2<High
     /**
      * Test that the activity can start properly and its the right activity.
      */
-    public void testActivityExitsts() {
+    public void testActivityExits() {
         activity = getActivity();
         assertNotNull(activity);
         assertSame(HighscoreActivity.class, activity.getClass());

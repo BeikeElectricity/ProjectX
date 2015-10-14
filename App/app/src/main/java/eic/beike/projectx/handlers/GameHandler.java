@@ -75,7 +75,6 @@ public class GameHandler extends Handler {
     }
 
     private void updateScore(Bundle data){
-        //TODO: Add sanity checks!
         int totalScore = data.getInt("score");
         int latestScore = data.getInt("latest_score");
         int bonusScore = data.getInt("bonus_score");
