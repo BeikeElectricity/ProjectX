@@ -45,6 +45,12 @@ public class GameActivity extends Activity
         gameModel.stopLoop();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResult(RESULT_CANCELED);
+    }
+
     /**
      * @param v The input form the "Stop Button" button. Not used, but required
      */

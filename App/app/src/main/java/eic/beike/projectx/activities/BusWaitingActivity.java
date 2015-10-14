@@ -28,6 +28,8 @@ public class BusWaitingActivity extends Activity {
     private LocationManager locationManager;
     private LocationHandler locationListener;
 
+    private static final int GAME_ACTIVITY_ID = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,10 +39,21 @@ public class BusWaitingActivity extends Activity {
         setContentView(R.layout.activity_bus_waiting);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == GAME_ACTIVITY_ID) {
+            if (resultCode == RESULT_CANCELED) {
+                finish();
+            }
+        }
+    }
+
     public void onConnect(View v) {
         if(connected){
             Intent intentGame = new Intent(this, GameActivity.class);
-            startActivity(intentGame);
+            startActivityForResult(intentGame,GAME_ACTIVITY_ID);
         }
         else{
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
