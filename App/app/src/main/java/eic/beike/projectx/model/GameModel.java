@@ -1,9 +1,10 @@
 package eic.beike.projectx.model;
 
-import android.os.Handler;
+import android.util.Log;
 
 import java.util.Random;
 
+import eic.beike.projectx.handlers.ITriggers;
 import eic.beike.projectx.network.busdata.BusCollector;
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
 import eic.beike.projectx.util.GameColor;
@@ -29,24 +30,22 @@ public class GameModel extends Thread implements IGameModel{
      * Persistent total score
      */
     private int score = 0;
-
     private int bonus = 0;
 
-    private UITriggers triggers;
+    private ITriggers triggers;
 
 
-    public GameModel(Handler handler){
+    public GameModel(ITriggers triggers){
         super();
         busCollector = SimpleBusCollector.getInstance();
         busCollector.chooseBus(BusCollector.TEST_BUSS_VIN_NUMBER);
-        triggers = new UITriggers(handler);
+        this.triggers = triggers;
         buttons = generateNewButtons();
         count = new Count(this);
     }
 
     /**
      * Adds points to the bonus count.
-     *
      * @param bonus The new bonus points.
      */
     protected synchronized void addBonus(int bonus){
@@ -83,7 +82,7 @@ public class GameModel extends Thread implements IGameModel{
             pressedC = -1;
         } else if (isNeighbour(row, column)) {
             //Valid swap, swap and deselect and remember to update ui
-            triggers.triggerSwopButtons(row, column, pressedR, pressedC);
+            triggers.triggerSwapButtons(row, column, pressedR, pressedC);
             swapButtons(row, column);
             triggers.triggerDeselectButton(pressedR, pressedC);
             pressedR = -1;
@@ -122,7 +121,7 @@ public class GameModel extends Thread implements IGameModel{
                     if (buttons[i][j].counted) {
                         buttons[i][j] = new Button(GameColor.color(random.nextInt(3)), random.nextInt(100));
                         generated++;
-                        triggers.triggerNewButton(i, j, buttons[i][j].colour.getAndroidColor());
+                        triggers.triggerNewButton(i, j, buttons[i][j].color.getAndroidColor());
                     }
                 }
             }
@@ -136,7 +135,7 @@ public class GameModel extends Thread implements IGameModel{
         for (int i = 0; i < tempList.length; i++) {
             for (int j = 0; j < tempList.length; j++) {
                 tempList[i][j] = new Button(GameColor.color(random.nextInt(3)), random.nextInt(100));
-                triggers.triggerNewButton(i, j, tempList[i][j].colour.getAndroidColor());
+                triggers.triggerNewButton(i, j, tempList[i][j].color.getAndroidColor());
             }
         }
         return tempList;
@@ -155,6 +154,13 @@ public class GameModel extends Thread implements IGameModel{
 
     public int getBonus() {
         return bonus;
+    }
+
+    /*
+    *Used for testing
+     */
+    public Button[][] getButtons() {
+        return buttons;
     }
 
 }

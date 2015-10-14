@@ -7,12 +7,12 @@ import eic.beike.projectx.util.GameColor;
  */
 public class Button {
 
-    public GameColor colour;
+    public GameColor color;
     public int score;
     public boolean counted;
 
     public Button(GameColor colour, int score) {
-        this.colour = colour;
+        this.color = colour;
         this.score = score;
         this.counted = false;
     }
@@ -22,9 +22,12 @@ public class Button {
 
         if(o instanceof Button) {
             Button other = (Button) o;
-            if (this.colour == other.colour) {
+            if (this.color == other.color) {
                 if(this.score == other.score) {
-                    return true;
+                    if(this.counted == counted) {
+                        return true;
+                    }
+
                 }
             }
         }

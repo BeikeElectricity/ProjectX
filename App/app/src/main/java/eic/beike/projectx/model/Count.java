@@ -1,5 +1,7 @@
 package eic.beike.projectx.model;
 
+import android.util.Log;
+
 import eic.beike.projectx.network.busdata.BusCollector;
 import eic.beike.projectx.network.busdata.Sensor;
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
@@ -44,9 +46,13 @@ public class Count implements ScoreCountApi {
                 if (t2 == 0) {
                     game.addScore(0);
                 } else if (t1 > t2) {
-                        game.addScore(Math.abs((int) (t1 / t2) * game.getBonus()));
+                    t1 -= Long.getLong("1444800000000");
+                    t2 -= Long.getLong("1444800000000");
+                        game.addScore(Math.abs((int) (t1 - t2) * game.getBonus()));
                 } else {
-                        game.addScore(Math.abs((int) (t2 / t1) * game.getBonus()));
+                    t1 -= Long.getLong("1444800000000");
+                    t2 -= Long.getLong("1444800000000");
+                        game.addScore(Math.abs((int) (t2 - t1) * game.getBonus()));
                     }
                 }
         }.count(t1);
@@ -63,8 +69,8 @@ public class Count implements ScoreCountApi {
     private int columns(Button[][] buttons) {
         int count = 0;
         for (int i = 0; i < buttons.length; i++) {
-            if (buttons[i][0].colour == buttons[i][1].colour
-                    && buttons[i][0].colour == buttons[i][2].colour) {
+            if (buttons[i][0].color == buttons[i][1].color
+                    && buttons[i][0].color == buttons[i][2].color) {
 
                 count += buttons[i][0].score + buttons[i][1].score + buttons[i][2].score;
                 buttons[i][0].counted = true;
@@ -82,8 +88,8 @@ public class Count implements ScoreCountApi {
     private int rows(Button[][] buttons) {
         int count = 0;
         for (int i = 0; i < buttons.length; i++) {
-            if (buttons[0][i].colour == buttons[1][i].colour
-                    && buttons[1][i].colour == buttons[2][i].colour) {
+            if (buttons[0][i].color == buttons[1][i].color
+                    && buttons[1][i].color == buttons[2][i].color) {
                 count += buttons[0][i].score + buttons[1][i].score + buttons[2][i].score;
                 buttons[0][i].counted = true;
                 buttons[1][i].counted = true;

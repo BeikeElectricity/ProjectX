@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import eic.beike.projectx.R;
 import eic.beike.projectx.handlers.GameHandler;
+import eic.beike.projectx.handlers.ITriggers;
+import eic.beike.projectx.handlers.UITriggers;
 import eic.beike.projectx.model.GameModel;
 import eic.beike.projectx.model.IGameModel;
 
@@ -44,7 +46,10 @@ public class GameActivity extends Activity {
         Log.d("Score", Thread.currentThread().getName() + ":onCreate");
 
         //TODO: Decide how to create.
-        gameModel = new GameModel(new GameHandler(Looper.getMainLooper(), this));
+        GameHandler handler  = new GameHandler(Looper.getMainLooper(), this);
+        ITriggers triggers = new UITriggers(handler);
+        gameModel = new GameModel(triggers);
+
         setContentView(R.layout.activity_game);
 
         //Get the ids of the grid buttons
@@ -147,7 +152,7 @@ public class GameActivity extends Activity {
         }
     }
 
-    public void swopButtons(int row1, int row2, int column1, int column2) {
+    public void swapButtons(int row1, int row2, int column1, int column2) {
         ImageButton button1 = (ImageButton) findViewById(gridButton[row1][column1]);
         ImageButton button2 = (ImageButton) findViewById(gridButton[row2][column2]);
 
