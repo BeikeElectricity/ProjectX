@@ -69,7 +69,7 @@ public class SimpleBusCollector implements BusCollector {
         // Try to find best match on timestamp. And add all corresponding resources
         // to the data.
 
-        ArrayList<ResponseEntry> chosenEntrys = new ArrayList();
+        ArrayList<ResponseEntry> chosenEntries = new ArrayList<ResponseEntry>();
         long bestDiff = Long.MAX_VALUE;
         long currentDiff;
 
@@ -77,16 +77,16 @@ public class SimpleBusCollector implements BusCollector {
         for (ResponseEntry e : response) {
             currentDiff = e.timestamp - time;
             if (Math.abs(currentDiff) < Math.abs(bestDiff)) {
-                chosenEntrys.clear();
-                chosenEntrys.add(e);
+                chosenEntries.clear();
+                chosenEntries.add(e);
                 bestDiff = currentDiff;
             } else if( bestDiff - currentDiff == 0 ){
-                chosenEntrys.add(e);
+                chosenEntries.add(e);
             }
         }
 
         //Populate all resource fields of the found sensor.
-        for(ResponseEntry chosenEntry : chosenEntrys) {
+        for(ResponseEntry chosenEntry : chosenEntries) {
             data.populate(chosenEntry);
         }
 
@@ -96,7 +96,7 @@ public class SimpleBusCollector implements BusCollector {
 
 
     private String constructUrl(String busDgw, Sensor sensor, long t1, long t2){
-        String dgw        = busDgw == ALL_BUSES ? "?" : "?dgw=" + busDgw + "&";
+        String dgw        = busDgw.equals(ALL_BUSES) ? "?" : "?dgw=" + busDgw + "&";
         String sensorSpec = "sensorSpec=Ericsson$" + sensor.toString();
         String timeSpan   = "&t1=" + String.valueOf(t1) + "&t2=" + String.valueOf(t2);
 
@@ -104,22 +104,16 @@ public class SimpleBusCollector implements BusCollector {
     }
 
 
-    private List<ResponseEntry> getResponse(String url){
-        List<ResponseEntry> response = null;
-        try {
-            BufferedReader reader = retrieveReader(url);
-            response = fetchSensorData(reader);
-            reader.close();
-        } catch (IOException e) {
-            Log.w(getClass().getSimpleName(), e);
-        }
+    private List<ResponseEntry> getResponse(String url) throws Exception {
+        List<ResponseEntry> response;
+        BufferedReader reader = retrieveReader(url);
+        response = fetchSensorData(reader);
+        reader.close();
 
-        if(response == null){ //TODO: Give exception to the user instead of swallowing it as empty list?
-            return new ArrayList();
+        if (response == null) {
+            throw new Exception("No data from bus api.");
         }
-        else{
-            return response;
-        }
+        return response;
     }
 
 
@@ -130,9 +124,9 @@ public class SimpleBusCollector implements BusCollector {
      * @return an input stream with the server response, this needs to be parsed. NULL if something goes wrong.
      */
     private BufferedReader retrieveReader(String url)
-            throws IOException
+            throws Exception
     {
-        BufferedReader in = null;
+        BufferedReader in;
         try {
             URL requestURL = new URL(url);
             HttpsURLConnection con = (HttpsURLConnection) requestURL.openConnection();
@@ -143,12 +137,12 @@ public class SimpleBusCollector implements BusCollector {
             //Check whether the request was successful.
             if (responseCode != HttpStatus.SC_OK) {
                 Log.w(getClass().getSimpleName(), "Error " + responseCode + " for URL " + url);
-                return null;
+                throw new Exception("Error fetching bus data.");
             }
             in = new BufferedReader(new InputStreamReader(
                     con.getInputStream()));
         } catch (IOException e) {
-            throw new IOException("Error for URL" + url, e);
+            throw new IOException("Error for URL: " + url, e);
         }
         return in;
     }
@@ -163,8 +157,7 @@ public class SimpleBusCollector implements BusCollector {
         //Parse the reader, gson needs the type which is weird below.
         Gson gson = new Gson();
         Type listType = new TypeToken<ArrayList<ResponseEntry>>() {}.getType();
-        List<ResponseEntry> response = (ArrayList<ResponseEntry>) gson.fromJson(reader, listType);
-        return response;
+        return (ArrayList<ResponseEntry>) gson.fromJson(reader, listType);
     }
 
 
@@ -175,19 +168,21 @@ public class SimpleBusCollector implements BusCollector {
     public boolean determineBus(Location userLocation) {
         long t1 = System.currentTimeMillis() - 3 * Constants.ONE_SECOND_IN_MILLI;
         long t2 = System.currentTimeMillis() + 3 * Constants.ONE_SECOND_IN_MILLI;
+        try {
 
-        String url = constructUrl(ALL_BUSES, Sensor.GPS_NMEA, t1, t2);
-        List<ResponseEntry> response = getResponse(url);
-        response = filterLatestData(response);
+            String url = constructUrl(ALL_BUSES, Sensor.GPS_NMEA, t1, t2);
+            List<ResponseEntry> response = getResponse(url);
+            response = filterLatestData(response);
 
-        ResponseEntry entry = getBestLocationMatch(response, userLocation);
-        if(busIsCloseEnough(entry, userLocation)){
-            vinNumber = entry.gatewayId;
-            return true;
+            ResponseEntry entry = getBestLocationMatch(response, userLocation);
+            if (busIsCloseEnough(entry, userLocation)) {
+                vinNumber = entry.gatewayId;
+                return true;
+            }
+        } catch (Exception e) {
+            Log.d("DetermineBus","Exception while locating bus: "+e.getMessage());
         }
-        else{
-            return false;
-        }
+        return false;
     }
 
 
@@ -197,7 +192,7 @@ public class SimpleBusCollector implements BusCollector {
      * @return a list only containing ResponseEntries with different ids.
      */
     private List<ResponseEntry> filterLatestData(List<ResponseEntry> response){
-        HashMap<String, ResponseEntry> latestData = new HashMap();
+        HashMap<String, ResponseEntry> latestData = new HashMap<String, ResponseEntry>();
 
         for(ResponseEntry r : response){
             ResponseEntry latest = latestData.get(r.gatewayId);
@@ -209,14 +204,20 @@ public class SimpleBusCollector implements BusCollector {
     }
 
 
-    private ResponseEntry getBestLocationMatch(List<ResponseEntry> response, Location location){
+    private ResponseEntry getBestLocationMatch(List<ResponseEntry> response, Location location)
+            throws Exception
+    {
         double shortestDistance = Double.MAX_VALUE;
         ResponseEntry bestMatch = null;
 
-        for(ResponseEntry e : response){
+        if (response.size() == 0) {
+            throw new Exception("No bus-gps available.");
+        }
+
+        for(ResponseEntry e : response) {
             double distanceAway = getLocationDifference(e, location);
 
-            if(bestMatch == null || distanceAway < shortestDistance){
+            if (bestMatch == null || distanceAway < shortestDistance) {
                 shortestDistance = distanceAway;
                 bestMatch = e;
             }
@@ -232,16 +233,20 @@ public class SimpleBusCollector implements BusCollector {
 
     private double getLocationDifference(ResponseEntry entry, Location location){
         try {
+            if (entry == null) {
+                throw new Exception("No entry");
+            }
             double northCoord = parseNorthCoordinate(entry.value);
             double eastCoord = parseEastCoordinate(entry.value);
 
             // The locations coordinates are multiplied by 100 to match the format from the bus.
             return Math.sqrt(Math.pow(100 * location.getLatitude() - northCoord, 2) + Math.pow(100 * location.getLongitude() - eastCoord, 2));
-        }
-        catch(NumberFormatException ex){
+        } catch(NumberFormatException ex){
             ex.printStackTrace();
-            return Double.MAX_VALUE;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return Double.MAX_VALUE;
     }
 
 

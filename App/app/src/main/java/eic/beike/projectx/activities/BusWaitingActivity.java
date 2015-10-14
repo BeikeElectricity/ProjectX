@@ -53,14 +53,14 @@ public class BusWaitingActivity extends Activity {
     public void onConnect(View v) {
         if(connected){
             Intent intentGame = new Intent(this, GameActivity.class);
-            startActivityForResult(intentGame,GAME_ACTIVITY_ID);
+            startActivityForResult(intentGame, GAME_ACTIVITY_ID);
         }
         else{
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
             TextView textView = (TextView) findViewById(R.id.bus_waiting_text);
             Button button = (Button) findViewById(R.id.bus_waiting_button);
-            textView.setText("Seaching for bus...");
+            textView.setText(R.string.bus_waiting_searching);
             button.setEnabled(false);
             new ConnectToBusTask().execute();
         }
@@ -69,10 +69,10 @@ public class BusWaitingActivity extends Activity {
     /**
      * Inner class to asynchronously connect to bus
      */
-    class ConnectToBusTask extends AsyncTask<Void, Void, Void> {
+    class ConnectToBusTask extends AsyncTask<Void, Void, Location> {
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Location doInBackground(Void... params) {
             Location location = null;
             for(int i = 0; location == null && i < 5; i++){
                 location = locationListener.getLocation();
@@ -85,20 +85,24 @@ public class BusWaitingActivity extends Activity {
             if(location != null) {
                 connected = busCollector.determineBus(location);
             }
-            return null;
+            return location;
         }
 
         @Override
-        protected void onPostExecute(Void v){
+        protected void onPostExecute(Location location){
             TextView textView = (TextView) BusWaitingActivity.this.findViewById(R.id.bus_waiting_text);
             Button button     = (Button) BusWaitingActivity.this.findViewById(R.id.bus_waiting_button);
 
             if(connected) {
-                textView.setText("Bus found.");
-                button.setText("Start");
+                textView.setText(R.string.bus_waiting_ready_text);
+                button.setText(R.string.but_waiting_ready_button);
             }
             else{
-                textView.setText("Couldn't connect to bus.\nPlease try again.");
+                if (location != null) {
+                    textView.setText(R.string.bus_waiting_no_bus);
+                } else {
+                    textView.setText(R.string.bus_waiting_no_gps);
+                }
             }
             button.setEnabled(true);
         }
