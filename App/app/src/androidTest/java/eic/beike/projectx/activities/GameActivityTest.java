@@ -1,6 +1,10 @@
 package eic.beike.projectx.activities;
 
 import android.test.ActivityInstrumentationTestCase2;
+import android.view.View;
+import android.widget.ImageButton;
+
+import eic.beike.projectx.R;
 
 /**
  * Created by Simon on 2015-10-14.
@@ -12,6 +16,8 @@ public class GameActivityTest extends ActivityInstrumentationTestCase2<GameActiv
     public GameActivityTest() {
         super(GameActivity.class);
     }
+
+
 
     public void tearDown() throws Exception {
 
@@ -30,6 +36,7 @@ public class GameActivityTest extends ActivityInstrumentationTestCase2<GameActiv
     public void testActivityExits() {
         activity = getActivity();
         assertNotNull(activity);
-        assertSame(HighscoreActivity.class, activity.getClass());
+        assertSame(GameActivity.class, activity.getClass());
     }
+
 }
