@@ -2,47 +2,90 @@ package eic.beike.projectx.activities;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.*;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import eic.beike.projectx.R;
-import eic.beike.projectx.network.busdata.Sensor;
 import eic.beike.projectx.handlers.GameHandler;
-import eic.beike.projectx.model.UserEvent;
+import eic.beike.projectx.handlers.ITriggers;
+import eic.beike.projectx.handlers.UITriggers;
 import eic.beike.projectx.model.GameModel;
 import eic.beike.projectx.util.MessageDialog;
+import eic.beike.projectx.model.IGameModel;
 
 /**
  * @author Mikael
  * @author Adam
+ * @author Alex
+ * @author Simon
  */
 public class GameActivity extends Activity
         implements MessageDialog.MessageDialogListener
 {
 
-    private GameModel gameModel;
+    /**
+     * The model used to decide what should be run
+     */
+    private IGameModel gameModel;
+    private Animation bumpButton;
+
+    private Animation fadeAnimation;
+    private int gridButton[][] = new int[3][3];
+
+
+    /**********************************************************************
+     * Methods dealing with the life cycle
+     **********************************************************************/
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("Score", Thread.currentThread().getName() + ":onCreate");
-        Handler h = makeHandler();
 
-        gameModel = new GameModel();
-        gameModel.setHandler(h);
-        gameModel.start();
+        //TODO: Decide how to create.
+        GameHandler handler  = new GameHandler(Looper.getMainLooper(), this);
+        ITriggers triggers = new UITriggers(handler);
+        gameModel = new GameModel(triggers);
+
         setContentView(R.layout.activity_game);
+
+        //Get the ids of the grid buttons
+        gridButton[0][0] = R.id.topLeft;
+        gridButton[0][1] = R.id.topMiddle;
+        gridButton[0][2] = R.id.topRight;
+        gridButton[1][0] = R.id.middleLeft;
+        gridButton[1][1] = R.id.middleMiddle;
+        gridButton[1][2] = R.id.middleRight;
+        gridButton[2][0] = R.id.bottomLeft;
+        gridButton[2][1] = R.id.bottomMiddle;
+        gridButton[2][2] = R.id.bottomRight;
+
+        //Initiate bump animation.
+        bumpButton = new ScaleAnimation(1f, 1.2f, 1f, 1.2f, 50f, 50f);
+        bumpButton.setDuration(250);
+        bumpButton.setRepeatMode(Animation.REVERSE);
+        bumpButton.setRepeatCount(1);
+        bumpButton.setInterpolator(new DecelerateInterpolator());
+
+        //Initiate fade animation.
+        fadeAnimation = new AlphaAnimation(1,0);
+        fadeAnimation.setDuration(250);
+        bumpButton.setRepeatMode(Animation.REVERSE);
+        bumpButton.setRepeatCount(1);
+        bumpButton.setInterpolator(new DecelerateInterpolator());
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        gameModel.stopLoop();
     }
 
     @Override
@@ -50,27 +93,59 @@ public class GameActivity extends Activity
         super.onBackPressed();
         setResult(RESULT_CANCELED);
     }
+    /**********************************************************************
+     *                  Methods used for event listening
+     **********************************************************************/
 
     /**
-     * @param v The input form the "Stop Button" button. Not used, but required
+     * Called when the claimBonus button is pressed. Delegates the press to the model.
      */
-    public void onStopButton(View v) {
-        gameModel.onClick(new UserEvent(System.currentTimeMillis(), Sensor.Stop_Pressed));
+    public void onBonusButtonClick(View view) {
+        if (view.getId() == R.id.claimBonus) {
+            view.startAnimation(bumpButton);
+            gameModel.claimBonus();
+        }
     }
 
     /**
-     * @param v The input form the "Door Open" button. Not used, but required
+     * Called when a grid button is pressed. Gets the position an delegates to the model.
      */
-    public void onDoorOpen(View v) {
-        gameModel.onClick(new UserEvent(System.currentTimeMillis(), Sensor.Opendoor));
+    public void onGridButtonClick(View view) {
+        //Loop through the grid buttons to see which one was clicked
+        for (int r = 0; r < gridButton.length; r++) {
+            for (int c = 0; c < gridButton[r].length; c++) {
+                if (view.getId() == gridButton[r][c]) {
+                    gameModel.pressButton(r, c);
+                    return;
+                }
+            }
+        }
+        //Couldn't find matching button. This is an error!
+        Log.e(this.getClass().getSimpleName(), "Unknown grid button pressed!");
     }
 
-    public void onLeft(View v) {
+    /***********************************************************************
+     *                  Methods used to update the UI
+     ***********************************************************************/
 
+
+    /**
+     * Used to update the score
+     */
+    public void updateScore(int latestScore, int bonusScore, int totalScore) {
+        TextView total = (TextView) findViewById(R.id.totalScore);
+        TextView last = (TextView) findViewById(R.id.lastScore);
+        Button bonus = (Button) findViewById(R.id.claimBonus);
+
+        total.setText(String.valueOf(totalScore));
+        last.setText(String.valueOf(latestScore));
+        bonus.setText(String.valueOf(bonusScore));
     }
 
-    public void onRight(View v) {
+    public void updateBonus(int bonusScore) {
+        Button bonus = (Button) findViewById(R.id.claimBonus);
 
+        bonus.setText(String.valueOf(bonusScore));
     }
 
     /**
@@ -80,17 +155,61 @@ public class GameActivity extends Activity
     private Handler makeHandler() {
         return new GameHandler(Looper.getMainLooper(), this);
     }
-    /**
-     * Used to update the score
-     * @param totalScore New score that the user got
-     */
-    public void showScore(int latestScore, int totalScore) {
-        Log.d("Score", Thread.currentThread().getName() + ":onNewScore");
-        TextView scoreText = (TextView) findViewById(R.id.textScore);
-        TextView scoreEventText = (TextView) findViewById(R.id.textScoreEvent);
 
-        scoreText.setText(String.valueOf(totalScore));
-        scoreEventText.setText(String.format("Du fick %d poäng", latestScore));
+    public void updateButton(int row, int column, int colour) {
+        if(row < gridButton.length && column < gridButton[row].length) {
+            ImageButton button = (ImageButton) findViewById(gridButton[row][column]);
+            button.startAnimation(fadeAnimation);
+
+            button.setImageResource(colour);
+        } else {
+            //Input was not in the correct form, log error.
+            Log.e(getClass().getSimpleName(), "Invalid argument when replacing buttons!");
+        }
+    }
+
+    public void swapButtons(int row1, int row2, int column1, int column2) {
+        ImageButton button1 = (ImageButton) findViewById(gridButton[row1][column1]);
+        ImageButton button2 = (ImageButton) findViewById(gridButton[row2][column2]);
+
+        Drawable color1 = button1.getDrawable();
+        Drawable color2= button2.getDrawable();
+
+        button1.startAnimation(fadeAnimation);
+        button1.setImageDrawable(color2);
+
+        button2.startAnimation(fadeAnimation);
+        button2.setImageDrawable(color1);
+    }
+
+    /**
+     * Highlights the specified grid button.
+     */
+    public void selectButton(int row, int column) {
+        //Check for valid position and change alpha.
+        if ((0 <= row && row < gridButton.length) &&
+                (0 <= column && column < gridButton[0].length)) {
+            ImageButton button = (ImageButton) findViewById(gridButton[row][column]);
+            button.setAlpha(.7f);
+            button.setSelected(true);
+        } else {
+            Log.e(getClass().getSimpleName(), "Invalid argument when selecting button!");
+        }
+    }
+
+    /**
+     * Deselect the specified button so that it is no longer highlighted.
+     */
+    public void deselectButton(int row, int column) {
+        //Check for valid position and change alpha.
+        if ((0 <= row && row < gridButton.length) &&
+                (0 <= column && column < gridButton[0].length)) {
+            ImageButton button = (ImageButton) findViewById(gridButton[row][column]);
+            button.setAlpha(1f);
+            button.setSelected(false);
+        } else {
+            Log.e(getClass().getSimpleName(), "Invalid argument when deselecting button!");
+        }
     }
 
     /**

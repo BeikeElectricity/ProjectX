@@ -4,13 +4,11 @@ import android.location.Location;
 import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import eic.beike.projectx.util.Constants;
-import org.apache.http.HttpStatus;
 
-import javax.net.ssl.HttpsURLConnection;
+import eic.beike.projectx.network.RetrieveReader;
+import eic.beike.projectx.util.Constants;
 import java.io.*;
 import java.lang.reflect.Type;
-import java.net.URL;
 import java.util.*;
 
 /**
@@ -106,47 +104,14 @@ public class SimpleBusCollector implements BusCollector {
 
     private List<ResponseEntry> getResponse(String url) throws Exception {
         List<ResponseEntry> response;
-        BufferedReader reader = retrieveReader(url);
+        BufferedReader reader = RetrieveReader.get(url);
         response = fetchSensorData(reader);
         reader.close();
-
         if (response == null) {
             throw new Exception("No data from bus api.");
         }
         return response;
     }
-
-
-    /**
-     * Make a http request and return a reader for the response.
-     *
-     * @param url the formatted rest call
-     * @return an input stream with the server response, this needs to be parsed. NULL if something goes wrong.
-     */
-    private BufferedReader retrieveReader(String url)
-            throws Exception
-    {
-        BufferedReader in;
-        try {
-            URL requestURL = new URL(url);
-            HttpsURLConnection con = (HttpsURLConnection) requestURL.openConnection();
-            con.setRequestMethod("GET");
-            con.setRequestProperty("Authorization", "Basic " + Constants.AUTHORIZATION);
-            int responseCode = con.getResponseCode();
-
-            //Check whether the request was successful.
-            if (responseCode != HttpStatus.SC_OK) {
-                Log.w(getClass().getSimpleName(), "Error " + responseCode + " for URL " + url);
-                throw new Exception("Error fetching bus data.");
-            }
-            in = new BufferedReader(new InputStreamReader(
-                    con.getInputStream()));
-        } catch (IOException e) {
-            throw new IOException("Error for URL: " + url, e);
-        }
-        return in;
-    }
-
 
     /**
      * @param reader buffered reader for gson.
