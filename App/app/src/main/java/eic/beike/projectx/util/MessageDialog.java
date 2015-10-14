@@ -17,6 +17,7 @@ public class MessageDialog extends DialogFragment {
     private String message = "";
     private int messageId;
     private boolean useId = false;
+    private boolean haveCancelButton = false;
 
     public void setMessage(String message) {
         this.message = message;
@@ -27,6 +28,9 @@ public class MessageDialog extends DialogFragment {
         this.useId = true;
     }
 
+    public void setHaveCancelButton(boolean flag) {
+        this.haveCancelButton = flag;
+    }
     /**
      * Interface to facilitate talking back to the activity.
      */
@@ -55,6 +59,13 @@ public class MessageDialog extends DialogFragment {
                     listener.onDialogPositiveClick(MessageDialog.this);
                 }
             });
+        if (this.haveCancelButton) {
+            builder.setNegativeButton(R.string.cancel,new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    listener.onDialogNegativeClick(MessageDialog.this);
+                }
+            });
+        }
         // Create the AlertDialog object and return it
         return builder.create();
     }
