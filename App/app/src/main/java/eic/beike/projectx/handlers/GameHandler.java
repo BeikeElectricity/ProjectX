@@ -45,7 +45,7 @@ public class GameHandler extends Handler {
         } else if (operation.equals(Constants.BONUSBUTTON)) {
             updateBonus(data);
         } else if (operation.equals(Constants.SWOPBUTTON)) {
-            swopButton(data);
+            swapButton(data);
         }
 
         else {
@@ -59,13 +59,13 @@ public class GameHandler extends Handler {
         }
     }
 
-    private void swopButton(Bundle data) {
+    private void swapButton(Bundle data) {
         int row1 = data.getInt("row1");
         int row2 = data.getInt("row2");
         int column1 = data.getInt("column1");
         int column2 = data.getInt("column2");
 
-        game.swopButtons(row1, row2, column1, column2);
+        game.swapButtons(row1, row2, column1, column2);
     }
 
     private void updateBonus(Bundle data) {

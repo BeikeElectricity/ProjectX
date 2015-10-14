@@ -1,10 +1,8 @@
 package eic.beike.projectx.model;
 
-import android.os.Handler;
-
 import java.util.Random;
 
-import eic.beike.projectx.handlers.UITriggers;
+import eic.beike.projectx.handlers.ITriggers;
 import eic.beike.projectx.network.busdata.BusCollector;
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
 import eic.beike.projectx.util.GameColor;
@@ -30,13 +28,12 @@ public class GameModel extends Thread implements IGameModel{
      * Persistent total score
      */
     private int score = 0;
-
     private int bonus = 0;
 
-    private UITriggers triggers;
+    private ITriggers triggers;
 
 
-    public GameModel(UITriggers triggers){
+    public GameModel(ITriggers triggers){
         super();
         busCollector = SimpleBusCollector.getInstance();
         busCollector.chooseBus(BusCollector.TEST_BUSS_VIN_NUMBER);
@@ -47,7 +44,6 @@ public class GameModel extends Thread implements IGameModel{
 
     /**
      * Adds points to the bonus count.
-     *
      * @param bonus The new bonus points.
      */
     protected synchronized void addBonus(int bonus){
@@ -84,7 +80,7 @@ public class GameModel extends Thread implements IGameModel{
             pressedC = -1;
         } else if (isNeighbour(row, column)) {
             //Valid swap, swap and deselect and remember to update ui
-            triggers.triggerSwopButtons(row, column, pressedR, pressedC);
+            triggers.triggerSwapButtons(row, column, pressedR, pressedC);
             swapButtons(row, column);
             triggers.triggerDeselectButton(pressedR, pressedC);
             pressedR = -1;

@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import eic.beike.projectx.R;
 import eic.beike.projectx.handlers.GameHandler;
+import eic.beike.projectx.handlers.ITriggers;
 import eic.beike.projectx.handlers.UITriggers;
 import eic.beike.projectx.model.GameModel;
 import eic.beike.projectx.model.IGameModel;
@@ -46,7 +47,7 @@ public class GameActivity extends Activity {
 
         //TODO: Decide how to create.
         GameHandler handler  = new GameHandler(Looper.getMainLooper(), this);
-        UITriggers triggers = new UITriggers(handler);
+        ITriggers triggers = new UITriggers(handler);
         gameModel = new GameModel(triggers);
 
         setContentView(R.layout.activity_game);
@@ -151,7 +152,7 @@ public class GameActivity extends Activity {
         }
     }
 
-    public void swopButtons(int row1, int row2, int column1, int column2) {
+    public void swapButtons(int row1, int row2, int column1, int column2) {
         ImageButton button1 = (ImageButton) findViewById(gridButton[row1][column1]);
         ImageButton button2 = (ImageButton) findViewById(gridButton[row2][column2]);
 

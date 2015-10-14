@@ -9,7 +9,7 @@ import eic.beike.projectx.util.Constants;
 /**
  * Used to update the game activity from any thread.
  */
-public class UITriggers {
+public class UITriggers implements ITriggers{
 
     private Handler handler;
 
@@ -22,6 +22,7 @@ public class UITriggers {
      * Used to notify the handlers about a new score
      * @param latestScore The latest score the player received
      */
+    @Override
     public synchronized void triggerNewScore(int latestScore, int totalscore) {
         if (handler == null) {
             return;
@@ -37,7 +38,7 @@ public class UITriggers {
         msg.setData(data);
         msg.sendToTarget();
     }
-
+    @Override
     public synchronized void triggerNewBonus(int bonus) {
         if (handler == null) {
             return;
@@ -53,7 +54,7 @@ public class UITriggers {
         msg.sendToTarget();
 
     }
-
+    @Override
     public synchronized void triggerDeselectButton(int row,int column) {
         if(handler == null) {
             return;
@@ -70,6 +71,7 @@ public class UITriggers {
         msg.sendToTarget();
     }
 
+    @Override
     public synchronized void triggerSelectButton(int row, int column) {
         if(handler == null) {
             return;
@@ -86,7 +88,8 @@ public class UITriggers {
         msg.sendToTarget();
     }
 
-    public synchronized void triggerSwopButtons(int row, int column,int pressedR, int pressedC) {
+    @Override
+    public synchronized void triggerSwapButtons(int row, int column, int pressedR, int pressedC) {
         if(handler == null) {
             return;
         }
@@ -104,6 +107,7 @@ public class UITriggers {
         msg.sendToTarget();
     }
 
+    @Override
     public synchronized void triggerNewButton(int row, int column, int androidColor) {
         if(handler == null) {
             return;
