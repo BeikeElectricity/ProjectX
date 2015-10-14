@@ -42,6 +42,7 @@ public class GameModel extends Thread implements IGameModel{
         this.triggers = triggers;
         buttons = generateNewButtons();
         count = new Count(this);
+        new RoundTracker().track(this);
     }
 
     /**
@@ -127,6 +128,15 @@ public class GameModel extends Thread implements IGameModel{
             }
             count.sum(buttons);
         } while (generated > 0);
+    }
+
+    /**
+     *
+     */
+    protected void endRound() {
+        triggers.triggerEndRound(score);
+        score = 0;
+        bonus = 0;
     }
 
     private Button[][] generateNewButtons() {

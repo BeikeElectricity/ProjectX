@@ -124,4 +124,19 @@ public class UITriggers implements ITriggers{
         msg.setData(data);
         msg.sendToTarget();
     }
+
+    public  synchronized void triggerEndRound(int score){
+        if(handler == null) {
+            return;
+        }
+
+        Message msg = handler.obtainMessage();
+        Bundle data = new Bundle();
+
+        data.putString("operation", Constants.ENDROUND);
+        data.putInt("score", score);
+
+        msg.setData(data);
+        msg.sendToTarget();
+    }
 }
