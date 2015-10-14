@@ -1,5 +1,7 @@
 package eic.beike.projectx.model;
 
+import android.util.Log;
+
 import java.util.Random;
 
 import eic.beike.projectx.handlers.ITriggers;
@@ -119,7 +121,7 @@ public class GameModel extends Thread implements IGameModel{
                     if (buttons[i][j].counted) {
                         buttons[i][j] = new Button(GameColor.color(random.nextInt(3)), random.nextInt(100));
                         generated++;
-                        triggers.triggerNewButton(i, j, buttons[i][j].colour.getAndroidColor());
+                        triggers.triggerNewButton(i, j, buttons[i][j].color.getAndroidColor());
                     }
                 }
             }
@@ -133,7 +135,7 @@ public class GameModel extends Thread implements IGameModel{
         for (int i = 0; i < tempList.length; i++) {
             for (int j = 0; j < tempList.length; j++) {
                 tempList[i][j] = new Button(GameColor.color(random.nextInt(3)), random.nextInt(100));
-                triggers.triggerNewButton(i, j, tempList[i][j].colour.getAndroidColor());
+                triggers.triggerNewButton(i, j, tempList[i][j].color.getAndroidColor());
             }
         }
         return tempList;
@@ -152,6 +154,13 @@ public class GameModel extends Thread implements IGameModel{
 
     public int getBonus() {
         return bonus;
+    }
+
+    /*
+    *Used for testing
+     */
+    public Button[][] getButtons() {
+        return buttons;
     }
 
 }

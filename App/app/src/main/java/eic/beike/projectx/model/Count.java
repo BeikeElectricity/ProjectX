@@ -63,8 +63,8 @@ public class Count implements ScoreCountApi {
     private int columns(Button[][] buttons) {
         int count = 0;
         for (int i = 0; i < buttons.length; i++) {
-            if (buttons[i][0].colour == buttons[i][1].colour
-                    && buttons[i][0].colour == buttons[i][2].colour) {
+            if (buttons[i][0].color == buttons[i][1].color
+                    && buttons[i][0].color == buttons[i][2].color) {
 
                 count += buttons[i][0].score + buttons[i][1].score + buttons[i][2].score;
                 buttons[i][0].counted = true;
@@ -82,8 +82,8 @@ public class Count implements ScoreCountApi {
     private int rows(Button[][] buttons) {
         int count = 0;
         for (int i = 0; i < buttons.length; i++) {
-            if (buttons[0][i].colour == buttons[1][i].colour
-                    && buttons[1][i].colour == buttons[2][i].colour) {
+            if (buttons[0][i].color == buttons[1][i].color
+                    && buttons[1][i].color == buttons[2][i].color) {
                 count += buttons[0][i].score + buttons[1][i].score + buttons[2][i].score;
                 buttons[0][i].counted = true;
                 buttons[1][i].counted = true;
