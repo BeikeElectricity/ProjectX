@@ -62,8 +62,13 @@ public class SimpleBusCollector implements BusCollector {
         long t1 = time - 10 * Constants.ONE_SECOND_IN_MILLI;
 
         String url = constructUrl(vinNumber, sensor, t1, t2);
-        List<ResponseEntry> response = getResponse(url);
 
+        List<ResponseEntry> response;
+        try {
+            response = getResponse(url);
+        } catch (Exception e) {
+            response = new ArrayList<ResponseEntry>();
+        }
         // Try to find best match on timestamp. And add all corresponding resources
         // to the data.
 

@@ -80,9 +80,6 @@ public class HighscoreActivityTest extends ActivityInstrumentationTestCase2<High
 
         assertNotNull(listView);
 
-        Adapter adapter = listView.getAdapter();
-
-        assertNotNull(adapter);
         Handler handler = activity.makeHandler();
         Bundle bundle = new Bundle();
         StringBuilder sb = new StringBuilder();
@@ -100,8 +97,26 @@ public class HighscoreActivityTest extends ActivityInstrumentationTestCase2<High
         Message msg = handler.obtainMessage();
         msg.setData(bundle);
 
+        // Wait so that the original database call gets through
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         msg.sendToTarget();
 
+        // Sleep some to make sure the data is updated.
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        Adapter adapter = listView.getAdapter();
+
+        assertNotNull(adapter);
         assertSame(adapter.getClass(), HighscoreAdapter.class);
         assertEquals(adapter.getCount(),data.size());
     }

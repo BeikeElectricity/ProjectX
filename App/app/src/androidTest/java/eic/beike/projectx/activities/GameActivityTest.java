@@ -30,6 +30,6 @@ public class GameActivityTest extends ActivityInstrumentationTestCase2<GameActiv
     public void testActivityExits() {
         activity = getActivity();
         assertNotNull(activity);
-        assertSame(HighscoreActivity.class, activity.getClass());
+        assertSame(GameActivity.class, activity.getClass());
     }
 }
