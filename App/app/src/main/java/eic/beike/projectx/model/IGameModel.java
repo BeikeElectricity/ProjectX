@@ -19,4 +19,6 @@ public interface IGameModel {
     void pressButton(int row, int column);
 
     void generateButtons();
+
+    Count getCount();
 }

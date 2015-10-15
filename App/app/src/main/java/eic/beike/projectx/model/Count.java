@@ -1,7 +1,10 @@
 package eic.beike.projectx.model;
 
+import android.os.Handler;
 import android.util.Log;
 
+import eic.beike.projectx.handlers.ITriggers;
+import eic.beike.projectx.handlers.UITriggers;
 import eic.beike.projectx.network.busdata.BusCollector;
 import eic.beike.projectx.network.busdata.Sensor;
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
@@ -12,8 +15,11 @@ import eic.beike.projectx.network.busdata.SimpleBusCollector;
 public class Count implements ScoreCountApi {
 
     /**
-     * The game that uses this counter.
+     * The game uses this counter.
      */
+
+    private final String eopchyear = String.valueOf("1444800000000");
+
     private GameModel game;
 
     public Count(GameModel game) {
@@ -43,17 +49,7 @@ public class Count implements ScoreCountApi {
 
                 BusCollector bus = SimpleBusCollector.getInstance();
                 long t2 = bus.getBusData(t1, Sensor.Stop_Pressed).timestamp;
-                if (t2 == 0) {
-                    game.addScore(0);
-                } else if (t1 > t2) {
-                    t1 -= Long.getLong("1444800000000");
-                    t2 -= Long.getLong("1444800000000");
-                        game.addScore(Math.abs((int) (t1 - t2) * game.getBonus()));
-                } else {
-                    t1 -= Long.getLong("1444800000000");
-                    t2 -= Long.getLong("1444800000000");
-                        game.addScore(Math.abs((int) (t2 - t1) * game.getBonus()));
-                    }
+                calculate(t1,t2);
                 }
         }.count(t1);
     }
@@ -97,5 +93,22 @@ public class Count implements ScoreCountApi {
             }
         }
         return count;
+    }
+    /*
+    * @Param t1, Time clicked
+    * @Param t2, Time for signal
+     */
+    public synchronized void calculate(long t1, long t2) {
+        if (t2 == 0) {
+            game.addScore(0);
+        } else if (t1 > t2) {
+            t1 -= Long.getLong(eopchyear);
+            t2 -= Long.getLong(eopchyear);
+            game.addScore(Math.abs((int) (t1 - t2) * game.getBonus()));
+        } else {
+            t1 -= Long.getLong(eopchyear);
+            t2 -= Long.getLong(eopchyear);
+            game.addScore(Math.abs((int) (t2 - t1) * game.getBonus()));
+        }
     }
 }

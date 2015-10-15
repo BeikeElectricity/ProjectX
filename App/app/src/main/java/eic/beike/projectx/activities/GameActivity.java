@@ -195,4 +195,9 @@ public class GameActivity extends Activity {
             Log.e(getClass().getSimpleName(), "Invalid argument when deselecting button!");
         }
     }
+
+    public IGameModel getGameModel() {
+        return gameModel;
+    }
+
 }

@@ -163,4 +163,8 @@ public class GameModel extends Thread implements IGameModel{
         return buttons;
     }
 
+    public Count getCount() {
+        return count;
+    }
+
 }
