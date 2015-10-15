@@ -60,7 +60,7 @@ public class SimpleBusCollectorTest extends TestCase {
      ****************************************************************************************************************/
 
 
-    public void testBusDataStamped() {
+    public void testBusDataStamped() throws Exception {
         BusData response = collector.getBusData(testTime,Sensor.At_Stop);
         assertTrue(response.getTimestamp() ==1443513325166l );
     }
@@ -72,7 +72,7 @@ public class SimpleBusCollectorTest extends TestCase {
         server.start();
         // reflectBaseUrl();
         BusData response = collector.getBusData(testTime, Sensor.Ambient_Temperature);
-        assert(response.getSensor() == Sensor.UNKNOWN);
+        assertEquals(response.getSensor(), Sensor.UNKNOWN);
     }
 
     public void testHttpRequestNotOK() throws Exception {

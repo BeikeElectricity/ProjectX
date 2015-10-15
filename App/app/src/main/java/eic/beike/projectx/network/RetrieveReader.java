@@ -23,10 +23,12 @@ public class RetrieveReader {
      * @param url the formatted rest call
      * @return an input stream with the server response, this needs to be parsed. NULL if something goes wrong.
      */
-    public static BufferedReader get(String url) {
-        BufferedReader in = null;
+    public static BufferedReader get(String url)
+            throws Exception
+    {
 
         try {
+            BufferedReader in;
             URL requestURL = new URL(url);
 
             //Handle https and http connections differently.
@@ -39,7 +41,7 @@ public class RetrieveReader {
                 //Check whether the request was successful.
                 if (responseCode != HttpStatus.SC_OK) {
                     Log.w("RetrieveReader", "Error " + responseCode + " for URL " + url);
-                    return null;
+                    throw new Exception(String.format("Response %d from url (%s).",responseCode,url));
                 }
                 in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             } else {
@@ -48,9 +50,10 @@ public class RetrieveReader {
                         new InputStreamReader(
                                 yc.getInputStream()));
             }
+            return in;
         } catch (IOException e) {
             Log.w("RetrieveReader", "Error for URL " + url, e);
+            throw new Exception(String.format("Unable to reach host (%s).",url));
         }
-        return in;
     }
 }

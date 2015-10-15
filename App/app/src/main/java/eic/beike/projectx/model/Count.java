@@ -1,13 +1,13 @@
 package eic.beike.projectx.model;
 
-import android.util.Log;
 
 import eic.beike.projectx.network.busdata.BusCollector;
+import eic.beike.projectx.network.busdata.BusData;
 import eic.beike.projectx.network.busdata.Sensor;
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
 
 /**
- * Created by Simon on 2015-10-08.
+ *@author Simon
  */
 public class Count implements ScoreCountApi {
 
@@ -36,13 +36,16 @@ public class Count implements ScoreCountApi {
             @Override
             public void run() {
                 try {
-                    this.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
                 BusCollector bus = SimpleBusCollector.getInstance();
-                long t2 = bus.getBusData(t1, Sensor.Stop_Pressed).timestamp;
+                BusData data = bus.getBusData(t1, Sensor.Stop_Pressed);
+                long t2 = data.timestamp;                
+
                 if (t2 == 0) {
                     game.addScore(0);
                 } else if (t1 > t2) {
@@ -54,7 +57,10 @@ public class Count implements ScoreCountApi {
                     t2 -= 1444800000000l;
                         game.addScore(Math.abs((int) (t2 - t1) * game.getBonus()));
                     }
+                } catch (Exception e) {
+                    game.triggerError(e.getMessage());
                 }
+            }
         }.count(t1);
     }
 
@@ -68,14 +74,14 @@ public class Count implements ScoreCountApi {
      */
     private int columns(Button[][] buttons) {
         int count = 0;
-        for (int i = 0; i < buttons.length; i++) {
-            if (buttons[i][0].color == buttons[i][1].color
-                    && buttons[i][0].color == buttons[i][2].color) {
+        for (Button[] button : buttons) {
+            if (button[0].color == button[1].color
+                    && button[0].color == button[2].color) {
 
-                count += buttons[i][0].score + buttons[i][1].score + buttons[i][2].score;
-                buttons[i][0].counted = true;
-                buttons[i][1].counted = true;
-                buttons[i][2].counted = true;
+                count += button[0].score + button[1].score + button[2].score;
+                button[0].counted = true;
+                button[1].counted = true;
+                button[2].counted = true;
             }
         }
         return count;

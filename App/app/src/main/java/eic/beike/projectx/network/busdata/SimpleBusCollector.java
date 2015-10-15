@@ -1,20 +1,14 @@
 package eic.beike.projectx.network.busdata;
 
-import android.content.Context;
 import android.location.Location;
-import android.location.LocationManager;
 import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
 import eic.beike.projectx.network.RetrieveReader;
 import eic.beike.projectx.util.Constants;
-import org.apache.http.HttpStatus;
-
-import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.lang.reflect.Type;
-import java.net.URL;
-import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -57,7 +51,9 @@ public class SimpleBusCollector implements BusCollector {
 
 
     @Override
-    public BusData getBusData(long time, Sensor sensor) {
+    public BusData getBusData(long time, Sensor sensor)
+            throws Exception
+    {
 
         BusData data = new BusData();
 
@@ -66,12 +62,17 @@ public class SimpleBusCollector implements BusCollector {
         long t1 = time - 10 * Constants.ONE_SECOND_IN_MILLI;
 
         String url = constructUrl(vinNumber, sensor, t1, t2);
-        List<ResponseEntry> response = getResponse(url);
 
+        List<ResponseEntry> response;
+        try {
+            response = getResponse(url);
+        } catch (Exception e) {
+            response = new ArrayList<ResponseEntry>();
+        }
         // Try to find best match on timestamp. And add all corresponding resources
         // to the data.
 
-        ArrayList<ResponseEntry> chosenEntrys = new ArrayList();
+        ArrayList<ResponseEntry> chosenEntries = new ArrayList<ResponseEntry>();
         long bestDiff = Long.MAX_VALUE;
         long currentDiff;
 
@@ -79,16 +80,16 @@ public class SimpleBusCollector implements BusCollector {
         for (ResponseEntry e : response) {
             currentDiff = e.timestamp - time;
             if (Math.abs(currentDiff) < Math.abs(bestDiff)) {
-                chosenEntrys.clear();
-                chosenEntrys.add(e);
+                chosenEntries.clear();
+                chosenEntries.add(e);
                 bestDiff = currentDiff;
             } else if( bestDiff - currentDiff == 0 ){
-                chosenEntrys.add(e);
+                chosenEntries.add(e);
             }
         }
 
         //Populate all resource fields of the found sensor.
-        for(ResponseEntry chosenEntry : chosenEntrys) {
+        for(ResponseEntry chosenEntry : chosenEntries) {
             data.populate(chosenEntry);
         }
 
@@ -98,7 +99,7 @@ public class SimpleBusCollector implements BusCollector {
 
 
     private String constructUrl(String busDgw, Sensor sensor, long t1, long t2){
-        String dgw        = busDgw == ALL_BUSES ? "?" : "?dgw=" + busDgw + "&";
+        String dgw        = busDgw.equals(ALL_BUSES) ? "?" : "?dgw=" + busDgw + "&";
         String sensorSpec = "sensorSpec=Ericsson$" + sensor.toString();
         String timeSpan   = "&t1=" + String.valueOf(t1) + "&t2=" + String.valueOf(t2);
 
@@ -106,24 +107,16 @@ public class SimpleBusCollector implements BusCollector {
     }
 
 
-    private List<ResponseEntry> getResponse(String url){
-        List<ResponseEntry> response = null;
-        try {
-            BufferedReader reader = RetrieveReader.get(url);
-            response = fetchSensorData(reader);
-            reader.close();
-        } catch (IOException e) {
-            Log.w(getClass().getSimpleName(), e);
+    private List<ResponseEntry> getResponse(String url) throws Exception {
+        List<ResponseEntry> response;
+        BufferedReader reader = RetrieveReader.get(url);
+        response = fetchSensorData(reader);
+        reader.close();
+        if (response == null) {
+            throw new Exception("No data from bus api.");
         }
-
-        if(response == null){ //TODO: Give exception to the user instead of swallowing it as empty list?
-            return new ArrayList();
-        }
-        else{
-            return response;
-        }
+        return response;
     }
-
 
     /**
      * @param reader buffered reader for gson.
@@ -134,8 +127,7 @@ public class SimpleBusCollector implements BusCollector {
         //Parse the reader, gson needs the type which is weird below.
         Gson gson = new Gson();
         Type listType = new TypeToken<ArrayList<ResponseEntry>>() {}.getType();
-        List<ResponseEntry> response = (ArrayList<ResponseEntry>) gson.fromJson(reader, listType);
-        return response;
+        return (ArrayList<ResponseEntry>) gson.fromJson(reader, listType);
     }
 
 
@@ -146,19 +138,21 @@ public class SimpleBusCollector implements BusCollector {
     public boolean determineBus(Location userLocation) {
         long t1 = System.currentTimeMillis() - 3 * Constants.ONE_SECOND_IN_MILLI;
         long t2 = System.currentTimeMillis() + 3 * Constants.ONE_SECOND_IN_MILLI;
+        try {
 
-        String url = constructUrl(ALL_BUSES, Sensor.GPS_NMEA, t1, t2);
-        List<ResponseEntry> response = getResponse(url);
-        response = filterLatestData(response);
+            String url = constructUrl(ALL_BUSES, Sensor.GPS_NMEA, t1, t2);
+            List<ResponseEntry> response = getResponse(url);
+            response = filterLatestData(response);
 
-        ResponseEntry entry = getBestLocationMatch(response, userLocation);
-        if(busIsCloseEnough(entry, userLocation)){
-            vinNumber = entry.gatewayId;
-            return true;
+            ResponseEntry entry = getBestLocationMatch(response, userLocation);
+            if (busIsCloseEnough(entry, userLocation)) {
+                vinNumber = entry.gatewayId;
+                return true;
+            }
+        } catch (Exception e) {
+            Log.d("DetermineBus","Exception while locating bus: "+e.getMessage());
         }
-        else{
-            return false;
-        }
+        return false;
     }
 
 
@@ -168,7 +162,7 @@ public class SimpleBusCollector implements BusCollector {
      * @return a list only containing ResponseEntries with different ids.
      */
     private List<ResponseEntry> filterLatestData(List<ResponseEntry> response){
-        HashMap<String, ResponseEntry> latestData = new HashMap();
+        HashMap<String, ResponseEntry> latestData = new HashMap<String, ResponseEntry>();
 
         for(ResponseEntry r : response){
             ResponseEntry latest = latestData.get(r.gatewayId);
@@ -180,14 +174,20 @@ public class SimpleBusCollector implements BusCollector {
     }
 
 
-    private ResponseEntry getBestLocationMatch(List<ResponseEntry> response, Location location){
+    private ResponseEntry getBestLocationMatch(List<ResponseEntry> response, Location location)
+            throws Exception
+    {
         double shortestDistance = Double.MAX_VALUE;
         ResponseEntry bestMatch = null;
 
-        for(ResponseEntry e : response){
+        if (response.size() == 0) {
+            throw new Exception("No bus-gps available.");
+        }
+
+        for(ResponseEntry e : response) {
             double distanceAway = getLocationDifference(e, location);
 
-            if(bestMatch == null || distanceAway < shortestDistance){
+            if (bestMatch == null || distanceAway < shortestDistance) {
                 shortestDistance = distanceAway;
                 bestMatch = e;
             }
@@ -203,16 +203,20 @@ public class SimpleBusCollector implements BusCollector {
 
     private double getLocationDifference(ResponseEntry entry, Location location){
         try {
+            if (entry == null) {
+                throw new Exception("No entry");
+            }
             double northCoord = parseNorthCoordinate(entry.value);
             double eastCoord = parseEastCoordinate(entry.value);
 
             // The locations coordinates are multiplied by 100 to match the format from the bus.
             return Math.sqrt(Math.pow(100 * location.getLatitude() - northCoord, 2) + Math.pow(100 * location.getLongitude() - eastCoord, 2));
-        }
-        catch(NumberFormatException ex){
+        } catch(NumberFormatException ex){
             ex.printStackTrace();
-            return Double.MAX_VALUE;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return Double.MAX_VALUE;
     }
 
 

@@ -6,13 +6,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
 import eic.beike.projectx.R;
+import eic.beike.projectx.util.Constants;
 
 
 /**
@@ -27,7 +27,7 @@ public class NameSplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_init);
 
-        SharedPreferences settings = getSharedPreferences(MainActivity.SETTINGS_FILE,0);
+        SharedPreferences settings = getSharedPreferences(Constants.SETTINGS_FILE,0);
 
         // Used to fetch the phone id
         final TelephonyManager tm = (TelephonyManager) getBaseContext()
@@ -38,7 +38,7 @@ public class NameSplashActivity extends Activity {
 
         // Save it
         SharedPreferences.Editor editor = settings.edit();
-        editor.putString(MainActivity.ID_FIELD, androidId);
+        editor.putString(Constants.ID_FIELD, androidId);
 
         editor.apply();
     }
@@ -46,15 +46,17 @@ public class NameSplashActivity extends Activity {
 
     /**
      * Handles clicks form the button in the view
-     * @param view
+     * @param view Unused (Triggering view)
      */
     public void onClick(View view) {
         EditText editBox = (EditText) findViewById(R.id.nameInputField);
         String text = editBox.getText().toString();
 
-        SharedPreferences settings = getSharedPreferences(MainActivity.SETTINGS_FILE, 0);
+        // Lets save the name in permanent storage
+        SharedPreferences settings = getSharedPreferences(Constants.SETTINGS_FILE, 0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putString(MainActivity.NAME_FIELD,text);
+
+        editor.putString(Constants.NAME_FIELD,text);
 
         editor.apply();
 
@@ -67,10 +69,19 @@ public class NameSplashActivity extends Activity {
         startActivityForResult(intent, NameSplashActivity.MENU_ACTIVITY);
     }
 
+    /**
+     * Handles the result from any activity started by this.
+     * Used for stopping this when user exits.
+     *
+     * @param requestCode The code identifying which request
+     * @param resultCode The result code of that request
+     * @param data The intent
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == MENU_ACTIVITY) {
             if (resultCode == NameSplashActivity.RESULT_CANCELED) {
+                // Bubble the "exit" to next activity (Main)
                 setResult(NameSplashActivity.RESULT_CANCELED);
                 finish();
             }

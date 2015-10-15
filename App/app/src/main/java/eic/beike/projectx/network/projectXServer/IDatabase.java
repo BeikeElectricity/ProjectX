@@ -2,7 +2,6 @@ package eic.beike.projectx.network.projectXServer;
 
 import eic.beike.projectx.util.ScoreEntry;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -17,21 +16,21 @@ public interface IDatabase {
      * Register a name for the given id.
      * @return True if registration succeded, false if it failed.
      */
-   boolean register(String id, String name);
+   boolean register(String id, String name) throws Exception;
 
     /**
      * @return True if score was recorded correctly, false if it failed.
      */
-    boolean recordScore(String playerId, int score, long time, String bus);
+    boolean recordScore(String playerId, int score, long time, String bus) throws Exception;
 
     /**
      * @return The best ten scores for all players on all buses.
      */
-    List<ScoreEntry> getTopTen();
+    List<ScoreEntry> getTopTen() throws Exception;
 
     /**
      * @return The best ten scores for the given player.
      */
-    List<ScoreEntry> getPlayerTopTen(String playerId);
+    List<ScoreEntry> getPlayerTopTen(String playerId) throws Exception;
 
 }

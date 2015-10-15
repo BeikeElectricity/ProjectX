@@ -28,6 +28,11 @@ public class GameHandler extends Handler {
 
         Bundle data = msg.getData();
 
+        if (data.getBoolean("error",false)) {
+            game.showErrorDialog();
+            game.finish();
+        }
+
         //See what operation to perform.
         String operation = data.getString("operation");
         if (operation.equals(Constants.UPDATESCORE)) {

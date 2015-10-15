@@ -1,19 +1,19 @@
 package eic.beike.projectx.activities;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.Adapter;
 import android.widget.ListView;
 
-import junit.framework.TestCase;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import eic.beike.projectx.util.Constants;
 import eic.beike.projectx.util.HighscoreAdapter;
 import eic.beike.projectx.util.ScoreEntry;
 
@@ -54,7 +54,7 @@ public class HighscoreActivityTest extends ActivityInstrumentationTestCase2<High
 
         // Clear settings
         Context context = getInstrumentation().getTargetContext();
-        SharedPreferences settings = context.getSharedPreferences(MainActivity.SETTINGS_FILE, 0);
+        SharedPreferences settings = context.getSharedPreferences(Constants.SETTINGS_FILE, 0);
         settings.edit().clear().commit();
 
 
@@ -80,12 +80,44 @@ public class HighscoreActivityTest extends ActivityInstrumentationTestCase2<High
 
         assertNotNull(listView);
 
+        Handler handler = activity.makeHandler();
+        Bundle bundle = new Bundle();
+        StringBuilder sb = new StringBuilder();
+
+        for (ScoreEntry entry : data) {
+            String row = entry.getName() + ":" + entry.getScore();
+            sb.append(row).append(",");
+        }
+
+        sb.deleteCharAt(sb.lastIndexOf(","));
+
+        bundle.putString("scores", sb.toString());
+        bundle.putBoolean("update_data", true);
+
+        Message msg = handler.obtainMessage();
+        msg.setData(bundle);
+
+        // Wait so that the original database call gets through
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        msg.sendToTarget();
+
+        // Sleep some to make sure the data is updated.
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
         Adapter adapter = listView.getAdapter();
 
         assertNotNull(adapter);
-        activity.setData(data);
-
-        assertSame(adapter.getCount(), HighscoreAdapter.class);
+        assertSame(adapter.getClass(), HighscoreAdapter.class);
         assertEquals(adapter.getCount(),data.size());
     }
 

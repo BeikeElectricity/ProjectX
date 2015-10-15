@@ -173,4 +173,7 @@ public class GameModel extends Thread implements IGameModel{
         return buttons;
     }
 
+    public void triggerError(String msg) {
+        triggers.triggerError(msg);
+    }
 }

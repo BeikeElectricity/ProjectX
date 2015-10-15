@@ -1,11 +1,13 @@
 package eic.beike.projectx.activities;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +22,7 @@ import eic.beike.projectx.handlers.GameHandler;
 import eic.beike.projectx.handlers.ITriggers;
 import eic.beike.projectx.handlers.UITriggers;
 import eic.beike.projectx.model.GameModel;
+import eic.beike.projectx.util.MessageDialog;
 import eic.beike.projectx.model.IGameModel;
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
 import eic.beike.projectx.network.projectXServer.Database;
@@ -31,7 +34,9 @@ import eic.beike.projectx.network.projectXServer.IDatabase;
  * @author Alex
  * @author Simon
  */
-public class GameActivity extends Activity {
+public class GameActivity extends Activity
+        implements MessageDialog.MessageDialogListener
+{
 
     private IDatabase db = new Database();
 
@@ -92,6 +97,14 @@ public class GameActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
     }
+    
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResult(RESULT_CANCELED);
+    }
+
+
 
     /**
      * Record score in database and switch to the high score activity. This is done in a background
@@ -103,18 +116,26 @@ public class GameActivity extends Activity {
         Toast.makeText(getApplicationContext(), "The round is over!", Toast.LENGTH_LONG).show();
 
         //Register the score on a background thread and then switch activity.
-        new AsyncTask<Integer, Void, Void>() {
+        new AsyncTask<Integer, Void, Boolean>() {
             @Override
-            protected Void doInBackground(Integer... scores) {
-                boolean success = db.recordScore("alex",10,System.currentTimeMillis(),"Ericsson$100020");
-                //TODO: Get correct id, the ids need to registered in the db from the name splash activity.
-                db.recordScore("alex", scores[0], System.currentTimeMillis(),
-                               SimpleBusCollector.getInstance().getVinNumber());
-                return null;
+            protected Boolean doInBackground(Integer... scores) {
+                try {
+                    boolean success = db.recordScore("alex",10,System.currentTimeMillis(),"Ericsson$100020");
+                    //TODO: Get correct id, the ids need to registered in the db from the name splash activity.
+                    db.recordScore("alex", scores[0], System.currentTimeMillis(),
+                                   SimpleBusCollector.getInstance().getVinNumber());
+                } catch (Exception e) {
+                    Log.d("GameActivity","Error ending round: "+e.getMessage());
+                    return true;
+                }
+                return false;
             }
 
             @Override
-            protected void onPostExecute(Void v) {
+            protected void onPostExecute(Boolean error) {
+                if (error) {
+                    gameModel.triggerError("Kunde inte komma åt internet.");
+                }
                 Intent intentBusWaiting = new Intent(getApplicationContext(), HighscoreActivity.class);
                 startActivity(intentBusWaiting);
             }
@@ -151,7 +172,6 @@ public class GameActivity extends Activity {
         }
         //Couldn't find matching button. This is an error!
         Log.e(this.getClass().getSimpleName(), "Unknown grid button pressed!");
-        return;
     }
 
     /***********************************************************************
@@ -178,6 +198,13 @@ public class GameActivity extends Activity {
         bonus.setText(String.valueOf(bonusScore));
     }
 
+    /**
+     * Creates a handler to update the ui
+     * @return The handler
+     */
+    private Handler makeHandler() {
+        return new GameHandler(Looper.getMainLooper(), this);
+    }
 
     public void updateButton(int row, int column, int colour) {
         if(row < gridButton.length && column < gridButton[row].length) {
@@ -195,8 +222,8 @@ public class GameActivity extends Activity {
         ImageButton button1 = (ImageButton) findViewById(gridButton[row1][column1]);
         ImageButton button2 = (ImageButton) findViewById(gridButton[row2][column2]);
 
-        Drawable color1 = (Drawable) button1.getDrawable();
-        Drawable color2= (Drawable) button2.getDrawable();
+        Drawable color1 = button1.getDrawable();
+        Drawable color2= button2.getDrawable();
 
         button1.startAnimation(fadeAnimation);
         button1.setImageDrawable(color2);
@@ -234,4 +261,40 @@ public class GameActivity extends Activity {
             Log.e(getClass().getSimpleName(), "Invalid argument when deselecting button!");
         }
     }
+
+    /**
+     *
+     */
+    public void showErrorDialog() {
+        MessageDialog dialog = new MessageDialog();
+        dialog.show(getFragmentManager(), "bus_data_unavailable");
+    }
+
+
+
+    /**
+     * Used to finish the activity of ok is clicked.
+     * @param dialog The triggering dialog.
+     */
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        finish();
+    }
+
+    /**
+     * Used to finish the activity if the dialog is dismissed, i.e. user pressed beside the dialog.
+     * @param dialog The triggering dialog.
+     */
+    @Override
+    public void onDialogDismiss(DialogFragment dialog) {
+        finish();
+    }
+
+    /**
+     * If the negative (no) button is clicked. Not used.
+     * @param dialog Triggering dialog
+     */
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) { /* Unused. */ }
+
 }

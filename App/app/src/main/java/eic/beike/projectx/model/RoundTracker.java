@@ -29,7 +29,7 @@ public class RoundTracker extends Thread {
             isAtStop = bus.getBusData(System.currentTimeMillis(),Sensor.At_Stop).isAtStop();
 
             //Check to see if the bus comes to a stop or leaves a stop.
-            while(true) {
+            while (true) {
                 BusData atStop = bus.getBusData(System.currentTimeMillis(), Sensor.At_Stop);
                 if (atStop.isAtStop() != isAtStop) {
                     isAtStop = atStop.isAtStop();
@@ -41,6 +41,10 @@ public class RoundTracker extends Thread {
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
+            game.triggerError("Lost internet connection");
+        } catch (Exception e) {
+            e.printStackTrace();
+            game.triggerError("Lost internet connection");
         }
 
     }

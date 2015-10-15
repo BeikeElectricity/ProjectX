@@ -1,12 +1,13 @@
 package eic.beike.projectx.activities;
 
 import eic.beike.projectx.R;
+import eic.beike.projectx.util.MessageDialog;
 import eic.beike.projectx.util.SystemUiHider;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 /**
@@ -15,7 +16,7 @@ import android.view.View;
  *
  * @see SystemUiHider
  */
-public class MenuActivity extends Activity {
+public class MenuActivity extends Activity implements MessageDialog.MessageDialogListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,8 +26,7 @@ public class MenuActivity extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        setResult(MenuActivity.RESULT_CANCELED);
-        finish();
+        exit(null);
     }
 
     /**
@@ -42,8 +42,12 @@ public class MenuActivity extends Activity {
      */
 
     public void exit(View v) {
-        onBackPressed();
-        finish();
+
+        MessageDialog msg = new MessageDialog();
+        msg.setMessage(R.string.exit_confirm);
+        msg.setHaveCancelButton(true);
+        msg.show(getFragmentManager(),"menu_exit");
+
     }
 
 
@@ -55,4 +59,15 @@ public class MenuActivity extends Activity {
         startActivity(new Intent(this, HighscoreActivity.class));
     }
 
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        setResult(MenuActivity.RESULT_CANCELED);
+        finish();
+    }
+
+    @Override
+    public void onDialogDismiss(DialogFragment dialog) { /* unused */ }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) { /* unused */ }
 }
