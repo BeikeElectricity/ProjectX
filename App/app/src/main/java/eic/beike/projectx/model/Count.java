@@ -112,11 +112,11 @@ public class Count implements ScoreCountApi {
         } else if (t1 > t2) {
             t1 -= Long.getLong(eopchyear);
             t2 -= Long.getLong(eopchyear);
-            game.addScore(Math.abs((int) (t1 - t2) * game.getBonus()));
+            game.addScore(Math.abs((int) (t1 / t2) * game.getBonus()));
         } else {
             t1 -= Long.getLong(eopchyear);
             t2 -= Long.getLong(eopchyear);
-            game.addScore(Math.abs((int) (t2 - t1) * game.getBonus()));
+            game.addScore(Math.abs((int) (t2 / t1) * game.getBonus()));
         }
     }
 }
