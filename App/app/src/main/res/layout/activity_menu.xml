@@ -19,6 +19,7 @@
             android:layout_gravity="center"
             android:baselineAligned="false">
 
+            <!-- Play button -->
             <Button
                 android:layout_width="266dp"
                 android:layout_height="wrap_content"
@@ -27,14 +28,7 @@
                 android:layout_gravity="center_horizontal"
                 android:onClick="play" />
 
-            <Button
-                android:layout_width="266dp"
-                android:layout_height="wrap_content"
-                android:text="Exit"
-                android:id="@+id/button2"
-                android:layout_gravity="center_horizontal"
-                android:onClick="exit" />
-
+            <!-- Highscore -->
             <Button
                 android:layout_width="266dp"
                 android:layout_height="wrap_content"
@@ -44,12 +38,14 @@
                 android:clickable="true"
                 android:onClick="startHighscore" />
 
+            <!-- Exit button -->
             <Button
                 android:layout_width="266dp"
                 android:layout_height="wrap_content"
-                android:text="New Button"
-                android:id="@+id/button4"
-                android:layout_gravity="center_horizontal" />
+                android:text="Exit"
+                android:id="@+id/button2"
+                android:layout_gravity="center_horizontal"
+                android:onClick="exit" />
         </LinearLayout>
 
 
