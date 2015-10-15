@@ -9,7 +9,7 @@ import eic.beike.projectx.util.Constants;
 /**
  * Used to update the game activity from any thread.
  */
-public class UITriggers implements ITriggers{
+public class UITriggers implements ITriggers {
 
     private Handler handler;
 
@@ -120,6 +120,32 @@ public class UITriggers implements ITriggers{
         data.putInt("row", row);
         data.putInt("column", column);
         data.putInt("color", androidColor);
+
+        msg.setData(data);
+        msg.sendToTarget();
+    }
+
+    @Override
+    public void triggerError(String errorText) {
+        Message msg = handler.obtainMessage();
+        Bundle data = new Bundle();
+
+        data.putString("exception", errorText);
+        data.putBoolean("error", true);
+        msg.setData(data);
+        msg.sendToTarget();
+    }
+
+    public  synchronized void triggerEndRound(int score){
+        if(handler == null) {
+            return;
+        }
+
+        Message msg = handler.obtainMessage();
+        Bundle data = new Bundle();
+
+        data.putString("operation", Constants.ENDROUND);
+        data.putInt("score", score);
 
         msg.setData(data);
         msg.sendToTarget();

@@ -25,7 +25,7 @@ public class Database implements IDatabase {
      * @return True if registration succeeded, false if it failed.
      */
     @Override
-    public boolean register(String id, String name) {
+    public boolean register(String id, String name) throws Exception {
         //Make request.
         BufferedReader in = RetrieveReader.get(
                 Constants.SERVER_URL+"Register.php?id="+ id + "&name=" + name
@@ -43,7 +43,7 @@ public class Database implements IDatabase {
      * @return True if score was recorded correctly, false if it failed.
      */
     @Override
-    public boolean recordScore(String id, int score, long time, String bus) {
+    public boolean recordScore(String id, int score, long time, String bus) throws Exception {
         //We need a player id and a vin number.
         if(id == null || bus == null){
             return false;
@@ -67,8 +67,11 @@ public class Database implements IDatabase {
         if (in != null) {
             Gson gson = new Gson();
             InsertResponse response = gson.fromJson(in, InsertResponse.class);
-            Log.d(this.getClass().getSimpleName(), "Got answer from server, message:" + response.getMessage());
-            return (response.getSuccess() == 1);
+            //TODO: There's a strange bug where a 0 causes the php to fail. This will give null here.
+            if(response != null ) {
+                Log.d(this.getClass().getSimpleName(), "Got answer from server, message:" + response.getMessage());
+                return (response.getSuccess() == 1);
+            }
         }
         Log.w(this.getClass().getSimpleName(), "Failed to contact the database.");
         return false;
@@ -80,7 +83,7 @@ public class Database implements IDatabase {
      * @return The best ten scores for all players on all buses.
      */
     @Override
-    public List<ScoreEntry> getTopTen() {
+    public List<ScoreEntry> getTopTen() throws Exception {
         //Make request.
         BufferedReader in = RetrieveReader.get(
                 Constants.SERVER_URL+"GetHighscore.php"
@@ -97,7 +100,7 @@ public class Database implements IDatabase {
      * @return An list of ScoreEntry:s of the players best scores.
      */
     @Override
-    public List<ScoreEntry> getPlayerTopTen(String playerId) {
+    public List<ScoreEntry> getPlayerTopTen(String playerId) throws Exception {
         //Make request.
         BufferedReader in = RetrieveReader.get(
                 Constants.SERVER_URL+"GetHighscore.php?id=" + playerId
@@ -111,7 +114,7 @@ public class Database implements IDatabase {
      *  Helper method that converts the json to an array of ScoreEntry:s
      *
      *  @param in reader hooked to a response from the GetHighscore.php script.
-     *  @return
+     *  @return List of highscores
      */
     private List<ScoreEntry> parseHighScoreFromReader(Reader in){
 

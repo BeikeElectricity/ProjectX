@@ -28,6 +28,11 @@ public class GameHandler extends Handler {
 
         Bundle data = msg.getData();
 
+        if (data.getBoolean("error",false)) {
+            game.showErrorDialog();
+            game.finish();
+        }
+
         //See what operation to perform.
         String operation = data.getString("operation");
         if (operation.equals(Constants.UPDATESCORE)) {
@@ -46,6 +51,8 @@ public class GameHandler extends Handler {
             updateBonus(data);
         } else if (operation.equals(Constants.SWOPBUTTON)) {
             swapButton(data);
+        } else if( operation.equals(Constants.ENDROUND)){
+            endRound(data);
         }
 
         else {
@@ -100,5 +107,11 @@ public class GameHandler extends Handler {
         int colour = data.getInt("color");
 
         game.updateButton(row, column, colour);
+    }
+
+    private void endRound(Bundle data){
+        int score = data.getInt("score");
+
+        game.endRound(score);
     }
 }

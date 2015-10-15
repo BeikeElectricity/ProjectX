@@ -138,5 +138,15 @@ public class GameModelTest{
             assertTrue(column < 3);
 
         }
+
+        @Override
+        public void triggerError(String errorText) {
+
+        }
+
+        @Override
+        public void triggerEndRound(int score) {
+
+        }
     }
 }

@@ -13,9 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import eic.beike.projectx.R;
-import eic.beike.projectx.activities.MainActivity;
-import eic.beike.projectx.activities.MenuActivity;
-import eic.beike.projectx.activities.NameSplashActivity;
+import eic.beike.projectx.util.Constants;
 
 /**
  * Test case for NameSplashActivity
@@ -46,7 +44,7 @@ public class NameSplashActivityTest extends ActivityInstrumentationTestCase2<Nam
 
         // Clear name from settings
         context = getInstrumentation().getTargetContext();
-        settings = context.getSharedPreferences(MainActivity.SETTINGS_FILE, 0);
+        settings = context.getSharedPreferences(Constants.SETTINGS_FILE, 0);
         settings.edit().clear().commit();
     }
 
@@ -62,7 +60,7 @@ public class NameSplashActivityTest extends ActivityInstrumentationTestCase2<Nam
 
         // Clear settings
         Context context = getInstrumentation().getTargetContext();
-        SharedPreferences settings = context.getSharedPreferences(MainActivity.SETTINGS_FILE, 0);
+        SharedPreferences settings = context.getSharedPreferences(Constants.SETTINGS_FILE, 0);
         settings.edit().clear().commit();
 
 
@@ -102,7 +100,7 @@ public class NameSplashActivityTest extends ActivityInstrumentationTestCase2<Nam
 
         activity = getActivity();
 
-        String id = settings.getString(MainActivity.ID_FIELD,"");
+        String id = settings.getString(Constants.ID_FIELD,"");
         Log.d("TestDebug",String.format("Id '%s' fetched.",id));
         assertNotSame("Fields are the same. Id: '"+id+"'","",id);
 
@@ -138,7 +136,7 @@ public class NameSplashActivityTest extends ActivityInstrumentationTestCase2<Nam
         // Check that the field is filled
         assertEquals(expected, actualText);
 
-        String name = settings.getString(MainActivity.NAME_FIELD,"");
+        String name = settings.getString(Constants.NAME_FIELD,"");
 
         // Check that the name was actually set in settings.
         assertEquals(expected,name);

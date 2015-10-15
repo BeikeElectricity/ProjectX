@@ -20,5 +20,9 @@ public interface IGameModel {
 
     void generateButtons();
 
+<<<<<<< HEAD
     Count getCount();
+=======
+    void triggerError(String msg);
+>>>>>>> 472974ed43aa4342abc693bc39cf7160228e762c
 }
