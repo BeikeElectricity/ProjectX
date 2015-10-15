@@ -35,6 +35,7 @@ public class RoundTracker extends Thread {
                     isAtStop = atStop.isAtStop();
                     if(isAtStop) {
                         game.endRound();
+                        return;
                     }
                 }
                 currentThread().sleep(Constants.ONE_SECOND_IN_MILLI);

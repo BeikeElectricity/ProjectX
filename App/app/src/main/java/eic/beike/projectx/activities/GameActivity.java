@@ -55,16 +55,14 @@ public class GameActivity extends Activity
      * Methods dealing with the life cycle
      **********************************************************************/
 
+    /**
+     *  Setup animations and choose layout, this is done once in the activity life cycle.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Log.d("Score", Thread.currentThread().getName() + ":onCreate");
-
-        //TODO: Decide how to create.
-        GameHandler handler  = new GameHandler(Looper.getMainLooper(), this);
-        ITriggers triggers = new UITriggers(handler);
-        gameModel = new GameModel(triggers);
-
         setContentView(R.layout.activity_game);
 
         //Get the ids of the grid buttons
@@ -91,6 +89,18 @@ public class GameActivity extends Activity
         bumpButton.setRepeatMode(Animation.REVERSE);
         bumpButton.setRepeatCount(1);
         bumpButton.setInterpolator(new DecelerateInterpolator());
+    }
+
+    /**
+     * Every time this view is displayed a new game is generated.
+     */
+    @Override
+    protected void onStart(){
+        super.onStart();
+
+        GameHandler handler  = new GameHandler(Looper.getMainLooper(), this);
+        ITriggers triggers = new UITriggers(handler);
+        gameModel = new GameModel(triggers);
     }
 
     @Override
