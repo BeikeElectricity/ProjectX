@@ -2,6 +2,7 @@ package eic.beike.projectx.activities;
 
 import android.app.DialogFragment;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,6 +46,13 @@ public class HighscoreActivity extends ListActivity
         setListAdapter(adapter);
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(this, MenuActivity.class));
+        finish();
+    }
 
     /**
      * Updates the adapter with new data, clearing old.

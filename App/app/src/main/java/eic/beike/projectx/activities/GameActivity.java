@@ -94,17 +94,13 @@ public class GameActivity extends Activity
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-    
-    @Override
-    public void onBackPressed() {
+    public void onBackPressed()
+    {
         super.onBackPressed();
         setResult(RESULT_CANCELED);
+        startActivity(new Intent(this, MenuActivity.class));
+        finish();
     }
-
-
 
     /**
      * Record score in database and switch to the high score activity. This is done in a background
