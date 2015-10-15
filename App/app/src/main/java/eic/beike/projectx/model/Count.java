@@ -51,11 +51,11 @@ public class Count implements ScoreCountApi {
                 } else if (t1 > t2) {
                     t1 -= 1444800000000l;
                     t2 -= 1444800000000l;
-                        game.addScore(Math.abs((int) (t1 - t2) * game.getBonus()));
+                        game.addScore(Math.abs((int) (t1 / t2) * game.getBonus()));
                 } else {
                     t1 -= 1444800000000l;
                     t2 -= 1444800000000l;
-                        game.addScore(Math.abs((int) (t2 - t1) * game.getBonus()));
+                        game.addScore(Math.abs((int) (t2 / t1) * game.getBonus()));
                     }
                 } catch (Exception e) {
                     game.triggerError(e.getMessage());
