@@ -42,19 +42,19 @@ public class Count implements ScoreCountApi {
                         e.printStackTrace();
                     }
 
-                    BusCollector bus = SimpleBusCollector.getInstance();
-                    BusData data = bus.getBusData(t1, Sensor.Stop_Pressed);
-                    long t2 = data.timestamp;
+                BusCollector bus = SimpleBusCollector.getInstance();
+                BusData data = bus.getBusData(t1, Sensor.Stop_Pressed);
+                long t2 = data.timestamp;                
 
-                    if (t2 == 0) {
-                        game.addScore(0);
-                    } else if (t1 > t2) {
-                        t1 -= Long.getLong("1444800000000");
-                        t2 -= Long.getLong("1444800000000");
+                if (t2 == 0) {
+                    game.addScore(0);
+                } else if (t1 > t2) {
+                    t1 -= 1444800000000l;
+                    t2 -= 1444800000000l;
                         game.addScore(Math.abs((int) (t1 - t2) * game.getBonus()));
-                    } else {
-                        t1 -= Long.getLong("1444800000000");
-                        t2 -= Long.getLong("1444800000000");
+                } else {
+                    t1 -= 1444800000000l;
+                    t2 -= 1444800000000l;
                         game.addScore(Math.abs((int) (t2 - t1) * game.getBonus()));
                     }
                 } catch (Exception e) {

@@ -1,20 +1,15 @@
 <resources>
-    <string name="app_name">projectx</string>
+    <string name="app_name">The Bus Factor</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_name_splash">Name Splash Activity</string>
-    <string name="title_activity_menu">Menu</string>
+    <string name="menu_activity_title">Menu</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="Switch_Menu" />
-    <string name="game_score_init">0</string>
-    <string name="title_activity_highscore">Highscore</string>
+
     <string name="menu_button_highscore">Highscore</string>
-    <string name="ok">OK</string>
-    <string name="highscore_unavailable">Couldn\'t fetch the top list.</string>
-    <string name="cancel">Cancel</string>
     <string name="exit_confirm">Do you want to exit?</string>
+    <string name="cancel">Cancel</string>
 
     <!-- Bus Waiting Activity -->
     <string name="bus_waiting_ready_text">Bus found. Ready to start game.</string>
@@ -22,4 +17,20 @@
     <string name="bus_waiting_no_bus">Couldn\'t connect to bus.\nPlease try again.</string>
     <string name="bus_waiting_no_gps">No location from GPS.\nPlease try again.</string>
     <string name="bus_waiting_searching">Searching for bus…</string>
+
+    <!-- Name picker splash -->
+    <string name="name_splash_activity_title">Välj smeknamn</string>
+    <string name="name_splash_main_text">Välj smeknamn</string>
+    <string name="name_splash_button_text">Ok</string>
+
+    <!-- Highscore activity -->
+    <string name="highscore_title_activity">Highscore</string>
+    <string name="highscore_menu_button">Highscore</string>
+    <string name="highscore_unavailable">Couldn\'t fetch the top list.</string>
+
+    <!-- Misc -->
+    <string name="ok">OK</string>
+    <string name="game_score_init">0</string>
+
+
 </resources>

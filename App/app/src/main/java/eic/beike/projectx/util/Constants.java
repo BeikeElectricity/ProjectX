@@ -29,4 +29,5 @@ public class Constants {
     public static final String SWOPBUTTON = "SWOPBUTTON";
     public static final String AUTHORIZATION = new String("Z3JwMjU6cnZyMkMqT25kNw==");
     public static final long ONE_SECOND_IN_MILLI = 1000;
+    public static final String ENDROUND = "ENDROUND";
 }

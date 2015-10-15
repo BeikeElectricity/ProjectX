@@ -143,5 +143,10 @@ public class GameModelTest{
         public void triggerError(String errorText) {
 
         }
+
+        @Override
+        public void triggerEndRound(int score) {
+
+        }
     }
 }

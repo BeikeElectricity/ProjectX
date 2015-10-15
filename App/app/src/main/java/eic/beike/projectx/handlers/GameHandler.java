@@ -51,6 +51,8 @@ public class GameHandler extends Handler {
             updateBonus(data);
         } else if (operation.equals(Constants.SWOPBUTTON)) {
             swapButton(data);
+        } else if( operation.equals(Constants.ENDROUND)){
+            endRound(data);
         }
 
         else {
@@ -105,5 +107,11 @@ public class GameHandler extends Handler {
         int colour = data.getInt("color");
 
         game.updateButton(row, column, colour);
+    }
+
+    private void endRound(Bundle data){
+        int score = data.getInt("score");
+
+        game.endRound(score);
     }
 }

@@ -132,6 +132,20 @@ public class UITriggers implements ITriggers {
 
         data.putString("exception", errorText);
         data.putBoolean("error", true);
+        msg.setData(data);
+        msg.sendToTarget();
+    }
+
+    public  synchronized void triggerEndRound(int score){
+        if(handler == null) {
+            return;
+        }
+
+        Message msg = handler.obtainMessage();
+        Bundle data = new Bundle();
+
+        data.putString("operation", Constants.ENDROUND);
+        data.putInt("score", score);
 
         msg.setData(data);
         msg.sendToTarget();

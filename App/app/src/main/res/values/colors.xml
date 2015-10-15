@@ -1,6 +1,8 @@
 <resources>
 
     <color name="black_overlay">#66000000</color>
+    <color name="activity_background">#FF0099CC</color>
+    <color name="button_border">#FF000000</color>
     <color name="blue">#38B0DE</color>
     <color name="red">#DB2929</color>
     <color name="green">#66CD00</color>

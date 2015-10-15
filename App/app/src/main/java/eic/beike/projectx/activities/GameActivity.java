@@ -2,7 +2,10 @@ package eic.beike.projectx.activities;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -13,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import android.widget.Toast;
 import eic.beike.projectx.R;
 import eic.beike.projectx.handlers.GameHandler;
 import eic.beike.projectx.handlers.ITriggers;
@@ -20,6 +24,9 @@ import eic.beike.projectx.handlers.UITriggers;
 import eic.beike.projectx.model.GameModel;
 import eic.beike.projectx.util.MessageDialog;
 import eic.beike.projectx.model.IGameModel;
+import eic.beike.projectx.network.busdata.SimpleBusCollector;
+import eic.beike.projectx.network.projectXServer.Database;
+import eic.beike.projectx.network.projectXServer.IDatabase;
 
 /**
  * @author Mikael
@@ -31,13 +38,16 @@ public class GameActivity extends Activity
         implements MessageDialog.MessageDialogListener
 {
 
+    private IDatabase db = new Database();
+
     /**
      * The model used to decide what should be run
      */
     private IGameModel gameModel;
-    private Animation bumpButton;
 
+    private Animation bumpButton;
     private Animation fadeAnimation;
+
     private int gridButton[][] = new int[3][3];
 
 
@@ -87,12 +97,52 @@ public class GameActivity extends Activity
     protected void onDestroy() {
         super.onDestroy();
     }
-
+    
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         setResult(RESULT_CANCELED);
     }
+
+
+
+    /**
+     * Record score in database and switch to the high score activity. This is done in a background
+     * thread since we need to make a network operation.
+     *
+     * @param score the score that should be recorded.
+     */
+    public void endRound(int score) {
+        Toast.makeText(getApplicationContext(), "The round is over!", Toast.LENGTH_LONG).show();
+
+        //Register the score on a background thread and then switch activity.
+        new AsyncTask<Integer, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Integer... scores) {
+                try {
+                    boolean success = db.recordScore("alex",10,System.currentTimeMillis(),"Ericsson$100020");
+                    //TODO: Get correct id, the ids need to registered in the db from the name splash activity.
+                    db.recordScore("alex", scores[0], System.currentTimeMillis(),
+                                   SimpleBusCollector.getInstance().getVinNumber());
+                } catch (Exception e) {
+                    Log.d("GameActivity","Error ending round: "+e.getMessage());
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean error) {
+                if (error) {
+                    gameModel.triggerError("Kunde inte komma åt internet.");
+                }
+                Intent intentBusWaiting = new Intent(getApplicationContext(), HighscoreActivity.class);
+                startActivity(intentBusWaiting);
+            }
+        }.execute(score);
+    }
+
+
     /**********************************************************************
      *                  Methods used for event listening
      **********************************************************************/

@@ -243,4 +243,9 @@ public class SimpleBusCollector implements BusCollector {
     public void chooseBus(String vinNumber) {
         this.vinNumber = vinNumber;
     }
+
+    @Override
+    public String getVinNumber(){
+        return vinNumber;
+    }
 }

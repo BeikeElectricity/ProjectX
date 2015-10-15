@@ -67,8 +67,11 @@ public class Database implements IDatabase {
         if (in != null) {
             Gson gson = new Gson();
             InsertResponse response = gson.fromJson(in, InsertResponse.class);
-            Log.d(this.getClass().getSimpleName(), "Got answer from server, message:" + response.getMessage());
-            return (response.getSuccess() == 1);
+            //TODO: There's a strange bug where a 0 causes the php to fail. This will give null here.
+            if(response != null ) {
+                Log.d(this.getClass().getSimpleName(), "Got answer from server, message:" + response.getMessage());
+                return (response.getSuccess() == 1);
+            }
         }
         Log.w(this.getClass().getSimpleName(), "Failed to contact the database.");
         return false;

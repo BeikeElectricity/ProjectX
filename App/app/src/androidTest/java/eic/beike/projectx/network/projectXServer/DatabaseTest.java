@@ -43,12 +43,16 @@ public class DatabaseTest extends TestCase {
             long t = System.currentTimeMillis();
             boolean success = db.recordScore(id1,10,t,"Ericsson$100020");
             assertTrue(success);
+            //Record a zero score, should be ok.
+            success = db.recordScore(id1,0,System.currentTimeMillis(),"Ericsson$100020");
+            assertTrue(success);
             //Try again. This should not be allowed.
             success = db.recordScore(id1,10,t,"Ericsson$100020");
             assertFalse(success);
             //Try with unknown player, should not be allowed.
             success = db.recordScore(id2,10,System.currentTimeMillis(),"Ericsson$100020");
             assertFalse(success);
+
         }
     }
 

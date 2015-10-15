@@ -12,4 +12,5 @@ public interface ITriggers {
     void triggerSwapButtons(int row, int column, int pressedR, int pressedC);
     void triggerNewButton(int row, int column, int androidColor);
     void triggerError(String errorText);
+    void triggerEndRound(int score);
 }
