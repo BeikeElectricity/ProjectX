@@ -32,4 +32,5 @@ public interface BusCollector {
      */
     void chooseBus(String vinNumber);
 
+    String getVinNumber();
 }

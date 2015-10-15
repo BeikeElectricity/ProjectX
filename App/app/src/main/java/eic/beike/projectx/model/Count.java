@@ -46,12 +46,12 @@ public class Count implements ScoreCountApi {
                 if (t2 == 0) {
                     game.addScore(0);
                 } else if (t1 > t2) {
-                    t1 -= Long.getLong("1444800000000");
-                    t2 -= Long.getLong("1444800000000");
+                    t1 -= 1444800000000l;
+                    t2 -= 1444800000000l;
                         game.addScore(Math.abs((int) (t1 - t2) * game.getBonus()));
                 } else {
-                    t1 -= Long.getLong("1444800000000");
-                    t2 -= Long.getLong("1444800000000");
+                    t1 -= 1444800000000l;
+                    t2 -= 1444800000000l;
                         game.addScore(Math.abs((int) (t2 - t1) * game.getBonus()));
                     }
                 }
