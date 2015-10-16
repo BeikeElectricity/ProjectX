@@ -46,14 +46,6 @@ public class HighscoreActivity extends ListActivity
         setListAdapter(adapter);
     }
 
-    @Override
-    public void onBackPressed()
-    {
-        super.onBackPressed();
-        startActivity(new Intent(this, MenuActivity.class));
-        finish();
-    }
-
     /**
      * Updates the adapter with new data, clearing old.
      * @param data New data for the adapter
