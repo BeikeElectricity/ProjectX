@@ -2,7 +2,6 @@ package eic.beike.projectx.activities;
 
 import android.app.Activity;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -16,7 +15,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import android.widget.Toast;
 import eic.beike.projectx.R;
 import eic.beike.projectx.handlers.GameHandler;
 import eic.beike.projectx.handlers.ITriggers;
@@ -41,6 +39,14 @@ public class GameActivity extends Activity
     private IDatabase db = new Database();
 
     /**
+     *  Used to pass a task to onDialogDismiss.
+     *  In android dialogs are asynchronous but we
+     *  want to wait before we record a score and switch activity.
+     */
+    private AsyncTask<Void,Void,Boolean> postDialogTask;
+
+
+    /**
      * The model used to decide what should be run
      */
     private IGameModel gameModel;
@@ -55,16 +61,14 @@ public class GameActivity extends Activity
      * Methods dealing with the life cycle
      **********************************************************************/
 
+    /**
+     *  Setup animations and choose layout, this is done once in the activity life cycle.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Log.d("Score", Thread.currentThread().getName() + ":onCreate");
-
-        //TODO: Decide how to create.
-        GameHandler handler  = new GameHandler(Looper.getMainLooper(), this);
-        ITriggers triggers = new UITriggers(handler);
-        gameModel = new GameModel(triggers);
-
         setContentView(R.layout.activity_game);
 
         //Get the ids of the grid buttons
@@ -93,6 +97,26 @@ public class GameActivity extends Activity
         bumpButton.setInterpolator(new DecelerateInterpolator());
     }
 
+    /**
+     * Every time this view is displayed a new game is generated.
+     */
+    @Override
+    protected void onStart(){
+        super.onStart();
+
+        GameHandler handler  = new GameHandler(Looper.getMainLooper(), this);
+        ITriggers triggers = new UITriggers(handler);
+        gameModel = new GameModel(triggers);
+    }
+
+    /**
+     * When the game is no longer visible the round is aborted.
+     */
+    @Override
+    protected void onStop(){
+        gameModel.abortRound();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -107,22 +131,25 @@ public class GameActivity extends Activity
 
 
     /**
-     * Record score in database and switch to the high score activity. This is done in a background
-     * thread since we need to make a network operation.
+     * Display a dialog with the score and record that score after the dialog is dismissed.
+     * The score is recorded on a separate thread and when it's done it starts the HighScoreActivity.
      *
      * @param score the score that should be recorded.
      */
-    public void endRound(int score) {
-        Toast.makeText(getApplicationContext(), "The round is over!", Toast.LENGTH_LONG).show();
+    public void endRound(final int score) {
+        // Display a dialog of achieved score.
+        MessageDialog msg = new MessageDialog();
+        msg.setMessage("Your score was " + Integer.toString(score)+ "!");
+        msg.show(getFragmentManager(), "show_round_score");
 
-        //Register the score on a background thread and then switch activity.
-        new AsyncTask<Integer, Void, Boolean>() {
+        //Create a task that should be run when the dialog is dismissed.
+        postDialogTask = new AsyncTask<Void, Void, Boolean>() {
+           // Register the score on a background thread and then switch activity.
             @Override
-            protected Boolean doInBackground(Integer... scores) {
+            protected Boolean doInBackground(Void... v) {
                 try {
-                    boolean success = db.recordScore("alex",10,System.currentTimeMillis(),"Ericsson$100020");
                     //TODO: Get correct id, the ids need to registered in the db from the name splash activity.
-                    db.recordScore("alex", scores[0], System.currentTimeMillis(),
+                    db.recordScore("alex", score, System.currentTimeMillis(),
                                    SimpleBusCollector.getInstance().getVinNumber());
                 } catch (Exception e) {
                     Log.d("GameActivity","Error ending round: "+e.getMessage());
@@ -139,7 +166,7 @@ public class GameActivity extends Activity
                 Intent intentBusWaiting = new Intent(getApplicationContext(), HighscoreActivity.class);
                 startActivity(intentBusWaiting);
             }
-        }.execute(score);
+        };
     }
 
 
@@ -272,29 +299,26 @@ public class GameActivity extends Activity
 
 
 
-    /**
-     * Used to finish the activity of ok is clicked.
-     * @param dialog The triggering dialog.
-     */
-    @Override
-    public void onDialogPositiveClick(DialogFragment dialog) {
-        finish();
-    }
 
     /**
-     * Used to finish the activity if the dialog is dismissed, i.e. user pressed beside the dialog.
+     * Used to run optional task when the dialog is dismissed, i.e. user pressed beside the dialog or on the
+     * ok button.
+     *
      * @param dialog The triggering dialog.
      */
     @Override
     public void onDialogDismiss(DialogFragment dialog) {
-        finish();
+        if (postDialogTask != null){
+            postDialogTask.execute();
+            postDialogTask = null;
+        }
     }
 
-    /**
-     * If the negative (no) button is clicked. Not used.
-     * @param dialog Triggering dialog
-     */
     @Override
     public void onDialogNegativeClick(DialogFragment dialog) { /* Unused. */ }
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) { /* Unused */ }
+
 
 }
