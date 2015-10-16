@@ -29,7 +29,7 @@ public class GameModel extends Thread implements IGameModel{
     /**
      * Persistent total score
      */
-    private int score = 0;
+    private double percentOfScore = 0;
     private int bonus = 0;
 
     private ITriggers triggers;
@@ -56,12 +56,11 @@ public class GameModel extends Thread implements IGameModel{
 
     /**
      * Adds to the total scores.
-     * @param latestScore the extra points that should be added.
+     * @param percentOfScore the extra points that should be added.
      */
-    protected synchronized void addScore(int latestScore){
-        score += latestScore;
-        bonus = 0;
-        triggers.triggerNewScore(latestScore, score);
+    protected synchronized void addScore(double percentOfScore){
+        this.percentOfScore = percentOfScore;
+        triggers.triggerNewScore(percentOfScore);
     }
 
     @Override
@@ -134,9 +133,9 @@ public class GameModel extends Thread implements IGameModel{
      *
      */
     protected void endRound() {
-        triggers.triggerEndRound(score);
-        score = 0;
+        triggers.triggerEndRound(percentOfScore * (double) bonus);
         bonus = 0;
+        percentOfScore = 0;
     }
 
     private Button[][] generateNewButtons() {
@@ -173,14 +172,13 @@ public class GameModel extends Thread implements IGameModel{
         return buttons;
     }
 
-<<<<<<< HEAD
     public Count getCount() {
         return count;
     }
 
-=======
+
     public void triggerError(String msg) {
         triggers.triggerError(msg);
     }
->>>>>>> 472974ed43aa4342abc693bc39cf7160228e762c
+
 }

@@ -182,14 +182,10 @@ public class GameActivity extends Activity
     /**
      * Used to update the score
      */
-    public void updateScore(int latestScore, int bonusScore, int totalScore) {
-        TextView total = (TextView) findViewById(R.id.totalScore);
+    public void updateScore(double latestScore) {
         TextView last = (TextView) findViewById(R.id.lastScore);
-        Button bonus = (Button) findViewById(R.id.claimBonus);
 
-        total.setText(String.valueOf(totalScore));
         last.setText(String.valueOf(latestScore));
-        bonus.setText(String.valueOf(bonusScore));
     }
 
     public void updateBonus(int bonusScore) {

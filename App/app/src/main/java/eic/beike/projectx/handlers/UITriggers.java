@@ -23,7 +23,7 @@ public class UITriggers implements ITriggers {
      * @param latestScore The latest score the player received
      */
     @Override
-    public synchronized void triggerNewScore(int latestScore, int totalscore) {
+    public synchronized void triggerNewScore(double latestScore) {
         if (handler == null) {
             return;
         }
@@ -32,8 +32,7 @@ public class UITriggers implements ITriggers {
         Bundle data = new Bundle();
 
         data.putString("operation", Constants.UPDATESCORE);
-        data.putInt("score", totalscore);
-        data.putInt("latest_score", latestScore);
+        data.putDouble("percent", latestScore);
 
         msg.setData(data);
         msg.sendToTarget();
@@ -136,7 +135,8 @@ public class UITriggers implements ITriggers {
         msg.sendToTarget();
     }
 
-    public  synchronized void triggerEndRound(int score){
+    @Override
+    public  synchronized void triggerEndRound(double score){
         if(handler == null) {
             return;
         }
@@ -145,7 +145,7 @@ public class UITriggers implements ITriggers {
         Bundle data = new Bundle();
 
         data.putString("operation", Constants.ENDROUND);
-        data.putInt("score", score);
+        data.putDouble("score", score);
 
         msg.setData(data);
         msg.sendToTarget();
