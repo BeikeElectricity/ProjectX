@@ -2,15 +2,10 @@ package eic.beike.projectx.model;
 
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
 
-import android.os.Handler;
 import android.util.Log;
 
-import eic.beike.projectx.handlers.ITriggers;
-import eic.beike.projectx.handlers.UITriggers;
 import eic.beike.projectx.network.busdata.BusCollector;
-import eic.beike.projectx.network.busdata.BusData;
 import eic.beike.projectx.network.busdata.Sensor;
-import eic.beike.projectx.network.busdata.SimpleBusCollector;
 
 /**
  *@author Simon

@@ -1,10 +1,6 @@
 package eic.beike.projectx.activities;
 
 import android.test.ActivityInstrumentationTestCase2;
-import android.view.View;
-import android.widget.ImageButton;
-
-import eic.beike.projectx.R;
 
 /**
  * Created by Simon on 2015-10-14.
