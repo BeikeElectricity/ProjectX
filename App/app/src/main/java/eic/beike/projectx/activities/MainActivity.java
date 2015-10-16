@@ -1,14 +1,18 @@
 package eic.beike.projectx.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import eic.beike.projectx.R;
 import eic.beike.projectx.util.Constants;
+import eic.beike.projectx.util.LocationFinder;
 
 
 /**
@@ -18,6 +22,8 @@ public class MainActivity extends Activity {
 
     public static final int NEXT_ACTIVITY = 0;
 
+    private LocationFinder locationFinder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,15 +32,19 @@ public class MainActivity extends Activity {
 
         SharedPreferences settings = getSharedPreferences(Constants.SETTINGS_FILE, 0);
 
-        String name = settings.getString(Constants.NAME_FIELD,"");
+        String name = settings.getString(Constants.NAME_FIELD, "");
+
+
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationFinder = new LocationFinder(lm);
 
         // First time running?
         if (name.equals("")) {
 
             // Start the name picker activity
             startActivityForResult(
-                new Intent(this, NameSplashActivity.class),
-                MainActivity.NEXT_ACTIVITY
+                    new Intent(this, NameSplashActivity.class),
+                    MainActivity.NEXT_ACTIVITY
             );
         } else {
 
@@ -47,6 +57,16 @@ public class MainActivity extends Activity {
             // Off we go
             startActivityForResult(intent, MainActivity.NEXT_ACTIVITY);
         }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        locationFinder.stop();
+
+        Log.d("LocationFinder", "Removing listener");
     }
 
     @Override
@@ -85,4 +105,6 @@ public class MainActivity extends Activity {
             finish();
         }
     }
+
+
 }

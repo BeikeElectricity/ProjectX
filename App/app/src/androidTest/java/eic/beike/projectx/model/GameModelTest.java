@@ -1,12 +1,6 @@
 package eic.beike.projectx.model;
 
-
-import android.util.Log;
-
-
 import org.junit.Test;
-
-import java.util.logging.Logger;
 
 import eic.beike.projectx.handlers.ITriggers;
 

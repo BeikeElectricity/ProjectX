@@ -1,7 +1,5 @@
 package eic.beike.projectx.model;
 
-import android.util.Log;
-
 import java.util.Random;
 
 import eic.beike.projectx.handlers.ITriggers;
@@ -191,5 +189,4 @@ public class GameModel extends Thread implements IGameModel{
     public void triggerError(String msg) {
         triggers.triggerError(msg);
     }
-
 }
