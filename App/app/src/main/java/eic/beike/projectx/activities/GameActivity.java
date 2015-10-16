@@ -114,7 +114,11 @@ public class GameActivity extends Activity
      */
     @Override
     protected void onStop(){
-        gameModel.abortRound();
+        super.onStop();
+        
+        if(gameModel != null){
+            gameModel.abortRound();
+        }
     }
 
     @Override
