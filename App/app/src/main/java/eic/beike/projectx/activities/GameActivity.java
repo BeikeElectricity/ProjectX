@@ -109,6 +109,14 @@ public class GameActivity extends Activity
         gameModel = new GameModel(triggers);
     }
 
+    /**
+     * When the game is no longer visible the round is aborted.
+     */
+    @Override
+    protected void onStop(){
+        gameModel.abortRound();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

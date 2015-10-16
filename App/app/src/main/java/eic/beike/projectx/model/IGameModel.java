@@ -8,6 +8,12 @@ import android.os.Handler;
  * @author alex
  */
 public interface IGameModel {
+
+    /**
+     * End the round and stop tracking the bus.
+     */
+    void abortRound();
+
     /**
      * Try to claim the bonus points.
      */
@@ -20,9 +26,6 @@ public interface IGameModel {
 
     void generateButtons();
 
-<<<<<<< HEAD
     Count getCount();
-=======
     void triggerError(String msg);
->>>>>>> 472974ed43aa4342abc693bc39cf7160228e762c
 }

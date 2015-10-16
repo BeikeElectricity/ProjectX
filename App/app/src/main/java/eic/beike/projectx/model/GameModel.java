@@ -33,6 +33,7 @@ public class GameModel extends Thread implements IGameModel{
     private int bonus = 0;
 
     private ITriggers triggers;
+    private RoundTracker tracker;
 
 
     public GameModel(ITriggers triggers){
@@ -42,7 +43,9 @@ public class GameModel extends Thread implements IGameModel{
         this.triggers = triggers;
         buttons = generateNewButtons();
         count = new Count(this);
-        new RoundTracker().track(this);
+
+        tracker = new RoundTracker();
+        tracker.track(this);
     }
 
     /**
@@ -131,12 +134,21 @@ public class GameModel extends Thread implements IGameModel{
     }
 
     /**
-     *
+     * Updates view and resets score.
      */
     protected void endRound() {
         triggers.triggerEndRound(score);
         score = 0;
         bonus = 0;
+    }
+
+    /**
+     * Abort the round without reporting a score.
+     */
+    public void abortRound(){
+        if(tracker != null) {
+            tracker.stopTracking();
+        }
     }
 
     private Button[][] generateNewButtons() {
@@ -173,14 +185,12 @@ public class GameModel extends Thread implements IGameModel{
         return buttons;
     }
 
-<<<<<<< HEAD
     public Count getCount() {
         return count;
     }
 
-=======
+    //TODO: This is a bit backward!
     public void triggerError(String msg) {
         triggers.triggerError(msg);
     }
->>>>>>> 472974ed43aa4342abc693bc39cf7160228e762c
 }
