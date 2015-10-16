@@ -7,6 +7,12 @@ package eic.beike.projectx.model;
  * @author alex
  */
 public interface IGameModel {
+
+    /**
+     * End the round and stop tracking the bus.
+     */
+    void abortRound();
+
     /**
      * Try to claim the bonus points.
      */

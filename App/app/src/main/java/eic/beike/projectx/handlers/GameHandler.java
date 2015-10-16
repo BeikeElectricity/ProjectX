@@ -82,10 +82,8 @@ public class GameHandler extends Handler {
     }
 
     private void updateScore(Bundle data){
-        int totalScore = data.getInt("score");
-        int latestScore = data.getInt("latest_score");
-        int bonusScore = data.getInt("bonus_score");
-        game.updateScore(latestScore, bonusScore, totalScore);
+        double percent = data.getDouble("percent");
+        game.updateScore(percent);
     }
 
     private void selectButton(Bundle data){
@@ -110,7 +108,7 @@ public class GameHandler extends Handler {
     }
 
     private void endRound(Bundle data){
-        int score = data.getInt("score");
+        int score = (int) data.getDouble("score");
 
         game.endRound(score);
     }

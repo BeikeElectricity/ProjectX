@@ -27,10 +27,11 @@ public class GameModel extends Thread implements IGameModel{
     /**
      * Persistent total score
      */
-    private int score = 0;
+    private double percentOfScore = 0;
     private int bonus = 0;
 
     private ITriggers triggers;
+    private RoundTracker tracker;
 
 
     public GameModel(ITriggers triggers){
@@ -40,7 +41,9 @@ public class GameModel extends Thread implements IGameModel{
         this.triggers = triggers;
         buttons = generateNewButtons();
         count = new Count(this);
-        new RoundTracker().track(this);
+
+        tracker = new RoundTracker();
+        tracker.track(this);
     }
 
     /**
@@ -54,12 +57,11 @@ public class GameModel extends Thread implements IGameModel{
 
     /**
      * Adds to the total scores.
-     * @param latestScore the extra points that should be added.
+     * @param percentOfScore the extra points that should be added.
      */
-    protected synchronized void addScore(int latestScore){
-        score += latestScore;
-        bonus = 0;
-        triggers.triggerNewScore(latestScore, score);
+    protected synchronized void addScore(double percentOfScore){
+        this.percentOfScore = percentOfScore;
+        triggers.triggerNewScore(percentOfScore);
     }
 
     @Override
@@ -129,12 +131,21 @@ public class GameModel extends Thread implements IGameModel{
     }
 
     /**
-     *
+     * Updates view and resets score.
      */
     protected void endRound() {
-        triggers.triggerEndRound(score);
-        score = 0;
+        triggers.triggerEndRound(percentOfScore * (double) bonus);
         bonus = 0;
+        percentOfScore = 0;
+    }
+
+    /**
+     * Abort the round without reporting a score.
+     */
+    public void abortRound(){
+        if(tracker != null) {
+            tracker.stopTracking();
+        }
     }
 
     private Button[][] generateNewButtons() {

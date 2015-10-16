@@ -109,6 +109,18 @@ public class GameActivity extends Activity
         gameModel = new GameModel(triggers);
     }
 
+    /**
+     * When the game is no longer visible the round is aborted.
+     */
+    @Override
+    protected void onStop(){
+        super.onStop();
+        
+        if(gameModel != null){
+            gameModel.abortRound();
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -201,14 +213,10 @@ public class GameActivity extends Activity
     /**
      * Used to update the score
      */
-    public void updateScore(int latestScore, int bonusScore, int totalScore) {
-        TextView total = (TextView) findViewById(R.id.totalScore);
+    public void updateScore(double latestScore) {
         TextView last = (TextView) findViewById(R.id.lastScore);
-        Button bonus = (Button) findViewById(R.id.claimBonus);
 
-        total.setText(String.valueOf(totalScore));
         last.setText(String.valueOf(latestScore));
-        bonus.setText(String.valueOf(bonusScore));
     }
 
     public void updateBonus(int bonusScore) {
