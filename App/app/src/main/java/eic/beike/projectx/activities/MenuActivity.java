@@ -33,7 +33,7 @@ public class MenuActivity extends Activity implements MessageDialog.MessageDialo
      * @param v The input form the "Play" button. Not used, but required
      */
     public void play(View v) {
-        Intent intentBusWaiting = new Intent(this, BusWaitingActivity.class);
+        Intent intentBusWaiting = new Intent(this, GameActivity.class);
         startActivity(intentBusWaiting);
     }
 

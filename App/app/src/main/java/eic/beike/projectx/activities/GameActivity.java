@@ -67,7 +67,6 @@ public class GameActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Log.d("Score", Thread.currentThread().getName() + ":onCreate");
         setContentView(R.layout.activity_game);
 
