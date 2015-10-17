@@ -1,6 +1,5 @@
 package eic.beike.projectx.model;
 
-import android.os.Handler;
 
 /**
  * Interface called by the game activity.
@@ -29,6 +28,5 @@ public interface IGameModel {
     Count getCount();
 
     void triggerError(String msg);
-
 
 }
