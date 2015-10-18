@@ -17,7 +17,7 @@ public class Count implements ScoreCountApi {
      * The gameModel uses this counter.
      */
 
-    private final String epochyear = String.valueOf("1444800000000");
+    private final Long epochyear = 1444800000000l;
 
     private GameModel gameModel;
 
@@ -110,12 +110,12 @@ public class Count implements ScoreCountApi {
         if (t2 == 0) {
             gameModel.addScore(0.3);
         } else if (t1 < t2) {
-            t1 -= Long.getLong(epochyear);
-            t2 -= Long.getLong(epochyear);
+            t1 -= epochyear;
+            t2 -= epochyear;
             gameModel.addScore(Math.abs( ((double) t1 / (double) t2)));
         } else {
-            t1 -=  Long.getLong(epochyear);
-            t2 -=  Long.getLong(epochyear);
+            t1 -= epochyear;
+            t2 -= epochyear;
             gameModel.addScore(Math.abs( ( (double) t2 / (double) t1)));
         }
     }
