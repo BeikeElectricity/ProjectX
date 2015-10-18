@@ -2,6 +2,7 @@ package eic.beike.projectx.model;
 
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
 
+import android.text.format.Time;
 import android.util.Log;
 
 import eic.beike.projectx.network.busdata.BusCollector;
@@ -17,7 +18,7 @@ public class Count implements ScoreCountApi {
      * The gameModel uses this counter.
      */
 
-    private final String epochyear = String.valueOf("1444800000000");
+    private static final Long epochyear = 1444800000000l;
 
     private GameModel gameModel;
 
@@ -42,22 +43,13 @@ public class Count implements ScoreCountApi {
             public void run() {
                 try {
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(2000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                Long startTime = System.currentTimeMillis() + Constants.ONE_SECOND_IN_MILLI * 20;
-                BusCollector bus = SimpleBusCollector.getInstance();
-                Long t2;
-                while(System.currentTimeMillis() < startTime) {
-                    t2 = bus.getBusData(t1, Sensor.Stop_Pressed).timestamp;
+                    Log.e("Count", "calculcatePrecent");
+                    Long t2 = System.currentTimeMillis() + 79999996;
                     calculatePercent(t1, t2);
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
                 } catch (Exception e) {
                     Log.e("Count", e.getMessage());
                 }
@@ -110,12 +102,12 @@ public class Count implements ScoreCountApi {
         if (t2 == 0) {
             gameModel.addScore(0.3);
         } else if (t1 < t2) {
-            t1 -= Long.getLong(epochyear);
-            t2 -= Long.getLong(epochyear);
+            t1 -= epochyear;
+            t2 -= epochyear;
             gameModel.addScore(Math.abs( ((double) t1 / (double) t2)));
         } else {
-            t1 -=  Long.getLong(epochyear);
-            t2 -=  Long.getLong(epochyear);
+            t1 -=  epochyear;
+            t2 -=  epochyear;
             gameModel.addScore(Math.abs( ( (double) t2 / (double) t1)));
         }
     }

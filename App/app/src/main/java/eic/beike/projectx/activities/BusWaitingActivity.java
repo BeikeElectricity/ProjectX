@@ -11,6 +11,7 @@ import android.widget.TextView;
 import eic.beike.projectx.R;
 import eic.beike.projectx.network.busdata.BusCollector;
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
+import eic.beike.projectx.util.Constants;
 import eic.beike.projectx.util.LocationFinder;
 
 /**
@@ -65,7 +66,12 @@ public class BusWaitingActivity extends Activity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            connected = busCollector.determineBus(LocationFinder.getLocation());
+            try {
+                Thread.sleep(Constants.ONE_SECOND_IN_MILLI);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            connected = true;
             return null;
         }
 

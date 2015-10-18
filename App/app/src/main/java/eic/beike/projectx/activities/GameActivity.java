@@ -214,8 +214,8 @@ public class GameActivity extends Activity
      */
     public void updateScore(double latestScore) {
         TextView last = (TextView) findViewById(R.id.lastScore);
-
-        last.setText(String.valueOf(latestScore));
+        String percent = String.valueOf(latestScore);
+        last.setText(percent.substring(0,4));
     }
 
     public void updateBonus(int bonusScore) {
