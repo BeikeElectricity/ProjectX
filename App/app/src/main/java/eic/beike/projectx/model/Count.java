@@ -21,6 +21,8 @@ public class Count implements ScoreCountApi {
 
     private GameModel gameModel;
 
+    private boolean isRunning = true;
+
     public Count(GameModel game) {
         this.gameModel = game;
     }
@@ -48,16 +50,26 @@ public class Count implements ScoreCountApi {
                     }
                 Long startTime = System.currentTimeMillis() + Constants.ONE_SECOND_IN_MILLI * 20;
                 BusCollector bus = SimpleBusCollector.getInstance();
-                Long t2;
-                while(System.currentTimeMillis() < startTime) {
+                Long t2 = 0l;
+                boolean hasNotCalculated = true;
+                while((System.currentTimeMillis() < startTime) && isRunning && hasNotCalculated) {
                     t2 = bus.getBusData(t1, Sensor.Stop_Pressed).timestamp;
-                    calculatePercent(t1, t2);
+                    if(t2 == 0) {
+
+                    } else {
+                        calculatePercent(t1, t2);
+                        hasNotCalculated = false;
+                    }
+
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
+                    if(hasNotCalculated) {
+                        calculatePercent(t1,t2);
+                    }
                 } catch (Exception e) {
                     Log.e("Count", e.getMessage());
                 }
