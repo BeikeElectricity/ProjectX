@@ -132,6 +132,8 @@ public class Count implements ScoreCountApi {
         }
     }
 
-
+ public void setRunning(boolean isRunning) {
+     this.isRunning = isRunning;
+ }
 
 }
