@@ -1,12 +1,6 @@
 package eic.beike.projectx.model;
 
-
-import android.util.Log;
-
-
 import org.junit.Test;
-
-import java.util.logging.Logger;
 
 import eic.beike.projectx.handlers.ITriggers;
 
@@ -42,6 +36,14 @@ public class GameModelTest{
                 assertNotNull(buttons[i][j]);
                 assertTrue(buttons[i][j] instanceof Button);
             }
+        }
+    }
+
+    @Test
+    public void TestNotSameColor() {
+        for (int i = 0; i < buttons.length; i++) {
+            assertFalse((buttons[i][0].color == buttons[i][1].color) && (buttons[i][0].color == buttons[i][2].color));
+            assertFalse((buttons[0][i].color == buttons[1][i].color) && (buttons[0][i].color == buttons[2][i].color));
         }
     }
 
@@ -96,7 +98,7 @@ public class GameModelTest{
 
 
         @Override
-        public void triggerNewScore(int latestScore, int totalscore) {
+        public void triggerNewScore(double score) {
 
         }
 
@@ -145,7 +147,7 @@ public class GameModelTest{
         }
 
         @Override
-        public void triggerEndRound(int score) {
+        public void triggerEndRound(double score) {
 
         }
     }

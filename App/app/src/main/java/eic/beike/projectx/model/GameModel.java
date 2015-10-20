@@ -1,7 +1,5 @@
 package eic.beike.projectx.model;
 
-import android.util.Log;
-
 import java.util.Random;
 
 import eic.beike.projectx.handlers.ITriggers;
@@ -29,10 +27,11 @@ public class GameModel implements IGameModel{
     /**
      * Persistent total score
      */
-    private int score = 0;
+    private double percentOfScore = 0;
     private int bonus = 0;
 
     private ITriggers triggers;
+    private RoundTracker tracker;
 
 
     public GameModel(ITriggers triggers){
@@ -42,7 +41,9 @@ public class GameModel implements IGameModel{
         this.triggers = triggers;
         buttons = generateNewButtons();
         count = new Count(this);
-        new RoundTracker().track(this);
+
+        tracker = new RoundTracker();
+        tracker.track(this);
     }
 
     /**
@@ -56,12 +57,11 @@ public class GameModel implements IGameModel{
 
     /**
      * Adds to the total scores.
-     * @param latestScore the extra points that should be added.
+     * @param percentOfScore the extra points that should be added.
      */
-    protected synchronized void addScore(int latestScore){
-        score += latestScore;
-        bonus = 0;
-        triggers.triggerNewScore(latestScore, score);
+    protected synchronized void addScore(double percentOfScore){
+        this.percentOfScore = percentOfScore;
+        triggers.triggerNewScore(percentOfScore);
     }
 
     @Override
@@ -120,7 +120,7 @@ public class GameModel implements IGameModel{
             for (int i = 0; i < buttons.length; i++) {
                 for (int j = 0; j < buttons.length; j++) {
                     if (buttons[i][j].counted) {
-                        buttons[i][j] = new Button(GameColor.color(random.nextInt(3)), random.nextInt(100));
+                        buttons[i][j] = new Button(GameColor.color(random.nextInt(3)), random.nextInt(50));
                         generated++;
                         triggers.triggerNewButton(i, j, buttons[i][j].color.getAndroidColor());
                     }
@@ -131,27 +131,65 @@ public class GameModel implements IGameModel{
     }
 
     /**
-     *
+     * Updates view and resets score.
      */
     protected void endRound() {
-        triggers.triggerEndRound(score);
-        score = 0;
+        triggers.triggerEndRound(percentOfScore * (double) bonus);
         bonus = 0;
+        percentOfScore = 0;
+    }
+
+    /**
+     * Abort the round without reporting a score.
+     */
+    public void abortRound(){
+        if(tracker != null) {
+            tracker.stopTracking();
+        }
     }
 
     private Button[][] generateNewButtons() {
         Button[][] tempList = new Button[3][3];
+        Button notSame = new Button(GameColor.BLUE, 0);
         Random random = new Random();
         for (int i = 0; i < tempList.length; i++) {
             for (int j = 0; j < tempList.length; j++) {
-                tempList[i][j] = new Button(GameColor.color(random.nextInt(3)), random.nextInt(100));
-                triggers.triggerNewButton(i, j, tempList[i][j].color.getAndroidColor());
+                tempList[i][j] = new Button(GameColor.color(random.nextInt(3)), random.nextInt(50));
             }
         }
+
+        while(hasThreeInRow(tempList)) {
+            for (int i = 0; i < tempList.length; i++) {
+                for (int j = 0; j < tempList.length; j++) {
+                    tempList[i][j].color = GameColor.color(random.nextInt(3));
+                }
+            }
+        }
+        triggerAllNewButtons(tempList);
         return tempList;
     }
 
-     private boolean isNeighbour(int row, int column) {
+    private void triggerAllNewButtons(Button[][] tempList) {
+        for (int i = 0; i < tempList.length; i++) {
+            for (int j = 0; j < tempList.length; j++) {
+                triggers.triggerNewButton(i, j, tempList[i][j].color.getAndroidColor());
+            }
+        }
+    }
+
+    public boolean hasThreeInRow(Button[][] buttons) {
+        for (int i = 0; i < buttons.length; i++) {
+            if((buttons[i][0].color == buttons[i][1].color) && (buttons[i][0].color == buttons[i][2].color)) {
+                return true;
+            }
+            if((buttons[0][i].color == buttons[1][i].color) && (buttons[0][i].color == buttons[2][i].color)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isNeighbour(int row, int column) {
 
          if(row == pressedR && (column+1 == pressedC || column-1 == pressedC)) {
             return true;

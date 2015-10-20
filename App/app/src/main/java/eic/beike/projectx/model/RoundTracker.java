@@ -16,10 +16,16 @@ public class RoundTracker extends Thread {
     BusCollector bus = SimpleBusCollector.getInstance();
     GameModel game;
     Boolean isAtStop;
+    private boolean continueTracking = true;
 
     public void track(GameModel game){
         this.game = game;
         start();
+    }
+
+    public void stopTracking(){
+        continueTracking = false;
+
     }
 
     @Override
@@ -29,12 +35,13 @@ public class RoundTracker extends Thread {
             isAtStop = bus.getBusData(System.currentTimeMillis(),Sensor.At_Stop).isAtStop();
 
             //Check to see if the bus comes to a stop or leaves a stop.
-            while (true) {
+            while (continueTracking) {
                 BusData atStop = bus.getBusData(System.currentTimeMillis(), Sensor.At_Stop);
                 if (atStop.isAtStop() != isAtStop) {
                     isAtStop = atStop.isAtStop();
                     if(isAtStop) {
                         game.endRound();
+                        return;
                     }
                 }
                 currentThread().sleep(Constants.ONE_SECOND_IN_MILLI);

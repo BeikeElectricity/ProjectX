@@ -2,15 +2,11 @@ package eic.beike.projectx.model;
 
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
 
-import android.os.Handler;
 import android.util.Log;
 
-import eic.beike.projectx.handlers.ITriggers;
-import eic.beike.projectx.handlers.UITriggers;
 import eic.beike.projectx.network.busdata.BusCollector;
-import eic.beike.projectx.network.busdata.BusData;
 import eic.beike.projectx.network.busdata.Sensor;
-import eic.beike.projectx.network.busdata.SimpleBusCollector;
+import eic.beike.projectx.util.Constants;
 
 /**
  *@author Simon
@@ -18,15 +14,17 @@ import eic.beike.projectx.network.busdata.SimpleBusCollector;
 public class Count implements ScoreCountApi {
 
     /**
-     * The game uses this counter.
+     * The gameModel uses this counter.
      */
 
-    private final String eopchyear = String.valueOf("1444800000000");
+    private final Long epochyear = 1444800000000l;
 
-    private GameModel game;
+    private GameModel gameModel;
+
+    private boolean isRunning = true;
 
     public Count(GameModel game) {
-        this.game = game;
+        this.gameModel = game;
     }
 
     @Override
@@ -50,11 +48,28 @@ public class Count implements ScoreCountApi {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-
+                Long startTime = System.currentTimeMillis() + Constants.ONE_SECOND_IN_MILLI * 20;
                 BusCollector bus = SimpleBusCollector.getInstance();
-                long t2 = bus.getBusData(t1, Sensor.Stop_Pressed).timestamp;
-                calculate(t1,t2);
+                Long t2 = 0l;
+                boolean hasNotCalculated = true;
+                while((System.currentTimeMillis() < startTime) && isRunning && hasNotCalculated) {
+                    t2 = bus.getBusData(t1, Sensor.Stop_Pressed).timestamp;
+                    if(t2 == 0) {
 
+                    } else {
+                        calculatePercent(t1, t2);
+                        hasNotCalculated = false;
+                    }
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                    if(hasNotCalculated) {
+                        calculatePercent(t1,t2);
+                    }
                 } catch (Exception e) {
                     Log.e("Count", e.getMessage());
                 }
@@ -63,11 +78,11 @@ public class Count implements ScoreCountApi {
     }
 
     public void sum(Button[][] buttons) {
-        game.addBonus(columns(buttons) + rows(buttons));
+        gameModel.addBonus(columns(buttons) + rows(buttons));
     }
 
     /**
-     * @return returns the score fomr all buttons that are "three of a kind"
+     * @return returns the score from all buttons that are "three of a kind"
      * it also sets that they are counted so they can be generated again
      */
     private int columns(Button[][] buttons) {
@@ -102,21 +117,23 @@ public class Count implements ScoreCountApi {
         }
         return count;
     }
-    /*
-    * @Param t1, Time clicked
-    * @Param t2, Time for signal
-     */
-    public synchronized void calculate(long t1, long t2) {
+
+    public synchronized void calculatePercent(long t1, long t2) {
         if (t2 == 0) {
-            game.addScore(0);
-        } else if (t1 > t2) {
-            t1 -= Long.getLong(eopchyear);
-            t2 -= Long.getLong(eopchyear);
-            game.addScore(Math.abs((int) (t1 / t2) * game.getBonus()));
+            gameModel.addScore(0.3);
+        } else if (t1 < t2) {
+            t1 -= epochyear;
+            t2 -= epochyear;
+            gameModel.addScore(Math.abs( ((double) t1 / (double) t2)));
         } else {
-            t1 -= Long.getLong(eopchyear);
-            t2 -= Long.getLong(eopchyear);
-            game.addScore(Math.abs((int) (t2 / t1) * game.getBonus()));
+            t1 -= epochyear;
+            t2 -= epochyear;
+            gameModel.addScore(Math.abs( ( (double) t2 / (double) t1)));
         }
     }
+
+ public void setRunning(boolean isRunning) {
+     this.isRunning = isRunning;
+ }
+
 }

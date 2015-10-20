@@ -1,6 +1,5 @@
 package eic.beike.projectx.model;
 
-import android.os.Handler;
 
 /**
  * Interface called by the game activity.
@@ -8,6 +7,12 @@ import android.os.Handler;
  * @author alex
  */
 public interface IGameModel {
+
+    /**
+     * End the round and stop tracking the bus.
+     */
+    void abortRound();
+
     /**
      * Try to claim the bonus points.
      */
@@ -24,4 +29,5 @@ public interface IGameModel {
     Count getCount();
 
     void triggerError(String msg);
+
 }
