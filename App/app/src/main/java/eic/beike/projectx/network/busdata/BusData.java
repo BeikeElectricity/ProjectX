@@ -57,6 +57,12 @@ public class BusData {
     private String nextStop;
 
     /**
+     * The speed of the bus in km/h
+     */
+    @Getter
+    private double speed;
+
+    /**
      * Awkwardly switch the response for further parsing to our own model.
      *
      * @param entry One parsed line from the json, this corresponds to one value of on sensor
@@ -80,6 +86,9 @@ public class BusData {
                     break;
                 case Bus_Stop_Name_Value:
                     nextStop = entry.value;
+                    break;
+                case Speed2_Value:
+                    speed = Double.valueOf(entry.value);
                     break;
                 default:
                     Log.d(getClass().getSimpleName(), "Value of sensor " + r.name() + " not currently used.");
