@@ -48,7 +48,6 @@ public class Count implements ScoreCountApi {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(1000);
                     Long startTime = System.currentTimeMillis() + Constants.ONE_SECOND_IN_MILLI * 20;
                     BusCollector bus = SimpleBusCollector.getInstance();
                     Long t2 = 0l;
@@ -59,8 +58,8 @@ public class Count implements ScoreCountApi {
                             calculatePercent(t1, t2);
                             hasNotCalculated = false;
                         }
+                        Thread.sleep(1000);
                     }
-                    Thread.sleep(1000);
                     if (hasNotCalculated) {
                         calculatePercent(t1, t2);
                     }
