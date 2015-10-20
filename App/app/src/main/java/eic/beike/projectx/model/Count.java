@@ -47,7 +47,7 @@ public class Count implements ScoreCountApi {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    Log.e("Count", "calculcatePrecent");
+                    Log.d("Count", "calculcatePrecent");
                     Long t2 = System.currentTimeMillis() + 79999996;
                     calculatePercent(t1, t2);
                 } catch (Exception e) {
@@ -100,8 +100,8 @@ public class Count implements ScoreCountApi {
 
     public synchronized void calculatePercent(long t1, long t2) {
         if (t2 == 0) {
-            gameModel.addScore(0.3);
-        } else if (t1 < t2) {
+            gameModel.addScore(1.00000);
+        } else if (t1 > t2) {
             t1 -= epochyear;
             t2 -= epochyear;
             gameModel.addScore(Math.abs( ((double) t1 / (double) t2)));

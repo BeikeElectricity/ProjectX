@@ -78,12 +78,12 @@ public class GameHandler extends Handler {
     private void updateBonus(Bundle data) {
         int bonus = data.getInt("bonus");
 
-        game.updateBonus(bonus);
+        game.updateScore(bonus);
     }
 
     private void updateScore(Bundle data){
         double percent = data.getDouble("percent");
-        game.updateScore(percent);
+        game.updateBonus(percent);
     }
 
     private void selectButton(Bundle data){

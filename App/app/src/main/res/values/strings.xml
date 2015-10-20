@@ -21,16 +21,22 @@
     <!-- Name picker splash -->
     <string name="name_splash_activity_title">Choose nickname</string>
     <string name="name_splash_main_text">Choose nickname</string>
-    <string name="name_splash_button_text">Ok</string>
+    <string name="name_splash_button_text">OK</string>
 
     <!-- Highscore activity -->
     <string name="highscore_title_activity">Highscore</string>
     <string name="highscore_menu_button">Highscore</string>
     <string name="highscore_unavailable">Couldn\'t fetch the top list.</string>
 
+    <!-- Game activity -->
+    <string name="game_last_factor_label">Last factor:</string>
+    <string name="game_total_score_label">Total score:</string>
+    <string name="game_last_factor_text">1.0</string>
+    <string name="game_total_score_text">0</string>
+
     <!-- Misc -->
     <string name="ok">OK</string>
-    <string name="game_score_init">0</string>
+    <string name="game_bonus_button_text">Bonus</string>
 
 
 </resources>

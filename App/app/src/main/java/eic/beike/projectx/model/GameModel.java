@@ -27,7 +27,7 @@ public class GameModel extends Thread implements IGameModel{
     /**
      * Persistent total score
      */
-    private double percentOfScore = 0;
+    private double percentOfScore = 1;
     private int bonus = 0;
 
     private ITriggers triggers;
@@ -136,7 +136,7 @@ public class GameModel extends Thread implements IGameModel{
     protected void endRound() {
         triggers.triggerEndRound(percentOfScore * (double) bonus);
         bonus = 0;
-        percentOfScore = 0;
+        percentOfScore = 1;
     }
 
     /**

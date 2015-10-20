@@ -20,10 +20,10 @@ public class UITriggers implements ITriggers {
 
     /**
      * Used to notify the handlers about a new score
-     * @param latestScore The latest score the player received
+     * @param percentOfScore The latest score the player received
      */
     @Override
-    public synchronized void triggerNewScore(double latestScore) {
+    public synchronized void triggerNewScore(double percentOfScore) {
         if (handler == null) {
             return;
         }
@@ -32,7 +32,7 @@ public class UITriggers implements ITriggers {
         Bundle data = new Bundle();
 
         data.putString("operation", Constants.UPDATESCORE);
-        data.putDouble("percent", latestScore);
+        data.putDouble("percent", percentOfScore);
 
         msg.setData(data);
         msg.sendToTarget();

@@ -3,6 +3,7 @@ package eic.beike.projectx.activities;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,7 +12,6 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.*;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -20,6 +20,7 @@ import eic.beike.projectx.handlers.GameHandler;
 import eic.beike.projectx.handlers.ITriggers;
 import eic.beike.projectx.handlers.UITriggers;
 import eic.beike.projectx.model.GameModel;
+import eic.beike.projectx.util.Constants;
 import eic.beike.projectx.util.MessageDialog;
 import eic.beike.projectx.model.IGameModel;
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
@@ -145,6 +146,10 @@ public class GameActivity extends Activity
         msg.setMessage("Your score was " + Integer.toString(score)+ "!");
         msg.show(getFragmentManager(), "show_round_score");
 
+        SharedPreferences settings = getSharedPreferences(Constants.SETTINGS_FILE, 0);
+
+        final String name = settings.getString(Constants.NAME_FIELD, "");
+
         //Create a task that should be run when the dialog is dismissed.
         postDialogTask = new AsyncTask<Void, Void, Boolean>() {
            // Register the score on a background thread and then switch activity.
@@ -152,7 +157,7 @@ public class GameActivity extends Activity
             protected Boolean doInBackground(Void... v) {
                 try {
                     //TODO: Get correct id, the ids need to registered in the db from the name splash activity.
-                    db.recordScore("alex", score, System.currentTimeMillis(),
+                    db.recordScore(name, score, System.currentTimeMillis(),
                                    SimpleBusCollector.getInstance().getVinNumber());
                 } catch (Exception e) {
                     Log.d("GameActivity","Error ending round: "+e.getMessage());
@@ -164,8 +169,10 @@ public class GameActivity extends Activity
             @Override
             protected void onPostExecute(Boolean error) {
                 if (error) {
-                    gameModel.triggerError("Kunde inte komma åt internet.");
+                    gameModel.triggerError("Unable to reach the internet.");
                 }
+                updateScore(0);
+                updateBonus(1.0);
                 Intent intentBusWaiting = new Intent(getApplicationContext(), HighscoreActivity.class);
                 startActivity(intentBusWaiting);
             }
@@ -212,16 +219,19 @@ public class GameActivity extends Activity
     /**
      * Used to update the score
      */
-    public void updateScore(double latestScore) {
-        TextView last = (TextView) findViewById(R.id.lastScore);
+    public void updateBonus(double latestScore) {
+        TextView last = (TextView) findViewById(R.id.lastFactor);
         String percent = String.valueOf(latestScore);
-        last.setText(percent.substring(0,4));
+        int endChar = percent.length() < 4 ?
+                percent.length()
+                : 4;
+        last.setText(percent.substring(0, endChar));
     }
 
-    public void updateBonus(int bonusScore) {
-        Button bonus = (Button) findViewById(R.id.claimBonus);
+    public void updateScore(int totalScore) {
+        TextView score = (TextView) findViewById(R.id.totalScore);
 
-        bonus.setText(String.valueOf(bonusScore));
+        score.setText(String.valueOf(totalScore));
     }
 
     /**
