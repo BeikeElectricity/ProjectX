@@ -67,7 +67,7 @@ public class Count implements ScoreCountApi {
                         }
                     }
 
-                    if (hasNotCalculated) {
+                    if (hasNotCalculated && (isRunning == myIsRunning)) {
                         calculatePercent(t1, t2);
                     }
                 } catch (Exception e) {
