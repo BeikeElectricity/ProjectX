@@ -9,7 +9,7 @@ import eic.beike.projectx.network.busdata.Sensor;
 import eic.beike.projectx.util.Constants;
 
 /**
- *@author Simon
+ * @author Simon
  */
 public class Count implements ScoreCountApi {
 
@@ -21,7 +21,7 @@ public class Count implements ScoreCountApi {
 
     private GameModel gameModel;
 
-    private boolean isRunning = true;
+    private static int isRunning = 0;
 
     public Count(GameModel game) {
         this.gameModel = game;
@@ -31,7 +31,7 @@ public class Count implements ScoreCountApi {
     public void count(long t1) {
         new Thread() {
             long t1;
-
+            int myIsRunning = isRunning;
             public void count(long t1) {
                 this.t1 = t1;
                 this.start();
@@ -48,27 +48,25 @@ public class Count implements ScoreCountApi {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                Long startTime = System.currentTimeMillis() + Constants.ONE_SECOND_IN_MILLI * 20;
-                BusCollector bus = SimpleBusCollector.getInstance();
-                Long t2 = 0l;
-                boolean hasNotCalculated = true;
-                while((System.currentTimeMillis() < startTime) && isRunning && hasNotCalculated) {
-                    t2 = bus.getBusData(t1, Sensor.Stop_Pressed).timestamp;
-                    if(t2 == 0) {
+                    Long startTime = System.currentTimeMillis() + Constants.ONE_SECOND_IN_MILLI * 20;
+                    BusCollector bus = SimpleBusCollector.getInstance();
+                    Long t2 = 0l;
+                    boolean hasNotCalculated = true;
+                    while ((System.currentTimeMillis() < startTime) && (isRunning == myIsRunning) && hasNotCalculated) {
+                        t2 = bus.getBusData(t1, Sensor.Stop_Pressed).timestamp;
+                        if (t2 != 0) {
+                            calculatePercent(t1, t2);
+                            hasNotCalculated = false;
+                        }
 
-                    } else {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (hasNotCalculated) {
                         calculatePercent(t1, t2);
-                        hasNotCalculated = false;
-                    }
-
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                    if(hasNotCalculated) {
-                        calculatePercent(t1,t2);
                     }
                 } catch (Exception e) {
                     Log.e("Count", e.getMessage());
@@ -124,16 +122,16 @@ public class Count implements ScoreCountApi {
         } else if (t1 < t2) {
             t1 -= epochyear;
             t2 -= epochyear;
-            gameModel.addScore(Math.abs( ((double) t1 / (double) t2)));
+            gameModel.addScore(Math.abs(((double) t1 / (double) t2)));
         } else {
             t1 -= epochyear;
             t2 -= epochyear;
-            gameModel.addScore(Math.abs( ( (double) t2 / (double) t1)));
+            gameModel.addScore(Math.abs(((double) t2 / (double) t1)));
         }
     }
 
- public void setRunning(boolean isRunning) {
-     this.isRunning = isRunning;
- }
+    public static void addRunning() {
+        isRunning++;
+    }
 
 }

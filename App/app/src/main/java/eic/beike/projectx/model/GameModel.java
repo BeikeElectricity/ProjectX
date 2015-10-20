@@ -41,6 +41,7 @@ public class GameModel extends Thread implements IGameModel{
         this.triggers = triggers;
         buttons = generateNewButtons();
         count = new Count(this);
+        count.addRunning();
 
         tracker = new RoundTracker();
         tracker.track(this);
