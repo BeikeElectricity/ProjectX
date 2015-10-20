@@ -121,17 +121,13 @@ public class GameActivity extends Activity
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-    
-    @Override
-    public void onBackPressed() {
+    public void onBackPressed()
+    {
         super.onBackPressed();
         setResult(RESULT_CANCELED);
+        startActivity(new Intent(this, MenuActivity.class));
+        finish();
     }
-
-
 
     /**
      * Display a dialog with the score and record that score after the dialog is dismissed.

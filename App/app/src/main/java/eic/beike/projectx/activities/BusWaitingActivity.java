@@ -33,6 +33,14 @@ public class BusWaitingActivity extends Activity {
     }
 
     @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(this, MenuActivity.class));
+        finish();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -47,6 +55,7 @@ public class BusWaitingActivity extends Activity {
         if (connected){
             Intent intentGame = new Intent(this, GameActivity.class);
             startActivityForResult(intentGame, GAME_ACTIVITY_ID);
+            finish();
         }
         else{
 

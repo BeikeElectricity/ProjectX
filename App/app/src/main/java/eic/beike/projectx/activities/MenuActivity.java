@@ -25,7 +25,6 @@ public class MenuActivity extends Activity implements MessageDialog.MessageDialo
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         exit(null);
     }
 

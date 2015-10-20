@@ -25,6 +25,7 @@ public interface IGameModel {
 
     void generateButtons();
 
+
     Count getCount();
 
     void triggerError(String msg);
