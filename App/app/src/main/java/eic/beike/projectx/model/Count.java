@@ -1,13 +1,6 @@
 package eic.beike.projectx.model;
 
-import eic.beike.projectx.network.busdata.SimpleBusCollector;
-
-import android.text.format.Time;
 import android.util.Log;
-
-import eic.beike.projectx.network.busdata.BusCollector;
-import eic.beike.projectx.network.busdata.Sensor;
-import eic.beike.projectx.util.Constants;
 
 /**
  *@author Simon
@@ -18,7 +11,7 @@ public class Count implements ScoreCountApi {
      * The gameModel uses this counter.
      */
 
-    private static final Long epochyear = 1444800000000l;
+    private static final Long epochYear = 1444800000000l;
 
     private GameModel gameModel;
 
@@ -102,12 +95,12 @@ public class Count implements ScoreCountApi {
         if (t2 == 0) {
             gameModel.addScore(0.3);
         } else if (t1 < t2) {
-            t1 -= epochyear;
-            t2 -= epochyear;
+            t1 -= epochYear;
+            t2 -= epochYear;
             gameModel.addScore(Math.abs( ((double) t1 / (double) t2)));
         } else {
-            t1 -=  epochyear;
-            t2 -=  epochyear;
+            t1 -= epochYear;
+            t2 -= epochYear;
             gameModel.addScore(Math.abs( ( (double) t2 / (double) t1)));
         }
     }
