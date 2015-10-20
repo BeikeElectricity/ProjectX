@@ -131,7 +131,7 @@ public class Count implements ScoreCountApi {
     }
 
     /**
-     * @return returns the score fomr all buttons that are "three of a kind"
+     * @return returns the score from all buttons that are "three of a kind"
      * it also sets that they are counted so they can be generated again
      */
     private int rows(Button[][] buttons) {
@@ -147,18 +147,21 @@ public class Count implements ScoreCountApi {
         }
         return count;
     }
-
+    /*
+    * @param t1, time bonus button is pressed
+    * @param t2, time actual stop signal
+     */
     public synchronized void calculatePercent(long t1, long t2) {
         if (t2 == 0) {
             gameModel.addScore(0.3);
         } else if (t1 < t2) {
             t1 -= epochyear;
             t2 -= epochyear;
-            gameModel.addScore(Math.abs(((double) t1 / (double) t2)));
+            gameModel.addScore(Math.abs(((double) t1 / (double) t2) +1));
         } else {
             t1 -= epochyear;
             t2 -= epochyear;
-            gameModel.addScore(Math.abs(((double) t2 / (double) t1)));
+            gameModel.addScore(Math.abs(((double) t2 / (double) t1) +1));
         }
     }
 

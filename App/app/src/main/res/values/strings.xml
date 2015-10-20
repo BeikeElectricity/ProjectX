@@ -3,8 +3,6 @@
 
     <string name="action_settings">Settings</string>
     <string name="menu_activity_title">Menu</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="Switch_Menu" />
 
     <string name="menu_button_highscore">Highscore</string>
@@ -28,9 +26,15 @@
     <string name="highscore_menu_button">Highscore</string>
     <string name="highscore_unavailable">Couldn\'t fetch the top list.</string>
 
+    <!-- Game activity -->
+    <string name="game_last_factor_label">Last factor:</string>
+    <string name="game_total_score_label">Total score:</string>
+    <string name="game_last_factor_text">1.0</string>
+    <string name="game_total_score_text">0</string>
+
     <!-- Misc -->
     <string name="ok">OK</string>
-    <string name="game_score_init">0</string>
+    <string name="game_bonus_button_text">Bonus</string>
 
 
 </resources>
