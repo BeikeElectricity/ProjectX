@@ -13,7 +13,7 @@ import eic.beike.projectx.util.Constants;
  * @author Mikael
  * @author Adam
  */
-public class GameModel extends Thread implements IGameModel{
+public class GameModel implements IGameModel{
 
 
     public static final long USER_EVENT_EXPIRATION_TIME = 1 * Constants.ONE_SECOND_IN_MILLI;

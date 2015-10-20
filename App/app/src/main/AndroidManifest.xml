@@ -10,10 +10,11 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/FullscreenTheme" >
+        android:theme="@style/FullscreenTheme">
         <activity
             android:name=".activities.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,22 +23,27 @@
         </activity>
         <activity
             android:name=".activities.NameSplashActivity"
-            android:label="@string/name_splash_activity_title" >
+            android:label="@string/name_splash_activity_title"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.MenuActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/menu_activity_title"
-            >
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name=".activities.GameActivity" >
+        <activity
+            android:name=".activities.GameActivity"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activities.HighscoreActivity"
-            android:label="@string/highscore_title_activity" >
+            android:label="@string/highscore_title_activity"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activities.BusWaitingActivity">
+            android:name=".activities.BusWaitingActivity"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

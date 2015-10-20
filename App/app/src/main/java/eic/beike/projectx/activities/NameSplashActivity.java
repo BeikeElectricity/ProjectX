@@ -43,6 +43,10 @@ public class NameSplashActivity extends Activity {
         editor.apply();
     }
 
+    @Override
+    public void onBackPressed() {
+        // Do Nothing
+    }
 
     /**
      * Handles clicks form the button in the view
