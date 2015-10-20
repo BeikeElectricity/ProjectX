@@ -31,21 +31,23 @@ public class RoundTracker extends Thread {
     @Override
     public void run(){
         try {
+            Thread.sleep(20 * Constants.ONE_SECOND_IN_MILLI);
+            game.endRound();
             //Get initial status, i.e see if the bus already left the station.
-            isAtStop = bus.getBusData(System.currentTimeMillis(),Sensor.At_Stop).isAtStop();
+//            isAtStop = bus.getBusData(System.currentTimeMillis(),Sensor.At_Stop).isAtStop();
 
-            //Check to see if the bus comes to a stop or leaves a stop.
-            while (continueTracking) {
-                BusData atStop = bus.getBusData(System.currentTimeMillis(), Sensor.At_Stop);
-                if (atStop.isAtStop() != isAtStop) {
-                    isAtStop = atStop.isAtStop();
-                    if(isAtStop) {
-                        game.endRound();
-                        return;
-                    }
-                }
-                currentThread().sleep(Constants.ONE_SECOND_IN_MILLI);
-            }
+//            //Check to see if the bus comes to a stop or leaves a stop.
+//            while (continueTracking) {
+//                BusData atStop = bus.getBusData(System.currentTimeMillis(), Sensor.At_Stop);
+//                if (atStop.isAtStop() != isAtStop) {
+//                    isAtStop = atStop.isAtStop();
+//                    if(isAtStop) {
+//                        game.endRound();
+//                        return;
+//                    }
+//                }
+//                currentThread().sleep(Constants.ONE_SECOND_IN_MILLI);
+//            }
         } catch (InterruptedException e) {
             e.printStackTrace();
             game.triggerError("Lost internet connection");

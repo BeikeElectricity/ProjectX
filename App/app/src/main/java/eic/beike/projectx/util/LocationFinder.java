@@ -15,22 +15,31 @@ public class LocationFinder implements LocationListener {
 
     public static final Location position = new Location("");
 
+    /**
+     * Sets up this finder to listen to the GPS position
+     * @param lm
+     */
     public LocationFinder(LocationManager lm) {
 
         Log.d("LocationFinder", "Initial location: " + position.toString());
 
         locationManager = lm;
-
         Log.d("LocationFinder", "Setting up listener");
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
     }
 
-
+    /**
+     * Stop listening
+     */
     public void stop() {
         locationManager.removeUpdates(this);
     }
 
 
+    /**
+     * Called when the by the OS when the location change
+     * @param location
+     */
     @Override
     public void onLocationChanged(Location location) {
         if (location != null) {
