@@ -23,16 +23,18 @@ public class RoundTracker extends Thread {
         start();
     }
 
-    public void stopTracking(){
+    public void stopTracking() {
         continueTracking = false;
-
     }
 
     @Override
     public void run(){
         try {
+
             Thread.sleep(20 * Constants.ONE_SECOND_IN_MILLI);
-            game.endRound();
+            if (continueTracking) {
+                game.endRound();
+            }
             //Get initial status, i.e see if the bus already left the station.
 //            isAtStop = bus.getBusData(System.currentTimeMillis(),Sensor.At_Stop).isAtStop();
 
