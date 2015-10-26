@@ -1,5 +1,7 @@
 package eic.beike.projectx.util;
 
+import eic.beike.projectx.BuildConfig;
+
 /**
  * Global constants.
  *
@@ -16,7 +18,7 @@ public class Constants {
 
     public static final String SERVER_URL = new String("http://ec2-52-28-202-131.eu-central-1.compute.amazonaws.com/");
     public static final String BASE_URL = new String("https://ece01.ericsson.net:4443/ecity");
-    public static final String AUTHORIZATION = new String(!!!!);
+    public static final String AUTHORIZATION = BuildConfig.CYBERCOM_API_KEY;
     public static final long ONE_SECOND_IN_MILLI = 1000;
     public static final String SETTINGS_FILE = "settings";
     public static final String NAME_FIELD = "name";
