@@ -38,6 +38,15 @@
                 android:clickable="true"
                 android:onClick="startHighscore" />
 
+            <!-- Tutorial -->
+            <Button
+                android:layout_width="266dp"
+                android:layout_height="wrap_content"
+                android:text="Tutorial"
+                android:id="@+id/button4"
+                android:layout_gravity="center_horizontal"
+                android:onClick="tutorial" />
+
             <!-- Exit button -->
             <Button
                 android:layout_width="266dp"
