@@ -1,4 +1,4 @@
-package eic.beike.projectx.activities;
+package eic.beike.projectx.android.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Instrumentation;

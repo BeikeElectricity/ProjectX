@@ -1,4 +1,4 @@
-package eic.beike.projectx.handlers;
+package eic.beike.projectx.android.handlers;
 
 /**
  * Created by Simon on 2015-10-14.

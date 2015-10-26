@@ -50,6 +50,16 @@ public class SimpleBusCollector implements BusCollector {
     }
 
 
+    /**
+     * Finds the best match from 10 seconds before to 10 seconds after
+     * the given time.
+     *
+     * @param time time time in epoch seconds that the data should be centered at.
+     * @param sensor the sensor that we want to check.
+     * @return A BusData filled with all the resources for that sensor at that time.
+     *         Note that we only record data from some sensors, make sure to look in
+     *         BusData to see if your sensor is recorded.
+     */
     @Override
     public BusData getBusData(long time, Sensor sensor)
             throws Exception

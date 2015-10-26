@@ -1,4 +1,4 @@
-package eic.beike.projectx.activities;
+package eic.beike.projectx.android.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -13,8 +13,9 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import eic.beike.projectx.android.activities.highScore.HighscoreActivity;
+import eic.beike.projectx.android.activities.highScore.HighscoreAdapter;
 import eic.beike.projectx.util.Constants;
-import eic.beike.projectx.util.HighscoreAdapter;
 import eic.beike.projectx.util.ScoreEntry;
 
 /**

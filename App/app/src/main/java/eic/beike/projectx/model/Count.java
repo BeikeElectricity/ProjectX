@@ -11,7 +11,7 @@ import eic.beike.projectx.util.Constants;
 /**
  * @author Simon
  */
-public class Count implements ScoreCountApi {
+public class Count  {
 
     /**
      * The gameModel uses this counter.
@@ -21,7 +21,9 @@ public class Count implements ScoreCountApi {
 
     private GameModel gameModel;
 
-    private boolean isRunning = true;
+    private static int isRunning = 0;
+
+    private int myIsRunning = isRunning;
 
     public Count(GameModel game) {
         this.gameModel = game;
@@ -33,12 +35,10 @@ public class Count implements ScoreCountApi {
      *
      * @param t1 the time the player pressed the button
      */
-    @Override
     public void count(long t1) {
         //Start a thread that makes the network call and then updates the game.
         new Thread() {
             long t1;
-
             public void count(long t1) {
                 this.t1 = t1;
                 this.start();
@@ -52,15 +52,21 @@ public class Count implements ScoreCountApi {
                     BusCollector bus = SimpleBusCollector.getInstance();
                     Long t2 = 0l;
                     boolean hasNotCalculated = true;
-                    while ((System.currentTimeMillis() < startTime) && isRunning && hasNotCalculated) {
+                    while ((System.currentTimeMillis() < startTime) && (isRunning == myIsRunning) && hasNotCalculated) {
                         t2 = bus.getBusData(t1, Sensor.Stop_Pressed).timestamp;
                         if (t2 != 0) {
                             calculatePercent(t1, t2);
                             hasNotCalculated = false;
                         }
-                        Thread.sleep(1000);
+
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
-                    if (hasNotCalculated) {
+
+                    if (hasNotCalculated && (isRunning == myIsRunning)) {
                         calculatePercent(t1, t2);
                     }
                 } catch (Exception e) {
@@ -78,8 +84,8 @@ public class Count implements ScoreCountApi {
      */
     public void sum(Button[][] buttons) {
         // The speed is updated every 5 seconds so we're likely to have gotten a speed
-        // event within the last 5 seconds.
-        final long time = System.currentTimeMillis()-5*Constants.ONE_SECOND_IN_MILLI;
+        // event within the last 10 seconds that the bus collector looks at.
+        final long time = System.currentTimeMillis();
 
         // Get the sums
         final int columns = columns(buttons);
@@ -90,10 +96,13 @@ public class Count implements ScoreCountApi {
             @Override
             public void run() {
                         try {
+                            //Get speed of bus and let this affect how much points are awarded for rows and columns.
                             double speed = SimpleBusCollector.getInstance().getBusData(time, Sensor.GPS2).getSpeed();
-                            if(isRunning) {
+                            double rowFactor = Math.max(Constants.BUS_NORMAL_SPEED - speed, 1);
+                            double columnFactor = Math.min(speed+1 , Constants.BUS_NORMAL_SPEED);
+                            if(isRunning == myIsRunning) {
                                 //Round still active, update score!
-                                gameModel.addBonus((int) (rows / (speed + 1) + columns * speed));
+                                gameModel.addBonus((int) (rows*rowFactor + columns * columnFactor));
                             }
                         } catch (Exception e) {
                             Log.e("Count", e.getMessage() + "");
@@ -124,7 +133,7 @@ public class Count implements ScoreCountApi {
     }
 
     /**
-     * @return returns the score fomr all buttons that are "three of a kind"
+     * @return returns the score from all buttons that are "three of a kind"
      * it also sets that they are counted so they can be generated again
      */
     private int rows(Button[][] buttons) {
@@ -140,23 +149,26 @@ public class Count implements ScoreCountApi {
         }
         return count;
     }
-
+    /*
+    * @param t1, time bonus button is pressed
+    * @param t2, time actual stop signal
+     */
     public synchronized void calculatePercent(long t1, long t2) {
         if (t2 == 0) {
             gameModel.addScore(0.3);
         } else if (t1 < t2) {
             t1 -= epochyear;
             t2 -= epochyear;
-            gameModel.addScore(Math.abs(((double) t1 / (double) t2)));
+            gameModel.addScore(Math.abs(((double) t1 / (double) t2) +1));
         } else {
             t1 -= epochyear;
             t2 -= epochyear;
-            gameModel.addScore(Math.abs(((double) t2 / (double) t1)));
+            gameModel.addScore(Math.abs(((double) t2 / (double) t1) +1));
         }
     }
 
-    public void setRunning(boolean isRunning) {
-        this.isRunning = isRunning;
+    public static void addRunning() {
+        isRunning++;
     }
 
 }

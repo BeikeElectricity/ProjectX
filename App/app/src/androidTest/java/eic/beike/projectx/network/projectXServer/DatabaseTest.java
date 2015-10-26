@@ -28,9 +28,9 @@ public class DatabaseTest extends TestCase {
         //Should be able to register.
         boolean success = db.register(id, "alex");
         assertTrue(success);
-        //Should not be able to register twice.
+        //Should be able to register twice, this should update the entry in the database.
         success = db.register(id, "alex");
-        assertFalse(success);
+        assertTrue(success);
     }
 
     public void testRecordScore() throws Exception {

@@ -1,17 +1,21 @@
-package eic.beike.projectx.activities;
+package eic.beike.projectx.android.activities;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
 import eic.beike.projectx.R;
+import eic.beike.projectx.network.projectXServer.Database;
+import eic.beike.projectx.network.projectXServer.IDatabase;
 import eic.beike.projectx.util.Constants;
 
 
@@ -21,6 +25,9 @@ import eic.beike.projectx.util.Constants;
 public class NameSplashActivity extends Activity {
 
     public static final int MENU_ACTIVITY = 0;
+
+    //TODO: Make database work like
+    private IDatabase db = new Database();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +50,10 @@ public class NameSplashActivity extends Activity {
         editor.apply();
     }
 
+    @Override
+    public void onBackPressed() {
+        // Do Nothing
+    }
 
     /**
      * Handles clicks form the button in the view
@@ -59,6 +70,34 @@ public class NameSplashActivity extends Activity {
         editor.putString(Constants.NAME_FIELD,text);
 
         editor.apply();
+
+        // Register the username on the server in a background thread.
+        new AsyncTask<Void, Void, Void>(){
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                //Get name and id from settings file.
+                SharedPreferences settings = getSharedPreferences(Constants.SETTINGS_FILE, 0);
+                String name = settings.getString(Constants.NAME_FIELD, "");
+                String id = settings.getString(Constants.ID_FIELD,"");
+
+                //Register to server.
+                try {
+                   boolean failure = db.register(id, name);
+                   if(failure){
+                       Log.d(this.getClass().getSimpleName(),"Failed to register nickname!");
+                   }
+                } catch (Exception e){
+                    //Log any errors
+                    Log.e(this.getClass().getSimpleName(),e.getMessage()+"");
+
+                    //TODO: Show dialog as well.
+                }
+
+                // Need to return something, this is androids fault.
+                return null;
+            }
+        }.execute();
 
 
         // Start menu activity

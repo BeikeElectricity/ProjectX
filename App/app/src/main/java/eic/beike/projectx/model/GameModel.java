@@ -2,7 +2,7 @@ package eic.beike.projectx.model;
 
 import java.util.Random;
 
-import eic.beike.projectx.handlers.ITriggers;
+import eic.beike.projectx.android.handlers.ITriggers;
 import eic.beike.projectx.network.busdata.BusCollector;
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
 import eic.beike.projectx.util.GameColor;
@@ -13,7 +13,7 @@ import eic.beike.projectx.util.Constants;
  * @author Mikael
  * @author Adam
  */
-public class GameModel extends Thread implements IGameModel{
+public class GameModel implements IGameModel{
 
 
     public static final long USER_EVENT_EXPIRATION_TIME = 1 * Constants.ONE_SECOND_IN_MILLI;
@@ -40,7 +40,12 @@ public class GameModel extends Thread implements IGameModel{
         busCollector.chooseBus(BusCollector.TEST_BUSS_VIN_NUMBER);
         this.triggers = triggers;
         buttons = generateNewButtons();
+
+        //Count up instances and then create a count object.
+        //TODO: The coupling between count and GameModel is very shaky and unclear...
+        Count.addRunning();
         count = new Count(this);
+
 
         tracker = new RoundTracker();
         tracker.track(this);

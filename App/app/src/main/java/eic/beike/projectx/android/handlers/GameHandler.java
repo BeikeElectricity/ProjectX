@@ -1,4 +1,4 @@
-package eic.beike.projectx.handlers;
+package eic.beike.projectx.android.handlers;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -6,7 +6,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
-import eic.beike.projectx.activities.GameActivity;
+import eic.beike.projectx.android.activities.GameActivity;
 import eic.beike.projectx.util.Constants;
 
 /**

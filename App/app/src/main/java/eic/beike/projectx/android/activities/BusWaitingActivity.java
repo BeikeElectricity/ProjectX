@@ -1,4 +1,4 @@
-package eic.beike.projectx.activities;
+package eic.beike.projectx.android.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,9 +9,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import eic.beike.projectx.R;
+import eic.beike.projectx.android.LocationFinder;
 import eic.beike.projectx.network.busdata.BusCollector;
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
-import eic.beike.projectx.util.LocationFinder;
 
 /**
  * Created by Mikael on 2015-10-06.
@@ -33,6 +33,14 @@ public class BusWaitingActivity extends Activity {
     }
 
     @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(this, MenuActivity.class));
+        finish();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -47,6 +55,7 @@ public class BusWaitingActivity extends Activity {
         if (connected){
             Intent intentGame = new Intent(this, GameActivity.class);
             startActivityForResult(intentGame, GAME_ACTIVITY_ID);
+            finish();
         }
         else{
 

@@ -3,7 +3,7 @@
 if(isset($_GET['id']) && strval($_GET['id']) &&
    isset($_GET['name']) && strval($_GET['name'])) {
 
-	/* set respone header */
+	/* set response header */
 	header('Content-type: application/json');
 
 	/* parse the input */
@@ -15,7 +15,8 @@ if(isset($_GET['id']) && strval($_GET['id']) &&
 	mysql_select_db('ProjectX',$link) or die('Cannot select the DB');
 
 	/* insert the user */
-	$query = "INSERT INTO Player (playerId, nickname) VALUES ('$player_id','$nickname')";
+	$query = " INSERT INTO Player (playerId, nickname) VALUES ('$player_id','$nickname')" .
+			 " ON DUPLICATE KEY UPDATE nickname=VALUES(nickname)";
 	$result = mysql_query($query,$link);
 
     /* respond with status */

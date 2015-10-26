@@ -1,4 +1,4 @@
-package eic.beike.projectx.activities;
+package eic.beike.projectx.android.activities;
 
 import android.app.Activity;
 import android.app.DialogFragment;
@@ -16,11 +16,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import eic.beike.projectx.R;
-import eic.beike.projectx.handlers.GameHandler;
-import eic.beike.projectx.handlers.ITriggers;
-import eic.beike.projectx.handlers.UITriggers;
+import eic.beike.projectx.android.activities.highScore.HighscoreActivity;
+import eic.beike.projectx.android.dialogs.MessageDialog;
+import eic.beike.projectx.android.handlers.GameHandler;
+import eic.beike.projectx.android.handlers.ITriggers;
+import eic.beike.projectx.android.handlers.UITriggers;
 import eic.beike.projectx.model.GameModel;
-import eic.beike.projectx.util.MessageDialog;
 import eic.beike.projectx.model.IGameModel;
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
 import eic.beike.projectx.network.projectXServer.Database;
@@ -121,17 +122,13 @@ public class GameActivity extends Activity
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-    
-    @Override
-    public void onBackPressed() {
+    public void onBackPressed()
+    {
         super.onBackPressed();
         setResult(RESULT_CANCELED);
+        startActivity(new Intent(this, MenuActivity.class));
+        finish();
     }
-
-
 
     /**
      * Display a dialog with the score and record that score after the dialog is dismissed.
