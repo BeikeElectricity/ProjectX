@@ -40,8 +40,12 @@ public class GameModel implements IGameModel{
         busCollector.chooseBus(BusCollector.TEST_BUSS_VIN_NUMBER);
         this.triggers = triggers;
         buttons = generateNewButtons();
+
+        //Count up instances and then create a count object.
+        //TODO: The coupling between count and GameModel is very shaky and unclear...
+        Count.addRunning();
         count = new Count(this);
-        count.addRunning();
+
 
         tracker = new RoundTracker();
         tracker.track(this);
