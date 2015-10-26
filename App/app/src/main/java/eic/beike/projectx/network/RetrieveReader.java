@@ -2,7 +2,6 @@ package eic.beike.projectx.network;
 
 import android.util.Log;
 import eic.beike.projectx.util.Constants;
-import org.apache.http.HttpStatus;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
@@ -39,7 +38,7 @@ public class RetrieveReader {
                 int responseCode = con.getResponseCode();
 
                 //Check whether the request was successful.
-                if (responseCode != HttpStatus.SC_OK) {
+                if (responseCode != Constants.REQUEST_OK) {
                     Log.w("RetrieveReader", "Error " + responseCode + " for URL " + url);
                     throw new Exception(String.format("Response %d from url (%s).",responseCode,url));
                 }
