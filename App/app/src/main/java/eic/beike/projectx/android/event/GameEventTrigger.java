@@ -4,10 +4,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import eic.beike.projectx.util.Constants;
 
-import static eic.beike.projectx.android.handlers.Keys.*;
-import static eic.beike.projectx.android.handlers.Operations.*;
+import static eic.beike.projectx.android.event.Keys.*;
+import static eic.beike.projectx.android.event.Operations.*;
 
 /**
  * Used to update the game activity from any thread.

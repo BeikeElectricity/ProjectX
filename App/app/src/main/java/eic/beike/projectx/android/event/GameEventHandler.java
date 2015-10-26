@@ -8,9 +8,9 @@ import android.util.Log;
 
 import eic.beike.projectx.android.activities.GameActivity;
 
-import static eic.beike.projectx.android.handlers.Keys.*;
+import static eic.beike.projectx.android.event.Keys.*;
 
-import static eic.beike.projectx.android.handlers.Operations.*;
+import static eic.beike.projectx.android.event.Operations.*;
 
 
 /**
@@ -68,7 +68,7 @@ public class GameEventHandler extends Handler {
     }
 
     private void errorException(Bundle data) {
-        if (data.getBoolean(ERROR,false)) {
+        if (data.getBoolean(ERROR, false)) {
             game.showErrorDialog(data.getString(ERROR));
             game.finish();
         }
