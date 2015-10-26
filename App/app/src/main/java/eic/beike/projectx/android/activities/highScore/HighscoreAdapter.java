@@ -1,4 +1,4 @@
-package eic.beike.projectx.util;
+package eic.beike.projectx.android.activities.highScore;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import eic.beike.projectx.R;
+import eic.beike.projectx.util.ScoreEntry;
 
 /**
  * @author Adam

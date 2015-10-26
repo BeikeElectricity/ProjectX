@@ -1,4 +1,4 @@
-package eic.beike.projectx.util;
+package eic.beike.projectx.android;
 
 import android.location.Location;
 import android.location.LocationListener;

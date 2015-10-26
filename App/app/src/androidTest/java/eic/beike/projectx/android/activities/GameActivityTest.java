@@ -1,7 +1,6 @@
-package eic.beike.projectx.activities;
+package eic.beike.projectx.android.activities;
 
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.UiThreadTest;
 
 /**
  * Created by Simon on 2015-10-14.

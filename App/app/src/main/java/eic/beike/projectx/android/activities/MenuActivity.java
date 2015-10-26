@@ -1,20 +1,17 @@
-package eic.beike.projectx.activities;
+package eic.beike.projectx.android.activities;
 
 import eic.beike.projectx.R;
-import eic.beike.projectx.util.MessageDialog;
-import eic.beike.projectx.util.SystemUiHider;
 
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import eic.beike.projectx.android.activities.highScore.HighscoreActivity;
+import eic.beike.projectx.android.dialogs.MessageDialog;
 
 /**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- *
- * @see SystemUiHider
+ * TODO: Write class description!
  */
 public class MenuActivity extends Activity implements MessageDialog.MessageDialogListener {
     @Override

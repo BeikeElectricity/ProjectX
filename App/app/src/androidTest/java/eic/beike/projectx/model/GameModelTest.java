@@ -2,7 +2,7 @@ package eic.beike.projectx.model;
 
 import org.junit.Test;
 
-import eic.beike.projectx.handlers.ITriggers;
+import eic.beike.projectx.android.handlers.ITriggers;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;

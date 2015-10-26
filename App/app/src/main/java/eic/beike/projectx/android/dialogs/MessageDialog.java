@@ -1,4 +1,4 @@
-package eic.beike.projectx.util;
+package eic.beike.projectx.android.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;

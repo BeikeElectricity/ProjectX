@@ -1,8 +1,7 @@
-package eic.beike.projectx.activities;
+package eic.beike.projectx.android.activities.highScore;
 
 import android.app.DialogFragment;
 import android.app.ListActivity;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,10 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eic.beike.projectx.R;
+import eic.beike.projectx.android.dialogs.MessageDialog;
 import eic.beike.projectx.network.projectXServer.Database;
 import eic.beike.projectx.network.projectXServer.IDatabase;
-import eic.beike.projectx.util.HighscoreAdapter;
-import eic.beike.projectx.util.MessageDialog;
 import eic.beike.projectx.util.ScoreEntry;
 
 

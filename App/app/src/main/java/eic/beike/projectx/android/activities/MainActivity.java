@@ -1,4 +1,4 @@
-package eic.beike.projectx.activities;
+package eic.beike.projectx.android.activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,8 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import eic.beike.projectx.R;
+import eic.beike.projectx.android.LocationFinder;
 import eic.beike.projectx.util.Constants;
-import eic.beike.projectx.util.LocationFinder;
 
 
 /**

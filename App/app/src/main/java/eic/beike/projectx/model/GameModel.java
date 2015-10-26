@@ -2,7 +2,7 @@ package eic.beike.projectx.model;
 
 import java.util.Random;
 
-import eic.beike.projectx.handlers.ITriggers;
+import eic.beike.projectx.android.handlers.ITriggers;
 import eic.beike.projectx.network.busdata.BusCollector;
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
 import eic.beike.projectx.util.GameColor;

@@ -1,4 +1,4 @@
-package eic.beike.projectx.handlers;
+package eic.beike.projectx.android.handlers;
 
 import android.os.Bundle;
 import android.os.Handler;
