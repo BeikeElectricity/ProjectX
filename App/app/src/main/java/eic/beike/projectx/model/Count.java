@@ -85,8 +85,8 @@ public class Count implements ScoreCountApi {
      */
     public void sum(Button[][] buttons) {
         // The speed is updated every 5 seconds so we're likely to have gotten a speed
-        // event within the last 5 seconds.
-        final long time = System.currentTimeMillis()-5*Constants.ONE_SECOND_IN_MILLI;
+        // event within the last 10 seconds that the bus collector looks at.
+        final long time = System.currentTimeMillis();
 
         // Get the sums
         final int columns = columns(buttons);
@@ -97,10 +97,13 @@ public class Count implements ScoreCountApi {
             @Override
             public void run() {
                         try {
+                            //Get speed of bus and let this affect how much points are awarded for rows and columns.
                             double speed = SimpleBusCollector.getInstance().getBusData(time, Sensor.GPS2).getSpeed();
+                            double rowFactor = Math.max(Constants.BUS_NORMAL_SPEED - speed, 1);
+                            double columnFactor = Math.min(speed+1 , Constants.BUS_NORMAL_SPEED);
                             if(isRunning == myIsRunning) {
                                 //Round still active, update score!
-                                gameModel.addBonus((int) (rows / (speed + 1) + columns * speed));
+                                gameModel.addBonus((int) (rows*rowFactor + columns * columnFactor));
                             }
                         } catch (Exception e) {
                             Log.e("Count", e.getMessage() + "");
