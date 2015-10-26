@@ -45,6 +45,10 @@
             android:name=".android.activities.BusWaitingActivity"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name=".android.activities.TutorialActivity"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>
