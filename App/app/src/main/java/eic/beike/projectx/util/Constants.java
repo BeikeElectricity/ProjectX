@@ -25,7 +25,7 @@ public class Constants {
     /**
      * Bundle operation types. Used when passing messages in a bundle to an activity.
      */
-
+    public static final String OPERATION = "OPERATION";
     public static final String UPDATESCORE = "UPDATESCORE";
     public static final String UPDATEBOARD = "UPDATEBOARD";
     public static final String SELECTBUTTON = "SELECTBUTTON";
