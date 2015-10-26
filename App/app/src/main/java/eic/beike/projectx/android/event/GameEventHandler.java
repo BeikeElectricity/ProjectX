@@ -1,4 +1,4 @@
-package eic.beike.projectx.android.handlers;
+package eic.beike.projectx.android.event;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,11 +17,11 @@ import static eic.beike.projectx.android.handlers.Operations.*;
  * @author Adam
  * @author Alex
  */
-public class GameHandler extends Handler {
+public class GameEventHandler extends Handler {
 
     GameActivity game;
 
-    public GameHandler(Looper looper, GameActivity activity) {
+    public GameEventHandler(Looper looper, GameActivity activity) {
         super(looper);
         game = activity;
     }

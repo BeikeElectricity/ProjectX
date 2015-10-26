@@ -2,7 +2,7 @@ package eic.beike.projectx.model;
 
 import org.junit.Test;
 
-import eic.beike.projectx.android.handlers.ITriggers;
+import eic.beike.projectx.android.event.IGameEventTrigger;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -90,7 +90,7 @@ public class GameModelTest{
         assertTrue(gameModel.getBonus() > 0);
     }
 
-    class TestTrigger implements ITriggers {
+    class TestTrigger implements IGameEventTrigger {
 
         public TestTrigger() {
 

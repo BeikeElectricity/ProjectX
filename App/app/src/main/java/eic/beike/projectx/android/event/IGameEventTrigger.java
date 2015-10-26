@@ -1,9 +1,9 @@
-package eic.beike.projectx.android.handlers;
+package eic.beike.projectx.android.event;
 
 /**
  * Created by Simon on 2015-10-14.
  */
-public interface ITriggers {
+public interface IGameEventTrigger {
 
     void triggerNewScore(double latestScore);
     void triggerNewBonus(int bonus);

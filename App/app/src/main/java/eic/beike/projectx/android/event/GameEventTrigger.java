@@ -1,4 +1,4 @@
-package eic.beike.projectx.android.handlers;
+package eic.beike.projectx.android.event;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,11 +12,11 @@ import static eic.beike.projectx.android.handlers.Operations.*;
 /**
  * Used to update the game activity from any thread.
  */
-public class UITriggers implements ITriggers {
+public class GameEventTrigger implements IGameEventTrigger {
 
     private Handler handler;
 
-    public UITriggers( Handler handler){
+    public GameEventTrigger(Handler handler){
         this.handler = handler;
     }
 
