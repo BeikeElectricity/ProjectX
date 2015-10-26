@@ -161,7 +161,7 @@ public class GameActivity extends Activity
             @Override
             protected void onPostExecute(Boolean error) {
                 if (error) {
-                    gameModel.triggerError("Kunde inte komma åt internet.");
+                    gameModel.triggerError("Could not reach the internet.");
                 }
                 Intent intentBusWaiting = new Intent(getApplicationContext(), HighscoreActivity.class);
                 startActivity(intentBusWaiting);
@@ -285,15 +285,13 @@ public class GameActivity extends Activity
         }
     }
 
-    public IGameModel getGameModel() {
-        return gameModel;
-    }
 
     /**
      *
      */
-    public void showErrorDialog() {
+    public void showErrorDialog(String message) {
         MessageDialog dialog = new MessageDialog();
+        dialog.setMessage(message);
         dialog.show(getFragmentManager(), "bus_data_unavailable");
     }
 

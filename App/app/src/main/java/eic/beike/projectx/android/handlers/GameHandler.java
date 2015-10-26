@@ -29,7 +29,8 @@ public class GameHandler extends Handler {
         Bundle data = msg.getData();
 
         if (data.getBoolean("error",false)) {
-            game.showErrorDialog();
+            //TODO: Break out hardcoded key.
+            game.showErrorDialog(data.getString("exception"));
             game.finish();
         }
 
