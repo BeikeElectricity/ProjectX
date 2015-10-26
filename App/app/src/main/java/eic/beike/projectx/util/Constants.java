@@ -23,18 +23,6 @@ public class Constants {
     public static final String ID_FIELD = "id";
 
     /**
-     * Bundle operation types. Used when passing messages in a bundle to an activity.
-     */
-    public static final String OPERATION = "OPERATION";
-    public static final String UPDATESCORE = "UPDATESCORE";
-    public static final String UPDATEBOARD = "UPDATEBOARD";
-    public static final String SELECTBUTTON = "SELECTBUTTON";
-    public static final String DESELECTBUTTON = "DESELECTBUTTON";
-    public static final String BONUSBUTTON = "BONUSBUTTON";
-    public static final String SWOPBUTTON = "SWOPBUTTON";
-    public static final String ENDROUND = "ENDROUND";
-
-    /**
      * Game play constants, anything that alters the feel of the game.
      */
 
