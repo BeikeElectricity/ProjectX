@@ -11,7 +11,7 @@ import eic.beike.projectx.util.Constants;
 /**
  * @author Simon
  */
-public class Count implements ScoreCountApi {
+public class Count  {
 
     /**
      * The gameModel uses this counter.
@@ -35,7 +35,6 @@ public class Count implements ScoreCountApi {
      *
      * @param t1 the time the player pressed the button
      */
-    @Override
     public void count(long t1) {
         //Start a thread that makes the network call and then updates the game.
         new Thread() {
