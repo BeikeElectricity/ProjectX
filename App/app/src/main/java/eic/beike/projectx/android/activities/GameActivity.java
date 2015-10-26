@@ -18,9 +18,9 @@ import android.widget.TextView;
 import eic.beike.projectx.R;
 import eic.beike.projectx.android.activities.highScore.HighscoreActivity;
 import eic.beike.projectx.android.dialogs.MessageDialog;
-import eic.beike.projectx.android.handlers.GameHandler;
-import eic.beike.projectx.android.handlers.ITriggers;
-import eic.beike.projectx.android.handlers.UITriggers;
+import eic.beike.projectx.android.event.GameEventHandler;
+import eic.beike.projectx.android.event.IGameEventTrigger;
+import eic.beike.projectx.android.event.GameEventTrigger;
 import eic.beike.projectx.model.GameModel;
 import eic.beike.projectx.model.IGameModel;
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
@@ -104,8 +104,8 @@ public class GameActivity extends Activity
     protected void onStart(){
         super.onStart();
 
-        GameHandler handler  = new GameHandler(Looper.getMainLooper(), this);
-        ITriggers triggers = new UITriggers(handler);
+        GameEventHandler handler  = new GameEventHandler(Looper.getMainLooper(), this);
+        IGameEventTrigger triggers = new GameEventTrigger(handler);
         gameModel = new GameModel(triggers);
     }
 
@@ -161,7 +161,7 @@ public class GameActivity extends Activity
             @Override
             protected void onPostExecute(Boolean error) {
                 if (error) {
-                    gameModel.triggerError("Kunde inte komma åt internet.");
+                    gameModel.triggerError("Could not reach the internet.");
                 }
                 Intent intentBusWaiting = new Intent(getApplicationContext(), HighscoreActivity.class);
                 startActivity(intentBusWaiting);
@@ -226,7 +226,7 @@ public class GameActivity extends Activity
      * @return The handler
      */
     private Handler makeHandler() {
-        return new GameHandler(Looper.getMainLooper(), this);
+        return new GameEventHandler(Looper.getMainLooper(), this);
     }
 
     public void updateButton(int row, int column, int colour) {
@@ -285,15 +285,13 @@ public class GameActivity extends Activity
         }
     }
 
-    public IGameModel getGameModel() {
-        return gameModel;
-    }
 
     /**
      *
      */
-    public void showErrorDialog() {
+    public void showErrorDialog(String message) {
         MessageDialog dialog = new MessageDialog();
+        dialog.setMessage(message);
         dialog.show(getFragmentManager(), "bus_data_unavailable");
     }
 

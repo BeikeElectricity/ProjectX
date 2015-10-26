@@ -16,8 +16,12 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "CYBERCOM_API_KEY", "\"" + CYBERCOM_API_KEY +"\"")
+        }
         release {
             signingConfig signingConfigs.release
+            buildConfigField("String", "CYBERCOM_API_KEY", "\"" + CYBERCOM_API_KEY +"\"")
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

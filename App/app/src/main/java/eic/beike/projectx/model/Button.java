@@ -24,7 +24,7 @@ public class Button {
             Button other = (Button) o;
             if (this.color == other.color) {
                 if(this.score == other.score) {
-                    if(this.counted == counted) {
+                    if(this.counted == other.counted) {
                         return true;
                     }
 

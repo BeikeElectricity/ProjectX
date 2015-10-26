@@ -33,6 +33,16 @@ public class MenuActivity extends Activity implements MessageDialog.MessageDialo
         startActivity(intentBusWaiting);
     }
 
+
+    /**
+     * @param v The input form the "Tutorial" button. Not used, but required
+     */
+    public void tutorial(View v){
+        Intent intentTutorial = new Intent(this, TutorialActivity.class);
+        startActivity(intentTutorial);
+    }
+
+
     /**
      * @param v The input form the "Exit" button. Not used, but required
      */

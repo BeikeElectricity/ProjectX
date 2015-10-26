@@ -2,7 +2,7 @@ package eic.beike.projectx.model;
 
 import java.util.Random;
 
-import eic.beike.projectx.android.handlers.ITriggers;
+import eic.beike.projectx.android.event.IGameEventTrigger;
 import eic.beike.projectx.network.busdata.BusCollector;
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
 import eic.beike.projectx.util.GameColor;
@@ -30,11 +30,11 @@ public class GameModel implements IGameModel{
     private double percentOfScore = 0;
     private int bonus = 0;
 
-    private ITriggers triggers;
+    private IGameEventTrigger triggers;
     private RoundTracker tracker;
 
 
-    public GameModel(ITriggers triggers){
+    public GameModel(IGameEventTrigger triggers){
         super();
         busCollector = SimpleBusCollector.getInstance();
         busCollector.chooseBus(BusCollector.TEST_BUSS_VIN_NUMBER);

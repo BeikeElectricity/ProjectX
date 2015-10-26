@@ -1,19 +1,21 @@
-package eic.beike.projectx.android.handlers;
+package eic.beike.projectx.android.event;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import eic.beike.projectx.util.Constants;
+
+import static eic.beike.projectx.android.event.Keys.*;
+import static eic.beike.projectx.android.event.Operations.*;
 
 /**
  * Used to update the game activity from any thread.
  */
-public class UITriggers implements ITriggers {
+public class GameEventTrigger implements IGameEventTrigger {
 
     private Handler handler;
 
-    public UITriggers( Handler handler){
+    public GameEventTrigger(Handler handler){
         this.handler = handler;
     }
 
@@ -31,8 +33,8 @@ public class UITriggers implements ITriggers {
         Message msg = handler.obtainMessage();
         Bundle data = new Bundle();
 
-        data.putString("operation", Constants.UPDATESCORE);
-        data.putDouble("percent", latestScore);
+        data.putString(OPERATION, UPDATESCORE);
+        data.putDouble(PERCENT, latestScore);
 
         msg.setData(data);
         msg.sendToTarget();
@@ -46,8 +48,8 @@ public class UITriggers implements ITriggers {
         Message msg = handler.obtainMessage();
         Bundle data = new Bundle();
 
-        data.putString("operation", Constants.BONUSBUTTON);
-        data.putInt("bonus", bonus);
+        data.putString(OPERATION, BONUSBUTTON);
+        data.putInt(BONUS, bonus);
 
         msg.setData(data);
         msg.sendToTarget();
@@ -62,9 +64,9 @@ public class UITriggers implements ITriggers {
         Message msg = handler.obtainMessage();
         Bundle data = new Bundle();
 
-        data.putString("operation", Constants.DESELECTBUTTON);
-        data.putInt("row", row);
-        data.putInt("column", column);
+        data.putString(OPERATION, DESELECTBUTTON);
+        data.putInt(ROW, row);
+        data.putInt(COLUMN, column);
 
         msg.setData(data);
         msg.sendToTarget();
@@ -79,9 +81,9 @@ public class UITriggers implements ITriggers {
         Message msg = handler.obtainMessage();
         Bundle data = new Bundle();
 
-        data.putString("operation", Constants.SELECTBUTTON);
-        data.putInt("row", row);
-        data.putInt("column", column);
+        data.putString(OPERATION, SELECTBUTTON);
+        data.putInt(ROW, row);
+        data.putInt(COLUMN, column);
 
         msg.setData(data);
         msg.sendToTarget();
@@ -96,11 +98,11 @@ public class UITriggers implements ITriggers {
         Message msg = handler.obtainMessage();
         Bundle data = new Bundle();
 
-        data.putString("operation", Constants.SWOPBUTTON);
-        data.putInt("row1", pressedR);
-        data.putInt("row2", row);
-        data.putInt("column1", pressedC);
-        data.putInt("column2", column);
+        data.putString(OPERATION, SWOPBUTTON);
+        data.putInt(ROW_1, pressedR);
+        data.putInt(ROW_2, row);
+        data.putInt(COLUMN_1, pressedC);
+        data.putInt(COLUMN_2, column);
 
         msg.setData(data);
         msg.sendToTarget();
@@ -115,10 +117,10 @@ public class UITriggers implements ITriggers {
         Message msg = handler.obtainMessage();
         Bundle data = new Bundle();
 
-        data.putString("operation", Constants.UPDATEBOARD);
-        data.putInt("row", row);
-        data.putInt("column", column);
-        data.putInt("color", androidColor);
+        data.putString(OPERATION, UPDATEBOARD);
+        data.putInt(ROW, row);
+        data.putInt(COLUMN, column);
+        data.putInt(COLOR, androidColor);
 
         msg.setData(data);
         msg.sendToTarget();
@@ -129,8 +131,9 @@ public class UITriggers implements ITriggers {
         Message msg = handler.obtainMessage();
         Bundle data = new Bundle();
 
-        data.putString("exception", errorText);
-        data.putBoolean("error", true);
+        data.putString(OPERATION, EXCEPTION);
+        data.putString(ERROR, errorText);
+        data.putBoolean(ERROR, true);
         msg.setData(data);
         msg.sendToTarget();
     }
@@ -144,8 +147,8 @@ public class UITriggers implements ITriggers {
         Message msg = handler.obtainMessage();
         Bundle data = new Bundle();
 
-        data.putString("operation", Constants.ENDROUND);
-        data.putDouble("score", score);
+        data.putString(OPERATION, ENDROUND);
+        data.putDouble(SCORE, score);
 
         msg.setData(data);
         msg.sendToTarget();
