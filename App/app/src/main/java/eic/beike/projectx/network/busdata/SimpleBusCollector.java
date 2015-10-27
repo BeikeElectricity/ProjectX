@@ -30,7 +30,7 @@ public class SimpleBusCollector implements BusCollector {
 
     /**
      * The Vin number of the bus, this is how we identify buses. This should be stored
-     * without the "Ericsson$" prefix.
+     * with the "Ericsson$" prefix.
      */
     private String vinNumber;
 
@@ -113,7 +113,7 @@ public class SimpleBusCollector implements BusCollector {
 
 
     private String constructUrl(String busDgw, Sensor sensor, long t1, long t2) {
-        String dgw = busDgw.equals(ALL_BUSES) ? "?" : "?dgw=Ericsson$" + busDgw + "&";
+        String dgw = busDgw.equals(ALL_BUSES) ? "?" : "?dgw=" + busDgw + "&";
         String sensorSpec = "sensorSpec=Ericsson$" + sensor.toString();
         String timeSpan = "&t1=" + String.valueOf(t1) + "&t2=" + String.valueOf(t2);
 
@@ -161,7 +161,7 @@ public class SimpleBusCollector implements BusCollector {
 
             ResponseEntry entry = getBestLocationMatch(response, userLocation);
             if (busIsCloseEnough(entry, userLocation)) {
-                vinNumber = entry.gatewayId;
+                vinNumber = "Ericsson$" +entry.gatewayId;
                 return true;
             }
         } catch (Exception e) {
@@ -275,6 +275,9 @@ public class SimpleBusCollector implements BusCollector {
         this.vinNumber = vinNumber;
     }
 
+    /**
+     * @return The vin number prefix with "Ericsson$".
+     */
     @Override
     public String getVinNumber(){
         return vinNumber;
