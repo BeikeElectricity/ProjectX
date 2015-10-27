@@ -223,8 +223,8 @@ public class SimpleBusCollector implements BusCollector {
             }
 
             //Get coordinates in degrees.
-            double northCoord = parseNorthCoordinate(entry.value)/100;
-            double eastCoord = parseEastCoordinate(entry.value)/100;
+            double northCoord = parseNorthCoordinate(entry.value);
+            double eastCoord = parseEastCoordinate(entry.value);
 
             //Create a location and let android calculate the distance in meters.
             Location busLocation = new Location("");
@@ -243,14 +243,25 @@ public class SimpleBusCollector implements BusCollector {
     private double parseNorthCoordinate(String s){
         int stopIndex = s.indexOf(",N");
         int startIndex = s.indexOf("A,") + 2;
-        return Double.parseDouble(s.substring(startIndex, stopIndex));
+        StringBuilder tmp =new StringBuilder(s.substring(startIndex, stopIndex));
+        tmp.deleteCharAt(tmp.indexOf("."));
+        //TODO: Add explaination.
+        String latitude = tmp.substring(0,2) + ":" + tmp.substring(2,4)+ ":" +
+                          tmp.substring(4,6)+ "." + tmp.substring(6);
+        return Location.convert(latitude);
     }
 
 
     private double parseEastCoordinate(String s){
         int stopIndex = s.indexOf(",E");
         int startIndex = s.indexOf("N,") + 2;
-        return Double.parseDouble(s.substring(startIndex, stopIndex));
+        StringBuilder tmp = new StringBuilder( s.substring(startIndex, stopIndex));
+        tmp.deleteCharAt(tmp.indexOf("."));
+        //TODO: Explain why these start with a leading 0.
+        String longitude = tmp.substring(0,3) + ":" + tmp.substring(3,5)+ ":" +
+                           tmp.substring(5,7)+ "." +tmp.substring(7);
+        return Location.convert(longitude);
+
     }
 
 
