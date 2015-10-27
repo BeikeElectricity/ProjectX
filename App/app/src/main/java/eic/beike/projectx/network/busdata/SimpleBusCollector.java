@@ -243,11 +243,9 @@ public class SimpleBusCollector implements BusCollector {
     private double parseNorthCoordinate(String s){
         int stopIndex = s.indexOf(",N");
         int startIndex = s.indexOf("A,") + 2;
-        StringBuilder tmp =new StringBuilder(s.substring(startIndex, stopIndex));
-        tmp.deleteCharAt(tmp.indexOf("."));
-        //TODO: Add explaination.
-        String latitude = tmp.substring(0,2) + ":" + tmp.substring(2,4)+ ":" +
-                          tmp.substring(4,6)+ "." + tmp.substring(6);
+        StringBuilder tmp = new StringBuilder(s.substring(startIndex, stopIndex));
+        //GPRMC gives the coordinates in minutes format but we need to insert a separator.
+        String latitude = tmp.substring(0,2) + ":" + tmp.substring(2);
         return Location.convert(latitude);
     }
 
@@ -256,10 +254,8 @@ public class SimpleBusCollector implements BusCollector {
         int stopIndex = s.indexOf(",E");
         int startIndex = s.indexOf("N,") + 2;
         StringBuilder tmp = new StringBuilder( s.substring(startIndex, stopIndex));
-        tmp.deleteCharAt(tmp.indexOf("."));
-        //TODO: Explain why these start with a leading 0.
-        String longitude = tmp.substring(0,3) + ":" + tmp.substring(3,5)+ ":" +
-                           tmp.substring(5,7)+ "." +tmp.substring(7);
+        //For some reason longitude starts with a leading zero.
+        String longitude = tmp.substring(0,3) + ":" + tmp.substring(3);
         return Location.convert(longitude);
 
     }
