@@ -15,6 +15,7 @@ import eic.beike.projectx.network.busdata.SimpleBusCollector;
 
 /**
  * Created by Mikael on 2015-10-06.
+ * This class is to find and connect the app with a bus. When it does you can start the game
  */
 public class BusWaitingActivity extends Activity {
 
@@ -51,6 +52,9 @@ public class BusWaitingActivity extends Activity {
         }
     }
 
+    /**
+     * If the app has found a bus, it starts the game else trys to connect
+     */
     public void onConnect(View v) {
         if (connected){
             Intent intentGame = new Intent(this, GameActivity.class);
