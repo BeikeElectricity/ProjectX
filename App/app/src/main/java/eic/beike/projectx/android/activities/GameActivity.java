@@ -3,6 +3,7 @@ package eic.beike.projectx.android.activities;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import eic.beike.projectx.model.IGameModel;
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
 import eic.beike.projectx.network.projectXServer.Database;
 import eic.beike.projectx.network.projectXServer.IDatabase;
+import eic.beike.projectx.util.Constants;
 
 /**
  * @author Mikael
@@ -142,14 +144,17 @@ public class GameActivity extends Activity
         msg.setMessage("Your score was " + Integer.toString(score)+ "!");
         msg.show(getFragmentManager(), "show_round_score");
 
+        SharedPreferences settings = getSharedPreferences(Constants.SETTINGS_FILE, 0);
+
+        final String name = settings.getString(Constants.NAME_FIELD, "");
+
         //Create a task that should be run when the dialog is dismissed.
         postDialogTask = new AsyncTask<Void, Void, Boolean>() {
            // Register the score on a background thread and then switch activity.
             @Override
             protected Boolean doInBackground(Void... v) {
                 try {
-                    //TODO: Get correct id, the ids need to registered in the db from the name splash activity.
-                    db.recordScore("alex", score, System.currentTimeMillis(),
+                    db.recordScore(name, score, System.currentTimeMillis(),
                                    SimpleBusCollector.getInstance().getVinNumber());
                 } catch (Exception e) {
                     Log.d("GameActivity","Error ending round: "+e.getMessage());
