@@ -14,7 +14,7 @@ import java.util.*;
 /**
  * A on phone middle layer for the Cybercom api. Perhaps this code would be better placed on a server
  * somewhere.
- *
+ * <p/>
  * Created by alex on 9/21/15.
  */
 public class SimpleBusCollector implements BusCollector {
@@ -22,10 +22,15 @@ public class SimpleBusCollector implements BusCollector {
     private static final SimpleBusCollector instance = new SimpleBusCollector();
 
     private static final String ALL_BUSES = "ALL_BUSES";
-    private static final double MAX_DISTANCE_ALLOWED = 10000000; //TODO: some value here
 
     /**
-     * The Vin number of the bus, this is how we identify buses.
+     * The maximal distance to the bus in meters.
+     */
+    private static final double MAX_DISTANCE_ALLOWED = 5000;
+
+    /**
+     * The Vin number of the bus, this is how we identify buses. This should be stored
+     * without the "Ericsson$" prefix.
      */
     private String vinNumber;
 
@@ -38,14 +43,14 @@ public class SimpleBusCollector implements BusCollector {
     /**
      * Private constructor to enforce singleton.
      */
-    private SimpleBusCollector(){
+    private SimpleBusCollector() {
     }
 
 
     /**
      * To get access to this API (the singleton).
      */
-    public static BusCollector getInstance(){
+    public static BusCollector getInstance() {
         return instance;
     }
 
@@ -54,16 +59,15 @@ public class SimpleBusCollector implements BusCollector {
      * Finds the best match from 10 seconds before to 10 seconds after
      * the given time.
      *
-     * @param time time time in epoch seconds that the data should be centered at.
+     * @param time   time time in epoch seconds that the data should be centered at.
      * @param sensor the sensor that we want to check.
      * @return A BusData filled with all the resources for that sensor at that time.
-     *         Note that we only record data from some sensors, make sure to look in
-     *         BusData to see if your sensor is recorded.
+     * Note that we only record data from some sensors, make sure to look in
+     * BusData to see if your sensor is recorded.
      */
     @Override
     public BusData getBusData(long time, Sensor sensor)
-            throws Exception
-    {
+            throws Exception {
 
         BusData data = new BusData();
 
@@ -93,13 +97,13 @@ public class SimpleBusCollector implements BusCollector {
                 chosenEntries.clear();
                 chosenEntries.add(e);
                 bestDiff = currentDiff;
-            } else if( bestDiff - currentDiff == 0 ){
+            } else if (bestDiff - currentDiff == 0) {
                 chosenEntries.add(e);
             }
         }
 
         //Populate all resource fields of the found sensor.
-        for(ResponseEntry chosenEntry : chosenEntries) {
+        for (ResponseEntry chosenEntry : chosenEntries) {
             data.populate(chosenEntry);
         }
 
@@ -108,10 +112,10 @@ public class SimpleBusCollector implements BusCollector {
     }
 
 
-    private String constructUrl(String busDgw, Sensor sensor, long t1, long t2){
-        String dgw        = busDgw.equals(ALL_BUSES) ? "?" : "?dgw=" + busDgw + "&";
+    private String constructUrl(String busDgw, Sensor sensor, long t1, long t2) {
+        String dgw = busDgw.equals(ALL_BUSES) ? "?" : "?dgw=Ericsson$" + busDgw + "&";
         String sensorSpec = "sensorSpec=Ericsson$" + sensor.toString();
-        String timeSpan   = "&t1=" + String.valueOf(t1) + "&t2=" + String.valueOf(t2);
+        String timeSpan = "&t1=" + String.valueOf(t1) + "&t2=" + String.valueOf(t2);
 
         return Constants.BASE_URL + dgw + sensorSpec + timeSpan;
     }
@@ -136,7 +140,8 @@ public class SimpleBusCollector implements BusCollector {
     private List<ResponseEntry> fetchSensorData(BufferedReader reader) {
         //Parse the reader, gson needs the type which is weird below.
         Gson gson = new Gson();
-        Type listType = new TypeToken<ArrayList<ResponseEntry>>() {}.getType();
+        Type listType = new TypeToken<ArrayList<ResponseEntry>>() {
+        }.getType();
         return (ArrayList<ResponseEntry>) gson.fromJson(reader, listType);
     }
 
@@ -160,7 +165,7 @@ public class SimpleBusCollector implements BusCollector {
                 return true;
             }
         } catch (Exception e) {
-            Log.d("DetermineBus","Exception while locating bus: "+e.getMessage());
+            Log.d("DetermineBus", "Exception while locating bus: " + e.getMessage());
         }
         return false;
     }
@@ -168,15 +173,16 @@ public class SimpleBusCollector implements BusCollector {
 
     /**
      * Removes all ResponseEntries with a lower timestamp that have the same id.
+     *
      * @param response list of ResponseEntries to filter
      * @return a list only containing ResponseEntries with different ids.
      */
-    private List<ResponseEntry> filterLatestData(List<ResponseEntry> response){
+    private List<ResponseEntry> filterLatestData(List<ResponseEntry> response) {
         HashMap<String, ResponseEntry> latestData = new HashMap<String, ResponseEntry>();
 
-        for(ResponseEntry r : response){
+        for (ResponseEntry r : response) {
             ResponseEntry latest = latestData.get(r.gatewayId);
-            if(latest == null || latest.timestamp < r.timestamp){
+            if (latest == null || latest.timestamp < r.timestamp) {
                 latestData.put(r.gatewayId, r);
             }
         }
@@ -185,8 +191,7 @@ public class SimpleBusCollector implements BusCollector {
 
 
     private ResponseEntry getBestLocationMatch(List<ResponseEntry> response, Location location)
-            throws Exception
-    {
+            throws Exception {
         double shortestDistance = Double.MAX_VALUE;
         ResponseEntry bestMatch = null;
 
@@ -194,7 +199,7 @@ public class SimpleBusCollector implements BusCollector {
             throw new Exception("No bus-gps available.");
         }
 
-        for(ResponseEntry e : response) {
+        for (ResponseEntry e : response) {
             double distanceAway = getLocationDifference(e, location);
 
             if (bestMatch == null || distanceAway < shortestDistance) {
@@ -206,26 +211,31 @@ public class SimpleBusCollector implements BusCollector {
     }
 
 
-    private boolean busIsCloseEnough(ResponseEntry entry, Location location){
+    private boolean busIsCloseEnough(ResponseEntry entry, Location location) {
         return getLocationDifference(entry, location) <= MAX_DISTANCE_ALLOWED;
     }
 
 
-    private double getLocationDifference(ResponseEntry entry, Location location){
+    private double getLocationDifference(ResponseEntry entry, Location location) {
         try {
             if (entry == null) {
                 throw new Exception("No entry");
             }
-            double northCoord = parseNorthCoordinate(entry.value);
-            double eastCoord = parseEastCoordinate(entry.value);
 
-            // The locations coordinates are multiplied by 100 to match the format from the bus.
-            return Math.sqrt(Math.pow(100 * location.getLatitude() - northCoord, 2) + Math.pow(100 * location.getLongitude() - eastCoord, 2));
-        } catch(NumberFormatException ex){
-            ex.printStackTrace();
+            //Get coordinates in degrees.
+            double northCoord = parseNorthCoordinate(entry.value)/100;
+            double eastCoord = parseEastCoordinate(entry.value)/100;
+
+            //Create a location and let android calculate the distance in meters.
+            Location busLocation = new Location("");
+            busLocation.setLatitude(northCoord);
+            busLocation.setLongitude(eastCoord);
+            return location.distanceTo(busLocation);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+        //TODO: This looks ugly...
         return Double.MAX_VALUE;
     }
 
