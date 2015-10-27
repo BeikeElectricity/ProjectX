@@ -25,7 +25,8 @@ public class SimpleBusCollector implements BusCollector {
     private static final double MAX_DISTANCE_ALLOWED = 10000000; //TODO: some value here
 
     /**
-     * The Vin number of the bus, this is how we identify buses.
+     * The Vin number of the bus, this is how we identify buses. This should be stored
+     * without the "Ericsson$" prefix.
      */
     private String vinNumber;
 
@@ -109,7 +110,7 @@ public class SimpleBusCollector implements BusCollector {
 
 
     private String constructUrl(String busDgw, Sensor sensor, long t1, long t2){
-        String dgw        = busDgw.equals(ALL_BUSES) ? "?" : "?dgw=" + busDgw + "&";
+        String dgw        = busDgw.equals(ALL_BUSES) ? "?" : "?dgw=Ericsson$" + busDgw + "&";
         String sensorSpec = "sensorSpec=Ericsson$" + sensor.toString();
         String timeSpan   = "&t1=" + String.valueOf(t1) + "&t2=" + String.valueOf(t2);
 
