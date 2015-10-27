@@ -1,5 +1,6 @@
 package eic.beike.projectx.android;
 
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -22,7 +23,8 @@ public class LocationFinder implements LocationListener {
         locationManager = lm;
 
         Log.d("LocationFinder", "Setting up listener");
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0, 1,this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 1, this);
     }
 
 
@@ -33,7 +35,8 @@ public class LocationFinder implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        if (location != null) {
+        if (location != null && location.getAccuracy() < 500) {
+            //location wasn't null and we're 68% certain that it's correct to 500 meters.
             position.set(location);
             Log.d("LocationFinder", "New location: " + position.toString());
         }
