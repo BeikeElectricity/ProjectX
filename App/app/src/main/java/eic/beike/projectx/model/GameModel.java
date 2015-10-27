@@ -41,7 +41,6 @@ public class GameModel implements IGameModel{
     public GameModel(IGameEventTrigger triggers){
         super();
         busCollector = SimpleBusCollector.getInstance();
-        busCollector.chooseBus(BusCollector.TEST_BUSS_VIN_NUMBER);
         this.triggers = triggers;
         buttons = generateNewButtons();
 
