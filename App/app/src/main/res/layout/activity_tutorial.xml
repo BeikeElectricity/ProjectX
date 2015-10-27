@@ -27,7 +27,7 @@
                 android:text="Back"
                 android:id="@+id/backButton"
                 android:layout_weight="1"
-                android:enabled="false"
+                android:enabled="true"
                 android:onClick="back" />
 
             <Button
