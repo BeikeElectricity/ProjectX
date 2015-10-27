@@ -5,6 +5,7 @@ import eic.beike.projectx.R;
 
 /**
  * Created by Simon on 2015-10-06.
+ * This is the color that is both represented in the GameModel and GameActivity for the UI
  */
 public enum GameColor {
 

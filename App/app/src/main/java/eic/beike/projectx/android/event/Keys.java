@@ -2,6 +2,8 @@ package eic.beike.projectx.android.event;
 
 /**
  * Created by Simon on 2015-10-26.
+ * The Strings is used in GameEventTrigger and GameEventHandler to send Messages between
+ * the GameModel and GameActivity
  */
 public class Keys {
     protected static final String ROW       = "ROW";

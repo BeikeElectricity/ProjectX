@@ -16,6 +16,8 @@ import static eic.beike.projectx.android.event.Operations.*;
 /**
  * @author Adam
  * @author Alex
+ * @author Simon
+ * Handles events sent from GameEventTrigger and passes it to GameActivity to update the GUI
  */
 public class GameEventHandler extends Handler {
 

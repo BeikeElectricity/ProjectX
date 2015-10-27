@@ -9,7 +9,8 @@ import static eic.beike.projectx.android.event.Keys.*;
 import static eic.beike.projectx.android.event.Operations.*;
 
 /**
- * Used to update the game activity from any thread.
+ * Used to trigger/create a new event that is handled in GameEventHandler. It uses Messages to bundle
+ * data that is sent.
  */
 public class GameEventTrigger implements IGameEventTrigger {
 
