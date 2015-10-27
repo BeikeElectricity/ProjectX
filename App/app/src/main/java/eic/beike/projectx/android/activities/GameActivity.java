@@ -175,12 +175,12 @@ public class GameActivity extends Activity
      **********************************************************************/
 
     /**
-     * Called when the claimBonus button is pressed. Delegates the press to the model.
+     * Called when the  bonus button is pressed. Delegates the press to the model.
      */
     public void onBonusButtonClick(View view) {
         if (view.getId() == R.id.claimBonus) {
             view.startAnimation(bumpButton);
-            gameModel.claimBonus();
+            gameModel.claimFactor();
         }
     }
 

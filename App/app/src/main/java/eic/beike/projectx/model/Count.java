@@ -102,7 +102,7 @@ public class Count  {
                             double columnFactor = Math.min(speed+1 , Constants.BUS_NORMAL_SPEED);
                             if(isRunning == myIsRunning) {
                                 //Round still active, update score!
-                                gameModel.addBonus((int) (rows*rowFactor + columns * columnFactor));
+                                gameModel.addPercentScore((int) (rows * rowFactor + columns * columnFactor));
                             }
                         } catch (Exception e) {
                             Log.e("Count", e.getMessage() + "");
@@ -155,15 +155,15 @@ public class Count  {
      */
     public synchronized void calculatePercent(long t1, long t2) {
         if (t2 == 0) {
-            gameModel.addScore(0.3);
+            gameModel.addPercentScore(0.3);
         } else if (t1 < t2) {
             t1 -= epochyear;
             t2 -= epochyear;
-            gameModel.addScore(Math.abs(((double) t1 / (double) t2) +1));
+            gameModel.addPercentScore(Math.abs(((double) t1 / (double) t2) + 1));
         } else {
             t1 -= epochyear;
             t2 -= epochyear;
-            gameModel.addScore(Math.abs(((double) t2 / (double) t1) +1));
+            gameModel.addPercentScore(Math.abs(((double) t2 / (double) t1) + 1));
         }
     }
 

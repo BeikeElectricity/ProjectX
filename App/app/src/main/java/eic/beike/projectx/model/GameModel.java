@@ -7,28 +7,32 @@ import eic.beike.projectx.network.busdata.BusCollector;
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
 import eic.beike.projectx.util.GameColor;
 
-import eic.beike.projectx.util.Constants;
+/**
+ * @author Simon
+ * @author Alex
+ */
 
 /**
- * @author Mikael
- * @author Adam
+ * This is the model for the game, which handles the representation of the game
  */
 public class GameModel implements IGameModel{
 
 
-    public static final long USER_EVENT_EXPIRATION_TIME = 1 * Constants.ONE_SECOND_IN_MILLI;
-
-    private BusCollector busCollector;
-    private Button[][] buttons;
     private Count count;
+    private BusCollector busCollector;
+    /**
+     * Used to represent the board
+     */
+    private Button[][] buttons;
+
+    /**
+     * Used to represent which button is pressed
+     */
     private int pressedC = -1;
     private int pressedR = -1;
 
-    /**
-     * Persistent total score
-     */
     private double percentOfScore = 0;
-    private int bonus = 0;
+    private int score = 0;
 
     private IGameEventTrigger triggers;
     private RoundTracker tracker;
@@ -42,47 +46,84 @@ public class GameModel implements IGameModel{
         buttons = generateNewButtons();
 
         //Count up instances and then create a count object.
-        //TODO: The coupling between count and GameModel is very shaky and unclear...
         Count.addRunning();
         count = new Count(this);
-
 
         tracker = new RoundTracker();
         tracker.track(this);
     }
 
     /**
-     * Adds points to the bonus count.
-     * @param bonus The new bonus points.
+     * Adds points to the score count.
+     * @param score The new score points.
      */
-    protected synchronized void addBonus(int bonus){
-        this.bonus += bonus;
-        triggers.triggerNewBonus(this.bonus);
+    @Override
+    public synchronized void addPercentScore(int score){
+        this.score += score;
+        triggers.triggerNewBonus(this.score);
     }
 
     /**
      * Adds to the total scores.
      * @param percentOfScore the extra points that should be added.
      */
-    protected synchronized void addScore(double percentOfScore){
+    @Override
+    public synchronized void addPercentScore(double percentOfScore){
         this.percentOfScore = percentOfScore;
         triggers.triggerNewScore(percentOfScore);
     }
-
+    /**
+    * Used when the stop sign lights up in the bus and the player wants a bigger multiplier
+     */
     @Override
-    public void claimBonus() {
+    public void claimFactor() {
         Long currentTime = System.currentTimeMillis();
         count.count(currentTime);
     }
 
+    @Override
+    public Count getCount() {
+        return count;
+    }
 
+    /**
+     * Generates new buttons for those that have been pressed
+     */
+    @Override
+    public void generateButtons() {
+        Random random = new Random();
+        int generated;
+
+        // While there exists rows or columns of the same color, count them and generate new.
+        do {
+            generated = 0;
+            for (int i = 0; i < buttons.length; i++) {
+                for (int j = 0; j < buttons.length; j++) {
+                    if (buttons[i][j].counted) {
+                        buttons[i][j] = new Button(GameColor.color(random.nextInt(3)), random.nextInt(50));
+                        generated++;
+                        triggers.triggerNewButton(i, j, buttons[i][j].color.getAndroidColor());
+                    }
+                }
+            }
+            count.sum(buttons);
+        } while (generated > 0);
+    }
+
+    /**
+     * Handles button interaction
+     * @param row, represents the row of the button pressed
+     * @param column, represents the column of the  button pressed
+     */
     @Override
     public void pressButton(int row, int column) {
         if(pressedR < 0 && pressedC < 0) {
+            //Select button
             pressedR = row;
             pressedC = column;
             triggers.triggerSelectButton(row,column);
         } else if(isSame(row, column)) {
+            //if we have a selected button and it's pressed again, deselect it
             triggers.triggerDeselectButton(row, column);
             pressedR = -1;
             pressedC = -1;
@@ -115,32 +156,14 @@ public class GameModel implements IGameModel{
         buttons[row][column] = temp;
     }
 
-    public void generateButtons() {
-        Random random = new Random();
-        int generated;
 
-        // While there exists rows or columns of the same color, count them and generate new.
-        do {
-            generated = 0;
-            for (int i = 0; i < buttons.length; i++) {
-                for (int j = 0; j < buttons.length; j++) {
-                    if (buttons[i][j].counted) {
-                        buttons[i][j] = new Button(GameColor.color(random.nextInt(3)), random.nextInt(50));
-                        generated++;
-                        triggers.triggerNewButton(i, j, buttons[i][j].color.getAndroidColor());
-                    }
-                }
-            }
-            count.sum(buttons);
-        } while (generated > 0);
-    }
 
     /**
      * Updates view and resets score.
      */
     protected void endRound() {
-        triggers.triggerEndRound(percentOfScore * (double) bonus);
-        bonus = 0;
+        triggers.triggerEndRound(percentOfScore * (double) score);
+        score = 0;
         percentOfScore = 0;
     }
 
@@ -153,9 +176,12 @@ public class GameModel implements IGameModel{
         }
     }
 
+    /**
+     * Generate a new board, without three in a row
+     * @return, returns a new board
+     */
     private Button[][] generateNewButtons() {
         Button[][] tempList = new Button[3][3];
-        Button notSame = new Button(GameColor.BLUE, 0);
         Random random = new Random();
         for (int i = 0; i < tempList.length; i++) {
             for (int j = 0; j < tempList.length; j++) {
@@ -174,6 +200,10 @@ public class GameModel implements IGameModel{
         return tempList;
     }
 
+    /**
+     * Tells the view to update all the buttons
+     * @param tempList, the board to be updated
+     */
     private void triggerAllNewButtons(Button[][] tempList) {
         for (int i = 0; i < tempList.length; i++) {
             for (int j = 0; j < tempList.length; j++) {
@@ -195,7 +225,6 @@ public class GameModel implements IGameModel{
     }
 
     private boolean isNeighbour(int row, int column) {
-
          if(row == pressedR && (column+1 == pressedC || column-1 == pressedC)) {
             return true;
          } else if(column == pressedC && (row+1 == pressedR || row-1 == pressedR)) {
@@ -205,8 +234,8 @@ public class GameModel implements IGameModel{
          }
      }
 
-    public int getBonus() {
-        return bonus;
+    public int getScore() {
+        return score;
     }
 
     /*
@@ -214,10 +243,6 @@ public class GameModel implements IGameModel{
      */
     public Button[][] getButtons() {
         return buttons;
-    }
-
-    public Count getCount() {
-        return count;
     }
 
     public void triggerError(String msg) {

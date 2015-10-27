@@ -87,7 +87,7 @@ public class GameModelTest{
 
         assertFalse(gameModel.getButtons()[0][0].counted);
         assertFalse(gameModel.getButtons()[1][0].counted);
-        assertTrue(gameModel.getBonus() > 0);
+        assertTrue(gameModel.getScore() > 0);
     }
 
     class TestTrigger implements IGameEventTrigger {

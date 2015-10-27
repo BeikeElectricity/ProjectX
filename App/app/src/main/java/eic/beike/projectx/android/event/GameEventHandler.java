@@ -39,13 +39,10 @@ public class GameEventHandler extends Handler {
 
         } else if (operation.equals(SELECTBUTTON)) {
             selectButton(data);
-
         } else if (operation.equals(DESELECTBUTTON)) {
             deselectButton(data);
-
         } else if (operation.equals(UPDATEBOARD)) {
             updateBoard(data);
-
         } else if (operation.equals(BONUSBUTTON)) {
             updateBonus(data);
         } else if (operation.equals(SWOPBUTTON)) {

@@ -16,7 +16,7 @@ public interface IGameModel {
     /**
      * Try to claim the bonus points.
      */
-    void claimBonus();
+    void claimFactor();
 
     /**
      * Press the grid button at the specified position. First row is 0 and first column is 0.
@@ -29,5 +29,9 @@ public interface IGameModel {
     Count getCount();
 
     void triggerError(String msg);
+
+    void addPercentScore(double percentOfScore);
+
+    void addPercentScore(int score);
 
 }
