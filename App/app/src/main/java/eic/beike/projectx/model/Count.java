@@ -1,5 +1,6 @@
 package eic.beike.projectx.model;
 
+import eic.beike.projectx.network.busdata.BusData;
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
 
 import android.util.Log;
@@ -16,8 +17,6 @@ public class Count  {
     /**
      * The gameModel uses this counter.
      */
-
-    private final Long epochyear = 1444800000000l;
 
     private GameModel gameModel;
 
@@ -44,7 +43,9 @@ public class Count  {
                 this.start();
             }
 
-            // Runs until a Stop pressed event is found.
+            /**
+             * Runs for 20 seconds and calculates a score
+             */
             @Override
             public void run() {
                 try {
@@ -53,10 +54,15 @@ public class Count  {
                     Long t2 = 0l;
                     boolean hasNotCalculated = true;
                     while ((System.currentTimeMillis() < startTime) && (isRunning == myIsRunning) && hasNotCalculated) {
-                        t2 = bus.getBusData(t1, Sensor.Stop_Pressed).timestamp;
-                        if (t2 != 0) {
-                            calculatePercent(t1, t2);
-                            hasNotCalculated = false;
+                        BusData busData= bus.getBusData(t1, Sensor.Stop_Pressed);
+
+                        //The bus might send stopPressed == false with a timestamp. Which means that the stop button is not pressed
+                        if(busData.isStopPressed()) {
+                            t2 = busData.getTimestamp();
+                            if (t2 != 0) {
+                                calculatePercent(t1, t2);
+                                hasNotCalculated = false;
+                            }
                         }
 
                         try {
@@ -156,15 +162,39 @@ public class Count  {
     public synchronized void calculatePercent(long t1, long t2) {
         if (t2 == 0) {
             gameModel.addPercentScore(0.3);
-        } else if (t1 < t2) {
-            t1 -= epochyear;
-            t2 -= epochyear;
+        }
+        long[] timestamps = realValue(t1,t2);
+        t1 = timestamps[0];
+        t2 = timestamps[1];
+        if (t1 < t2) {
             gameModel.addPercentScore(Math.abs(((double) t1 / (double) t2) + 1));
         } else {
-            t1 -= epochyear;
-            t2 -= epochyear;
             gameModel.addPercentScore(Math.abs(((double) t2 / (double) t1) + 1));
         }
+    }
+
+    private long[] realValue(long t1, long t2) {
+        String temp_1 = String.valueOf(t1);
+        String temp_2 = String.valueOf(t2);
+        long[] list = new long[2];
+        if(temp_1.length() == temp_2.length()) {
+            int index = 0;
+            for(int i = 0; i < temp_1.length(); i++) {
+               if(temp_1.charAt(i) == temp_2.charAt(i)) {
+                   index++;
+               } else {
+                   temp_1.substring(0,index);
+                   temp_2.substring(0,index);
+
+                   list[0] = Long.valueOf(temp_1).longValue();
+                   list[1] = Long.valueOf(temp_2).longValue();
+                   return list;
+               }
+            }
+        }
+        list[0] = t1;
+        list[1] = t2;
+        return list;
     }
 
     public static void addRunning() {
