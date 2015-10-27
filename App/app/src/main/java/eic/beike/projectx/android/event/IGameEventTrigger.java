@@ -5,8 +5,8 @@ package eic.beike.projectx.android.event;
  */
 public interface IGameEventTrigger {
 
-    void triggerNewScore(double latestScore);
-    void triggerNewBonus(int bonus);
+    void triggerNewFactor(double latestScore);
+    void triggerNewScore(int bonus);
     void triggerDeselectButton(int row,int column);
     void triggerSelectButton(int row, int column);
     void triggerSwapButtons(int row, int column, int pressedR, int pressedC);

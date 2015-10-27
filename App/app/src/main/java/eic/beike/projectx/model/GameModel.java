@@ -57,9 +57,9 @@ public class GameModel implements IGameModel{
      * @param score The new score points.
      */
     @Override
-    public synchronized void addPercentScore(int score){
+    public synchronized void addScore(int score){
         this.score += score;
-        triggers.triggerNewBonus(this.score);
+        triggers.triggerNewScore(this.score);
     }
 
     /**
@@ -69,7 +69,7 @@ public class GameModel implements IGameModel{
     @Override
     public synchronized void addPercentScore(double percentOfScore){
         this.percentOfScore = percentOfScore;
-        triggers.triggerNewScore(percentOfScore);
+        triggers.triggerNewFactor(percentOfScore);
     }
     /**
     * Used when the stop sign lights up in the bus and the player wants a bigger multiplier

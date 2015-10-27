@@ -12,7 +12,6 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.*;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -214,16 +213,19 @@ public class GameActivity extends Activity
     /**
      * Used to update the score
      */
-    public void updateScore(double latestScore) {
-        TextView last = (TextView) findViewById(R.id.lastScore);
-
-        last.setText(String.valueOf(latestScore));
+    public void updateFactor(double latestFactor) {
+        TextView last = (TextView) findViewById(R.id.Factor);
+        String percent = String.valueOf(latestFactor);
+        int endChar = percent.length() < 4 ?
+                percent.length()
+                : 4;
+        last.setText(percent.substring(0, endChar));
     }
 
-    public void updateBonus(int bonusScore) {
-        Button bonus = (Button) findViewById(R.id.claimBonus);
+    public void updateScore(int latestScore) {
+        TextView last = (TextView) findViewById(R.id.totalScore);
 
-        bonus.setText(String.valueOf(bonusScore));
+        last.setText(String.valueOf(latestScore));
     }
 
     /**

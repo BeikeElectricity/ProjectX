@@ -34,18 +34,17 @@ public class GameEventHandler extends Handler {
 
         //See what operation to perform.
         String operation = data.getString(OPERATION);
-        if (operation.equals(UPDATESCORE)) {
+        if(operation.equals(UPDATESCORE)) {
             updateScore(data);
-
+        } else if (operation.equals(UPDATEFACTOR)) {
+            updateFactor(data);
         } else if (operation.equals(SELECTBUTTON)) {
             selectButton(data);
         } else if (operation.equals(DESELECTBUTTON)) {
             deselectButton(data);
         } else if (operation.equals(UPDATEBOARD)) {
             updateBoard(data);
-        } else if (operation.equals(BONUSBUTTON)) {
-            updateBonus(data);
-        } else if (operation.equals(SWOPBUTTON)) {
+        } else if (operation.equals(SWAPBUTTON)) {
             swapButton(data);
         } else if(operation.equals(ENDROUND)){
             endRound(data);
@@ -80,15 +79,14 @@ public class GameEventHandler extends Handler {
         game.swapButtons(row1, row2, column1, column2);
     }
 
-    private void updateBonus(Bundle data) {
-        int bonus = data.getInt(BONUS);
-
-        game.updateBonus(bonus);
+    private void updateScore(Bundle data) {
+        int bonus = data.getInt(SCORE);
+        game.updateScore(bonus);
     }
 
-    private void updateScore(Bundle data){
+    private void updateFactor(Bundle data){
         double percent = data.getDouble(PERCENT);
-        game.updateScore(percent);
+        game.updateFactor(percent);
     }
 
     private void selectButton(Bundle data){

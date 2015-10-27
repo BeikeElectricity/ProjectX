@@ -30,7 +30,7 @@ public class Count  {
 
     /**
      * Calculate the bonus percent the player will get at the end of the round based
-     * on how fast she reacted to the stop sign being lit on the bus.
+     * on how fast he/she reacted to the stop sign being lit on the bus.
      *
      * @param t1 the time the player pressed the button
      */
@@ -44,7 +44,7 @@ public class Count  {
             }
 
             /**
-             * Runs for 20 seconds and calculates a score
+             * Runs for 20 seconds and calculates a factor
              */
             @Override
             public void run() {
@@ -108,7 +108,7 @@ public class Count  {
                             double columnFactor = Math.min(speed+1 , Constants.BUS_NORMAL_SPEED);
                             if(isRunning == myIsRunning) {
                                 //Round still active, update score!
-                                gameModel.addPercentScore((int) (rows * rowFactor + columns * columnFactor));
+                                gameModel.addScore((int) (rows * rowFactor + columns * columnFactor));
                             }
                         } catch (Exception e) {
                             Log.e("Count", e.getMessage() + "");

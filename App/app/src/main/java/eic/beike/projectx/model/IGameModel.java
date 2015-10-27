@@ -32,6 +32,6 @@ public interface IGameModel {
 
     void addPercentScore(double percentOfScore);
 
-    void addPercentScore(int score);
+    void addScore(int score);
 
 }

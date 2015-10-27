@@ -98,12 +98,12 @@ public class GameModelTest{
 
 
         @Override
-        public void triggerNewScore(double score) {
+        public void triggerNewFactor(double score) {
 
         }
 
         @Override
-        public void triggerNewBonus(int bonus) {
+        public void triggerNewScore(int bonus) {
             testBonus += bonus;
         }
 
