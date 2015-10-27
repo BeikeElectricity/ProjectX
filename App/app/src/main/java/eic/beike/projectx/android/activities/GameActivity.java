@@ -146,7 +146,7 @@ public class GameActivity extends Activity
 
         SharedPreferences settings = getSharedPreferences(Constants.SETTINGS_FILE, 0);
 
-        final String name = settings.getString(Constants.NAME_FIELD, "");
+        final String id = settings.getString(Constants.ID_FIELD, "");
 
         //Create a task that should be run when the dialog is dismissed.
         postDialogTask = new AsyncTask<Void, Void, Boolean>() {
@@ -154,7 +154,7 @@ public class GameActivity extends Activity
             @Override
             protected Boolean doInBackground(Void... v) {
                 try {
-                    db.recordScore(name, score, System.currentTimeMillis(),
+                    db.recordScore(id, score, System.currentTimeMillis(),
                                    SimpleBusCollector.getInstance().getVinNumber());
                 } catch (Exception e) {
                     Log.d("GameActivity","Error ending round: "+e.getMessage());
