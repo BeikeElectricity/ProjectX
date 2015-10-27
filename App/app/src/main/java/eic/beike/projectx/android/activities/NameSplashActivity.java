@@ -26,7 +26,6 @@ public class NameSplashActivity extends Activity {
 
     public static final int MENU_ACTIVITY = 0;
 
-    //TODO: Make database work like
     private IDatabase db = new Database();
 
     @Override

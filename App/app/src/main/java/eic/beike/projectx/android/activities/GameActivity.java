@@ -246,6 +246,13 @@ public class GameActivity extends Activity
         }
     }
 
+    /**
+     * Updates view with the swapped buttons
+     * @param row1, Row of the first button to swap
+     * @param row2, Row if the second button to swap
+     * @param column1, Column of the first button to swap
+     * @param column2, Column of the second button to swap
+     */
     public void swapButtons(int row1, int row2, int column1, int column2) {
         ImageButton button1 = (ImageButton) findViewById(gridButton[row1][column1]);
         ImageButton button2 = (ImageButton) findViewById(gridButton[row2][column2]);
@@ -262,6 +269,8 @@ public class GameActivity extends Activity
 
     /**
      * Highlights the specified grid button.
+     * @param row, Row of the selected button
+     * @param column, Column of the selected button
      */
     public void selectButton(int row, int column) {
         //Check for valid position and change alpha.
@@ -277,6 +286,8 @@ public class GameActivity extends Activity
 
     /**
      * Deselect the specified button so that it is no longer highlighted.
+     * @param row, Row of the button to deselect
+     * @param column, Column of the button to deselect
      */
     public void deselectButton(int row, int column) {
         //Check for valid position and change alpha.
@@ -292,7 +303,7 @@ public class GameActivity extends Activity
 
 
     /**
-     *
+     *Displays an errorDialog with a specified message
      */
     public void showErrorDialog(String message) {
         MessageDialog dialog = new MessageDialog();
