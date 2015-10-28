@@ -127,7 +127,6 @@ public class GameActivity extends Activity
     {
         super.onBackPressed();
         setResult(RESULT_CANCELED);
-        startActivity(new Intent(this, MenuActivity.class));
         finish();
     }
 
