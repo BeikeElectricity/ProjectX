@@ -36,7 +36,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/game_last_factor_text"
-                    android:id="@+id/lastScore"
+                    android:id="@+id/Factor"
                     android:textSize="32sp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"

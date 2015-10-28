@@ -1,5 +1,6 @@
 package eic.beike.projectx.model;
 
+import eic.beike.projectx.network.busdata.BusData;
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
 
 import android.util.Log;
@@ -10,16 +11,17 @@ import eic.beike.projectx.util.Constants;
 
 /**
  * @author Simon
+ *         This class is used to calculate the score that a player has, to update the score and update the factor.
+ *         It only does this when the isRunning is correct e.g to not get a extra score when not playing.
  */
-public class Count  {
+public class Count {
+
+
+    private GameModel gameModel;
 
     /**
      * The gameModel uses this counter.
      */
-
-    private final Long epochyear = 1444800000000l;
-
-    private GameModel gameModel;
 
     private static int isRunning = 0;
 
@@ -31,7 +33,7 @@ public class Count  {
 
     /**
      * Calculate the bonus percent the player will get at the end of the round based
-     * on how fast she reacted to the stop sign being lit on the bus.
+     * on how fast he/she reacted to the stop sign being lit on the bus.
      *
      * @param t1 the time the player pressed the button
      */
@@ -39,12 +41,15 @@ public class Count  {
         //Start a thread that makes the network call and then updates the game.
         new Thread() {
             long t1;
+
             public void count(long t1) {
                 this.t1 = t1;
                 this.start();
             }
 
-            // Runs until a Stop pressed event is found.
+            /**
+             * Runs for 20 seconds and calculates a factor
+             */
             @Override
             public void run() {
                 try {
@@ -53,10 +58,15 @@ public class Count  {
                     Long t2 = 0l;
                     boolean hasNotCalculated = true;
                     while ((System.currentTimeMillis() < startTime) && (isRunning == myIsRunning) && hasNotCalculated) {
-                        t2 = bus.getBusData(t1, Sensor.Stop_Pressed).timestamp;
-                        if (t2 != 0) {
-                            calculatePercent(t1, t2);
-                            hasNotCalculated = false;
+                        BusData busData = bus.getBusData(t1, Sensor.Stop_Pressed);
+
+                        //The bus might send stopPressed == false with a timestamp. Which means that the stop button is not pressed
+                        if (busData.isStopPressed()) {
+                            t2 = busData.getTimestamp();
+                            if (t2 != 0) {
+                                calculatePercent(t1, t2);
+                                hasNotCalculated = false;
+                            }
                         }
 
                         try {
@@ -70,15 +80,15 @@ public class Count  {
                         calculatePercent(t1, t2);
                     }
                 } catch (Exception e) {
-                    Log.e("Count", e.getMessage()+"");
+                    Log.e("Count", e.getMessage() + "");
                 }
             }
         }.count(t1);
     }
 
     /**
-     *  Sum the rows and columns of the board to get their points and then give them to the player
-     *  factoring in the speed of the bus.
+     * Sum the rows and columns of the board to get their points and then give them to the player
+     * factoring in the speed of the bus.
      *
      * @param buttons the board that should be summed and updated.
      */
@@ -89,28 +99,27 @@ public class Count  {
 
         // Get the sums
         final int columns = columns(buttons);
-        final int rows =  rows(buttons);
+        final int rows = rows(buttons);
 
         // Factor in the speed in a separate thread.
         new Thread() {
             @Override
             public void run() {
-                        try {
-                            //Get speed of bus and let this affect how much points are awarded for rows and columns.
-                            double speed = SimpleBusCollector.getInstance().getBusData(time, Sensor.GPS2).getSpeed();
-                            double rowFactor = Math.max(Constants.BUS_NORMAL_SPEED - speed, 1);
-                            double columnFactor = Math.min(speed+1 , Constants.BUS_NORMAL_SPEED);
-                            if(isRunning == myIsRunning) {
-                                //Round still active, update score!
-                                gameModel.addBonus((int) (rows*rowFactor + columns * columnFactor));
-                            }
-                        } catch (Exception e) {
-                            Log.e("Count", e.getMessage() + "");
-                        }
+                try {
+                    //Get speed of bus and let this affect how much points are awarded for rows and columns.
+                    double speed = SimpleBusCollector.getInstance().getBusData(time, Sensor.GPS2).getSpeed();
+                    double rowFactor = Math.max(Constants.BUS_NORMAL_SPEED - speed, 1);
+                    double columnFactor = Math.min(speed + 1, Constants.BUS_NORMAL_SPEED);
+                    if (isRunning == myIsRunning) {
+                        //Round still active, update score!
+                        gameModel.addScore((int) (rows * rowFactor + columns * columnFactor));
                     }
+                } catch (Exception e) {
+                    Log.e("Count", e.getMessage() + "");
+                }
+            }
         }.start();
     }
-
 
 
     /**
@@ -149,22 +158,39 @@ public class Count  {
         }
         return count;
     }
+
     /*
     * @param t1, time bonus button is pressed
     * @param t2, time actual stop signal
      */
     public synchronized void calculatePercent(long t1, long t2) {
         if (t2 == 0) {
-            gameModel.addScore(0.3);
-        } else if (t1 < t2) {
-            t1 -= epochyear;
-            t2 -= epochyear;
-            gameModel.addScore(Math.abs(((double) t1 / (double) t2) +1));
-        } else {
-            t1 -= epochyear;
-            t2 -= epochyear;
-            gameModel.addScore(Math.abs(((double) t2 / (double) t1) +1));
+            gameModel.addPercentScore(0.3);
         }
+        long[] timestamps = realValue(t1, t2);
+        t1 = timestamps[0];
+        t2 = timestamps[1];
+        if (t1 < t2) {
+            gameModel.addPercentScore(Math.abs(((double) t1 / (double) t2) + 1));
+        } else {
+            gameModel.addPercentScore(Math.abs(((double) t2 / (double) t1) + 1));
+        }
+    }
+
+    private long[] realValue(long t1, long t2) {
+        String temp_1 = String.valueOf(t1);
+        String temp_2 = String.valueOf(t2);
+        long[] list = new long[2];
+        int index = 0;
+        while (temp_1.charAt(index) == temp_2.charAt(index)) {
+            index++;
+        }
+        temp_1 = temp_1.substring(index);
+        temp_2 = temp_2.substring(index);
+
+        list[0] = Long.valueOf(temp_1).longValue();
+        list[1] = Long.valueOf(temp_2).longValue();
+        return list;
     }
 
     public static void addRunning() {

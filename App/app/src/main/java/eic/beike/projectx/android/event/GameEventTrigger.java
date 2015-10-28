@@ -9,7 +9,8 @@ import static eic.beike.projectx.android.event.Keys.*;
 import static eic.beike.projectx.android.event.Operations.*;
 
 /**
- * Used to update the game activity from any thread.
+ * Used to trigger/create a new event that is handled in GameEventHandler. It uses Messages to bundle
+ * data that is sent.
  */
 public class GameEventTrigger implements IGameEventTrigger {
 
@@ -22,25 +23,25 @@ public class GameEventTrigger implements IGameEventTrigger {
 
     /**
      * Used to notify the handlers about a new score
-     * @param latestScore The latest score the player received
+     * @param latestFactor The latest score the player received
      */
     @Override
-    public synchronized void triggerNewScore(double latestScore) {
+    public synchronized void triggerNewFactor(double latestFactor) {
         if (handler == null) {
             return;
         }
-        Log.d("Score", Thread.currentThread().getName() + ":triggerNewScore");
+        Log.d("Score", Thread.currentThread().getName() + ":triggerNewFactor");
         Message msg = handler.obtainMessage();
         Bundle data = new Bundle();
 
-        data.putString(OPERATION, UPDATESCORE);
-        data.putDouble(PERCENT, latestScore);
+        data.putString(OPERATION, UPDATEFACTOR);
+        data.putDouble(PERCENT, latestFactor);
 
         msg.setData(data);
         msg.sendToTarget();
     }
     @Override
-    public synchronized void triggerNewBonus(int bonus) {
+    public synchronized void triggerNewScore(int score) {
         if (handler == null) {
             return;
         }
@@ -48,8 +49,8 @@ public class GameEventTrigger implements IGameEventTrigger {
         Message msg = handler.obtainMessage();
         Bundle data = new Bundle();
 
-        data.putString(OPERATION, BONUSBUTTON);
-        data.putInt(BONUS, bonus);
+        data.putString(OPERATION, UPDATESCORE);
+        data.putInt(SCORE, score);
 
         msg.setData(data);
         msg.sendToTarget();
@@ -98,7 +99,7 @@ public class GameEventTrigger implements IGameEventTrigger {
         Message msg = handler.obtainMessage();
         Bundle data = new Bundle();
 
-        data.putString(OPERATION, SWOPBUTTON);
+        data.putString(OPERATION, SWAPBUTTON);
         data.putInt(ROW_1, pressedR);
         data.putInt(ROW_2, row);
         data.putInt(COLUMN_1, pressedC);

@@ -1,6 +1,7 @@
 package eic.beike.projectx.android.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -41,12 +42,16 @@ public class TutorialActivity extends Activity {
      * @param v The input form the "Next" button. Not used, but required
      */
     public void next(View v) {
+        if(index == imageIds.length - 1){
+            finish();
+        }
+
         if(index < imageIds.length - 1){
             index++;
         }
 
         if(index == imageIds.length - 1){
-            nextButton.setEnabled(false);
+            nextButton.setText("Finish");
         }
 
         backButton.setEnabled(true);
@@ -57,12 +62,16 @@ public class TutorialActivity extends Activity {
      * @param v The input form the "Back" button. Not used, but required
      */
     public void back(View v) {
-        if(index > 0){
-            index--;
+        if(index == 0){
+            finish();
         }
 
-        if(index == 0){
-            backButton.setEnabled(false);
+        if(index == imageIds.length - 1){
+            nextButton.setText("Next");
+        }
+
+        if(index > 0){
+            index--;
         }
 
         nextButton.setEnabled(true);

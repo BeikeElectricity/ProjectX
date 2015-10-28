@@ -21,12 +21,13 @@ import eic.beike.projectx.util.Constants;
 
 /**
  * @author Adam Ingmansson
+ * If you have not chosen a nickname this class will start. It registrates you new nickname in the
+ * database and starts the menu activity.
  */
 public class NameSplashActivity extends Activity {
 
     public static final int MENU_ACTIVITY = 0;
 
-    //TODO: Make database work like
     private IDatabase db = new Database();
 
     @Override
@@ -90,8 +91,6 @@ public class NameSplashActivity extends Activity {
                 } catch (Exception e){
                     //Log any errors
                     Log.e(this.getClass().getSimpleName(),e.getMessage()+"");
-
-                    //TODO: Show dialog as well.
                 }
 
                 // Need to return something, this is androids fault.

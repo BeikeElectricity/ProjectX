@@ -87,7 +87,7 @@ public class GameModelTest{
 
         assertFalse(gameModel.getButtons()[0][0].counted);
         assertFalse(gameModel.getButtons()[1][0].counted);
-        assertTrue(gameModel.getBonus() > 0);
+        assertTrue(gameModel.getScore() > 0);
     }
 
     class TestTrigger implements IGameEventTrigger {
@@ -98,12 +98,12 @@ public class GameModelTest{
 
 
         @Override
-        public void triggerNewScore(double score) {
+        public void triggerNewFactor(double score) {
 
         }
 
         @Override
-        public void triggerNewBonus(int bonus) {
+        public void triggerNewScore(int bonus) {
             testBonus += bonus;
         }
 

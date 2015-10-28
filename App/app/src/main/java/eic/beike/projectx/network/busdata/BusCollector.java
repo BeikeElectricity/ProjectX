@@ -9,7 +9,7 @@ import android.location.Location;
  */
 public interface BusCollector {
 
-    public static final String TEST_BUSS_VIN_NUMBER = "Ericsson$Vin_Num_001";
+    String TEST_BUSS_VIN_NUMBER = "Ericsson$Vin_Num_001";
 
     /**
      * Get the closest data from the given sensor.

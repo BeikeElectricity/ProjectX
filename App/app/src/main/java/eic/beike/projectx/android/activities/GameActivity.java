@@ -3,6 +3,7 @@ package eic.beike.projectx.android.activities;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,7 +12,6 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.*;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -26,6 +26,7 @@ import eic.beike.projectx.model.IGameModel;
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
 import eic.beike.projectx.network.projectXServer.Database;
 import eic.beike.projectx.network.projectXServer.IDatabase;
+import eic.beike.projectx.util.Constants;
 
 /**
  * @author Mikael
@@ -126,7 +127,6 @@ public class GameActivity extends Activity
     {
         super.onBackPressed();
         setResult(RESULT_CANCELED);
-        startActivity(new Intent(this, MenuActivity.class));
         finish();
     }
 
@@ -142,14 +142,17 @@ public class GameActivity extends Activity
         msg.setMessage("Your score was " + Integer.toString(score)+ "!");
         msg.show(getFragmentManager(), "show_round_score");
 
+        SharedPreferences settings = getSharedPreferences(Constants.SETTINGS_FILE, 0);
+
+        final String id = settings.getString(Constants.ID_FIELD, "");
+
         //Create a task that should be run when the dialog is dismissed.
         postDialogTask = new AsyncTask<Void, Void, Boolean>() {
            // Register the score on a background thread and then switch activity.
             @Override
             protected Boolean doInBackground(Void... v) {
                 try {
-                    //TODO: Get correct id, the ids need to registered in the db from the name splash activity.
-                    db.recordScore("alex", score, System.currentTimeMillis(),
+                    db.recordScore(id, score, System.currentTimeMillis(),
                                    SimpleBusCollector.getInstance().getVinNumber());
                 } catch (Exception e) {
                     Log.d("GameActivity","Error ending round: "+e.getMessage());
@@ -175,12 +178,12 @@ public class GameActivity extends Activity
      **********************************************************************/
 
     /**
-     * Called when the claimBonus button is pressed. Delegates the press to the model.
+     * Called when the  bonus button is pressed. Delegates the press to the model.
      */
     public void onBonusButtonClick(View view) {
         if (view.getId() == R.id.claimBonus) {
             view.startAnimation(bumpButton);
-            gameModel.claimBonus();
+            gameModel.claimFactor();
         }
     }
 
@@ -209,16 +212,19 @@ public class GameActivity extends Activity
     /**
      * Used to update the score
      */
-    public void updateScore(double latestScore) {
-        TextView last = (TextView) findViewById(R.id.lastScore);
-
-        last.setText(String.valueOf(latestScore));
+    public void updateFactor(double latestFactor) {
+        TextView last = (TextView) findViewById(R.id.Factor);
+        String percent = String.valueOf(latestFactor);
+        int endChar = percent.length() < 4 ?
+                percent.length()
+                : 4;
+        last.setText(percent.substring(0, endChar));
     }
 
-    public void updateBonus(int bonusScore) {
-        Button bonus = (Button) findViewById(R.id.claimBonus);
+    public void updateScore(int latestScore) {
+        TextView last = (TextView) findViewById(R.id.totalScore);
 
-        bonus.setText(String.valueOf(bonusScore));
+        last.setText(String.valueOf(latestScore));
     }
 
     /**
@@ -241,6 +247,13 @@ public class GameActivity extends Activity
         }
     }
 
+    /**
+     * Updates view with the swapped buttons
+     * @param row1, Row of the first button to swap
+     * @param row2, Row if the second button to swap
+     * @param column1, Column of the first button to swap
+     * @param column2, Column of the second button to swap
+     */
     public void swapButtons(int row1, int row2, int column1, int column2) {
         ImageButton button1 = (ImageButton) findViewById(gridButton[row1][column1]);
         ImageButton button2 = (ImageButton) findViewById(gridButton[row2][column2]);
@@ -257,6 +270,8 @@ public class GameActivity extends Activity
 
     /**
      * Highlights the specified grid button.
+     * @param row, Row of the selected button
+     * @param column, Column of the selected button
      */
     public void selectButton(int row, int column) {
         //Check for valid position and change alpha.
@@ -272,6 +287,8 @@ public class GameActivity extends Activity
 
     /**
      * Deselect the specified button so that it is no longer highlighted.
+     * @param row, Row of the button to deselect
+     * @param column, Column of the button to deselect
      */
     public void deselectButton(int row, int column) {
         //Check for valid position and change alpha.
@@ -287,7 +304,7 @@ public class GameActivity extends Activity
 
 
     /**
-     *
+     *Displays an errorDialog with a specified message
      */
     public void showErrorDialog(String message) {
         MessageDialog dialog = new MessageDialog();

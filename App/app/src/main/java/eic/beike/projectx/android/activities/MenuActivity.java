@@ -11,7 +11,8 @@ import eic.beike.projectx.android.activities.highScore.HighscoreActivity;
 import eic.beike.projectx.android.dialogs.MessageDialog;
 
 /**
- * TODO: Write class description!
+ * @author Simon
+ * This class handels the Menu. It has several buttons for starting different activities.
  */
 public class MenuActivity extends Activity implements MessageDialog.MessageDialogListener {
     @Override
@@ -26,7 +27,7 @@ public class MenuActivity extends Activity implements MessageDialog.MessageDialo
     }
 
     /**
-     * @param v The input form the "Play" button. Not used, but required
+     * @param v View of the triggering ui element. Not used, but required
      */
     public void play(View v) {
         Intent intentBusWaiting = new Intent(this, BusWaitingActivity.class);
@@ -35,7 +36,7 @@ public class MenuActivity extends Activity implements MessageDialog.MessageDialo
 
 
     /**
-     * @param v The input form the "Tutorial" button. Not used, but required
+     * @param v View of the triggering ui element. Not used, but required
      */
     public void tutorial(View v){
         Intent intentTutorial = new Intent(this, TutorialActivity.class);
@@ -44,7 +45,7 @@ public class MenuActivity extends Activity implements MessageDialog.MessageDialo
 
 
     /**
-     * @param v The input form the "Exit" button. Not used, but required
+     * @param v View of the triggering ui element. Not used, but required
      */
 
     public void exit(View v) {
