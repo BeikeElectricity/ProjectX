@@ -30,6 +30,7 @@ public class GameActivityTest extends ActivityInstrumentationTestCase2<GameActiv
      * Test that the activity can start properly and its the right activity.
      */
     public void testActivityExits() {
+        activity = getActivity();
         assertNotNull(activity);
         assertSame(GameActivity.class, activity.getClass());
     }
