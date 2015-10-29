@@ -10,7 +10,8 @@ import static eic.beike.projectx.android.event.Operations.*;
 
 /**
  * Used to trigger/create a new event that is handled in GameEventHandler. It uses Messages to bundle
- * data that is sent.
+ * data that is sent. This is done to allow worker threads to update the GUI.
+ *
  */
 public class GameEventTrigger implements IGameEventTrigger {
 

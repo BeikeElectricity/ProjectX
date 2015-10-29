@@ -10,7 +10,7 @@ import eic.beike.projectx.util.Constants;
  * Thread that keeps of the rounds, for now it ends the round every time the bus goes from
  * not being at a stop to being at a stop.
  *
- * Created by alex on 10/13/15.
+ * @author alex
  */
 public class RoundTracker extends Thread {
     BusCollector bus = SimpleBusCollector.getInstance();

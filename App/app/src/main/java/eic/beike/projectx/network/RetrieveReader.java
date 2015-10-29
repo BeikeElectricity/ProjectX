@@ -12,7 +12,8 @@ import java.net.URLConnection;
 
 /**
  * Used to retrieve a buffered readers from URLs.
- * Created by alex on 10/1/15.
+ *
+ * @author alex
  */
 public class RetrieveReader {
 

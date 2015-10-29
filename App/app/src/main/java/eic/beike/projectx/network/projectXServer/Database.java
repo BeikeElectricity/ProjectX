@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * Used to interact with our database.
+ *
  * @author alex
  */
 public class Database implements IDatabase {

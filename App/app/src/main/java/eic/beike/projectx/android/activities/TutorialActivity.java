@@ -10,7 +10,9 @@ import android.widget.ImageView;
 import eic.beike.projectx.R;
 
 /**
- * Created by Mikael on 2015-10-26.
+ * Simple class to display our tutorial images in the right order.
+ *
+ * @author Mikael
  */
 public class TutorialActivity extends Activity {
 

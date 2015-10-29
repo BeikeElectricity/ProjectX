@@ -2,7 +2,8 @@ package eic.beike.projectx.network.busdata;
 
 /**
  * The name of the resources from the bus coupled with their sensor.
- * Created by alex on 9/22/15.
+ *
+ * @author alex
  */
 public enum Resource {
 

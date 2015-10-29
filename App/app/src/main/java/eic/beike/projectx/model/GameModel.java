@@ -8,12 +8,10 @@ import eic.beike.projectx.network.busdata.SimpleBusCollector;
 import eic.beike.projectx.util.GameColor;
 
 /**
+ * This is the model for the game, which handles the representation of the game.
+ *
  * @author Simon
  * @author Alex
- */
-
-/**
- * This is the model for the game, which handles the representation of the game
  */
 public class GameModel implements IGameModel{
 

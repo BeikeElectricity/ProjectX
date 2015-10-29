@@ -6,7 +6,9 @@ import lombok.Getter;
 
 /**
  * Data carrying class. If the value is needed use getSensor and then the get the appropriate field.
- * Created by alex on 9/22/15.
+ * To get field call getField().
+ *
+ * @author alex
  */
 public class BusData {
 

@@ -1,7 +1,9 @@
 package eic.beike.projectx.util;
 
 /**
- * Created by Adam on 2015-09-29.
+ * Data object used to send score entries from the database to the high score activity.
+ *
+ * @autor adam
  */
 public class ScoreEntry {
 

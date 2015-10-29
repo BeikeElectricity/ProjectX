@@ -5,7 +5,7 @@ import android.location.Location;
 /**
  * Interface for communicating with the Electricity API.
  *
- * Created by alex on 9/22/15.
+ * @author alex
  */
 public interface BusCollector {
 
