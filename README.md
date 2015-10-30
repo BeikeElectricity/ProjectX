@@ -40,6 +40,8 @@ You can also make a release build by utilizing the Generate Signed APK mentioned
 # Testing
 Testing is easiest done by by making a new Android Test run configuration in Android Studio
 # Web Server
+We have a server up and running but if you want to run your 
+own it's possible. 
 The server is intended to run on the LAMP stack,
 so make sure you have that installed on your system.
 For example using ubuntu run
@@ -53,5 +55,8 @@ After that you need to put the php scripts from the webservice directory in your
 
     sudo cp webservice/* /var/www/html
     sudo service apache2 restart
+
+for further details about the server please see the TechnicalDocumentation pdf.
+
 #License
 See the `LICENSE` file in project root.
