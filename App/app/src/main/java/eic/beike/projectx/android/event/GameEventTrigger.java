@@ -23,8 +23,8 @@ public class GameEventTrigger implements IGameEventTrigger {
 
 
     /**
-     * Used to notify the handlers about a new score
-     * @param latestFactor The latest score the player received
+     * Used to notify the handlers about a new factor
+     * @param latestFactor The latest factor the player received
      */
     @Override
     public synchronized void triggerNewFactor(double latestFactor) {
@@ -41,6 +41,11 @@ public class GameEventTrigger implements IGameEventTrigger {
         msg.setData(data);
         msg.sendToTarget();
     }
+
+    /**
+     * Notifies the handlers that the score should be uppdated
+     * @param score The player's new score
+     */
     @Override
     public synchronized void triggerNewScore(int score) {
         if (handler == null) {
@@ -57,6 +62,13 @@ public class GameEventTrigger implements IGameEventTrigger {
         msg.sendToTarget();
 
     }
+
+    /**
+     * Notifies the ui that a button should be deselected
+     *
+     * @param row The buttons row number
+     * @param column The buttons column number
+     */
     @Override
     public synchronized void triggerDeselectButton(int row,int column) {
         if(handler == null) {
@@ -128,6 +140,10 @@ public class GameEventTrigger implements IGameEventTrigger {
         msg.sendToTarget();
     }
 
+    /**
+     * Notifies the ui to show an error message.
+     * @param errorText The text of the error
+     */
     @Override
     public void triggerError(String errorText) {
         Message msg = handler.obtainMessage();
@@ -140,6 +156,10 @@ public class GameEventTrigger implements IGameEventTrigger {
         msg.sendToTarget();
     }
 
+    /**
+     * Notifies the ui that the round has ended
+     * @param score The final score the user got.
+     */
     @Override
     public  synchronized void triggerEndRound(double score){
         if(handler == null) {
