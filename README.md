@@ -53,3 +53,5 @@ After that you need to put the php scripts from the webservice directory in your
 
     sudo cp webservice/* /var/www/html
     sudo service apache2 restart
+#License
+See the `LICENSE` file in project root.
