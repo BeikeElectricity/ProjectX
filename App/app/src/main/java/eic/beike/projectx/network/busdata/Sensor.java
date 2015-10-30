@@ -2,7 +2,8 @@ package eic.beike.projectx.network.busdata;
 
 /**
  * The different sensors that can be fetched from the bus.
- * Created by alex on 9/29/15.
+ *
+ * @author alex
  */
 public enum Sensor {
     Accelerator_Pedal_Position,

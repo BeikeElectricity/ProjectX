@@ -29,6 +29,11 @@ import eic.beike.projectx.network.projectXServer.IDatabase;
 import eic.beike.projectx.util.Constants;
 
 /**
+ * The GameActivity initiates the game, sends user input to the model and
+ * lets the model update the view. This class also registers the score and
+ * switch activity once the round is over. This is something of a god object
+ * but Android feels geared towards fat activities.
+ *
  * @author Mikael
  * @author Adam
  * @author Alex
@@ -38,6 +43,11 @@ public class GameActivity extends Activity
         implements MessageDialog.MessageDialogListener
 {
 
+    /**
+     * A database object to register the score. We would like
+     * to update the Database class to follow the singleton pattern
+     * in the same way as the BusCollector does.
+     */
     private IDatabase db = new Database();
 
     /**
@@ -53,9 +63,16 @@ public class GameActivity extends Activity
      */
     private IGameModel gameModel;
 
+    /**
+     * Our fancy animations.
+     */
     private Animation bumpButton;
     private Animation fadeAnimation;
 
+    /**
+     * This holds the ids of the buttons in the activity so that
+     * we don't need to look them up every time.
+     */
     private int gridButton[][] = new int[3][3];
 
 
@@ -174,7 +191,7 @@ public class GameActivity extends Activity
 
 
     /**********************************************************************
-     *                  Methods used for event listening
+     *                  Methods used for user event listening
      **********************************************************************/
 
     /**
@@ -205,12 +222,12 @@ public class GameActivity extends Activity
     }
 
     /***********************************************************************
-     *                  Methods used to update the UI
+     *                  Methods used to let the model update the UI
      ***********************************************************************/
 
 
     /**
-     * Used to update the score
+     * Sets the score multiplier factor.
      */
     public void updateFactor(double latestFactor) {
         TextView last = (TextView) findViewById(R.id.Factor);
@@ -221,12 +238,18 @@ public class GameActivity extends Activity
         last.setText(percent.substring(0, endChar));
     }
 
+    /**
+     * Sets the score in view.
+     */
     public void updateScore(int latestScore) {
         TextView last = (TextView) findViewById(R.id.totalScore);
-
         last.setText(String.valueOf(latestScore));
     }
 
+
+    /**
+     * Sets the color of the button in the specified row and column.
+     */
 
     public void updateButton(int row, int column, int colour) {
         if(row < gridButton.length && column < gridButton[row].length) {
@@ -242,6 +265,7 @@ public class GameActivity extends Activity
 
     /**
      * Updates view with the swapped buttons
+     *
      * @param row1, Row of the first button to swap
      * @param row2, Row if the second button to swap
      * @param column1, Column of the first button to swap
@@ -263,6 +287,7 @@ public class GameActivity extends Activity
 
     /**
      * Highlights the specified grid button.
+     *
      * @param row, Row of the selected button
      * @param column, Column of the selected button
      */
@@ -280,6 +305,7 @@ public class GameActivity extends Activity
 
     /**
      * Deselect the specified button so that it is no longer highlighted.
+     *
      * @param row, Row of the button to deselect
      * @param column, Column of the button to deselect
      */
@@ -297,7 +323,7 @@ public class GameActivity extends Activity
 
 
     /**
-     *Displays an errorDialog with a specified message
+     * Displays an errorDialog with a specified message
      */
     public void showErrorDialog(String message) {
         MessageDialog dialog = new MessageDialog();
@@ -327,6 +353,4 @@ public class GameActivity extends Activity
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) { /* Unused */ }
-
-
 }

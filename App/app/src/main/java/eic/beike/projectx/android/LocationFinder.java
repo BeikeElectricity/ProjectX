@@ -1,6 +1,5 @@
 package eic.beike.projectx.android;
 
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -8,13 +7,19 @@ import android.os.Bundle;
 import android.util.Log;
 
 /**
+ * Keeps track of the gps position of the phone. We start listening
+ * as soon as the app starts and let any class that's interested get
+ * the android Location. The reason we do this is because we had trouble
+ * getting a gps fix fast enough so we give the location finder a head
+ * start.
+ *
  * @author adam
  */
 public class LocationFinder implements LocationListener {
 
     private LocationManager locationManager;
 
-    public static final Location position = new Location("");
+    private static final Location position = new Location("");
 
     public LocationFinder(LocationManager lm) {
 

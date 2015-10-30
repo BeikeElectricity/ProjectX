@@ -23,6 +23,7 @@ public class Constants {
     public static final String SETTINGS_FILE = "settings";
     public static final String NAME_FIELD = "name";
     public static final String ID_FIELD = "id";
+    public static final int REQUEST_OK = 200;
 
     /**
      * Game play constants, anything that alters the feel of the game.
@@ -30,4 +31,5 @@ public class Constants {
 
 
     public static final double BUS_NORMAL_SPEED = 50;
+    public static final int BUTTON_POINTS = 1;
 }

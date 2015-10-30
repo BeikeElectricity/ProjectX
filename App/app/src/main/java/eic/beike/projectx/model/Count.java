@@ -10,9 +10,10 @@ import eic.beike.projectx.network.busdata.Sensor;
 import eic.beike.projectx.util.Constants;
 
 /**
+ * This class is used to calculate the score that a player has, to update the score and update the factor.
+ * It only does this when the isRunning is correct e.g to not get a extra score when not playing.
+ *
  * @author Simon
- *         This class is used to calculate the score that a player has, to update the score and update the factor.
- *         It only does this when the isRunning is correct e.g to not get a extra score when not playing.
  */
 public class Count {
 

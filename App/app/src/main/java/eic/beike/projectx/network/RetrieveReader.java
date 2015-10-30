@@ -2,7 +2,6 @@ package eic.beike.projectx.network;
 
 import android.util.Log;
 import eic.beike.projectx.util.Constants;
-import org.apache.http.HttpStatus;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
@@ -13,7 +12,8 @@ import java.net.URLConnection;
 
 /**
  * Used to retrieve a buffered readers from URLs.
- * Created by alex on 10/1/15.
+ *
+ * @author alex
  */
 public class RetrieveReader {
 
@@ -39,7 +39,7 @@ public class RetrieveReader {
                 int responseCode = con.getResponseCode();
 
                 //Check whether the request was successful.
-                if (responseCode != HttpStatus.SC_OK) {
+                if (responseCode != Constants.REQUEST_OK) {
                     Log.w("RetrieveReader", "Error " + responseCode + " for URL " + url);
                     throw new Exception(String.format("Response %d from url (%s).",responseCode,url));
                 }

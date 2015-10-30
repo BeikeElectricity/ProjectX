@@ -12,10 +12,10 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 /**
- * A on phone middle layer for the Cybercom api. Perhaps this code would be better placed on a server
- * somewhere.
- * <p/>
- * Created by alex on 9/21/15.
+ * A on phone middle layer for the Cybercom api. These methods should
+ * not be called from the GUI thread.
+ *
+ * @author alex
  */
 public class SimpleBusCollector implements BusCollector {
 

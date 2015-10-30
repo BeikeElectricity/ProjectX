@@ -14,10 +14,12 @@ import static eic.beike.projectx.android.event.Operations.*;
 
 
 /**
+ * Handles events sent from GameEventTrigger and passes it to GameActivity to update the GUI.
+ * This is the point were the GUI thread takes over again.
+ *
  * @author Adam
  * @author Alex
  * @author Simon
- * Handles events sent from GameEventTrigger and passes it to GameActivity to update the GUI
  */
 public class GameEventHandler extends Handler {
 

@@ -20,9 +20,9 @@ import eic.beike.projectx.util.Constants;
 
 
 /**
+ * This class handels the Menu. It has several buttons for starting different activities.
+ *
  * @author Adam Ingmansson
- * If you have not chosen a nickname this class will start. It registrates you new nickname in the
- * database and starts the menu activity.
  */
 public class NameSplashActivity extends Activity {
 

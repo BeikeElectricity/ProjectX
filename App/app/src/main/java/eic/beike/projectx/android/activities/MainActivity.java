@@ -16,9 +16,10 @@ import eic.beike.projectx.util.Constants;
 
 
 /**
- * @author Adam Ingmansson
  * This is the first activity to start. It checks if you have chosen a nickname before
  * if not it starts nameSplashActivity else starts menu
+ *
+ * @author Adam Ingmansson
  */
 public class MainActivity extends Activity {
 

@@ -10,6 +10,8 @@ import android.os.Bundle;
 import eic.beike.projectx.R;
 
 /**
+ * A dialog fragment that can be used from any activity to display a dialog.
+ *
  * @author Adam
  */
 public class MessageDialog extends DialogFragment {
@@ -29,6 +31,7 @@ public class MessageDialog extends DialogFragment {
     }
 
     public void setHaveCancelButton(boolean flag) {
+
         this.haveCancelButton = flag;
     }
     /**

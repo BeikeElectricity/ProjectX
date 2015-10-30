@@ -11,8 +11,9 @@ import eic.beike.projectx.android.activities.highScore.HighscoreActivity;
 import eic.beike.projectx.android.dialogs.MessageDialog;
 
 /**
- * @author Simon
  * This class handels the Menu. It has several buttons for starting different activities.
+ *
+ *  @author Simon
  */
 public class MenuActivity extends Activity implements MessageDialog.MessageDialogListener {
     @Override

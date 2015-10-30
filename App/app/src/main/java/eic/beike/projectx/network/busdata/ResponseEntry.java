@@ -2,7 +2,8 @@ package eic.beike.projectx.network.busdata;
 
 /**
  * Small data class used by gson, comparation on timestamp
- * Created by alex on 9/22/15.
+ *
+ * @author alex
  */
 public class ResponseEntry {
     /**
