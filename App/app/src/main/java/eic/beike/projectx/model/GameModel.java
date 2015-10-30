@@ -5,6 +5,7 @@ import java.util.Random;
 import eic.beike.projectx.android.event.IGameEventTrigger;
 import eic.beike.projectx.network.busdata.BusCollector;
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
+import eic.beike.projectx.util.Constants;
 import eic.beike.projectx.util.GameColor;
 
 /**
@@ -97,7 +98,7 @@ public class GameModel implements IGameModel{
             for (int i = 0; i < buttons.length; i++) {
                 for (int j = 0; j < buttons.length; j++) {
                     if (buttons[i][j].counted) {
-                        buttons[i][j] = new Button(GameColor.color(random.nextInt(3)), random.nextInt(50));
+                        buttons[i][j] = new Button(GameColor.color(random.nextInt(3)), Constants.BUTTON_POINTS);
                         generated++;
                         triggers.triggerNewButton(i, j, buttons[i][j].color.getAndroidColor());
                     }

@@ -31,4 +31,5 @@ public class Constants {
 
 
     public static final double BUS_NORMAL_SPEED = 50;
+    public static final int BUTTON_POINTS = 1;
 }
