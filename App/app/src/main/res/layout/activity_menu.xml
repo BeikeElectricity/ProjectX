@@ -1,0 +1,61 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <!-- The primary full-screen view. This can be replaced with whatever view
+         is needed to present your content, e.g. VideoView, SurfaceView,
+         TextureView, etc. -->
+
+    <!-- This FrameLayout insets its children based on system windows using
+         android:fitsSystemWindows. -->
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:baselineAligned="false">
+
+            <!-- Play button -->
+            <Button
+                android:layout_width="266dp"
+                android:layout_height="wrap_content"
+                android:text="Play"
+                android:id="@+id/button"
+                android:layout_gravity="center_horizontal"
+                android:onClick="play" />
+
+            <!-- Highscore -->
+            <Button
+                android:layout_width="266dp"
+                android:layout_height="wrap_content"
+                android:text="@string/highscore_menu_button"
+                android:id="@+id/button3"
+                android:layout_gravity="center_horizontal"
+                android:clickable="true"
+                android:onClick="startHighscore" />
+
+            <!-- Tutorial -->
+            <Button
+                android:layout_width="266dp"
+                android:layout_height="wrap_content"
+                android:text="Tutorial"
+                android:id="@+id/button4"
+                android:layout_gravity="center_horizontal"
+                android:onClick="tutorial" />
+
+            <!-- Exit button -->
+            <Button
+                android:layout_width="266dp"
+                android:layout_height="wrap_content"
+                android:text="Exit"
+                android:id="@+id/button2"
+                android:layout_gravity="center_horizontal"
+                android:onClick="exit" />
+        </LinearLayout>
+
+
+</FrameLayout>
