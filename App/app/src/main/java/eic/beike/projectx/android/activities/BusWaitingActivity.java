@@ -14,8 +14,9 @@ import eic.beike.projectx.network.busdata.BusCollector;
 import eic.beike.projectx.network.busdata.SimpleBusCollector;
 
 /**
- * Created by Mikael on 2015-10-06.
  * This class is to find and connect the app with a bus. When it does you can start the game
+ *
+ * @author Mikael
  */
 public class BusWaitingActivity extends Activity {
 
