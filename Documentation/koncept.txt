@@ -1,0 +1,8 @@
+Koncept
+
+Vision
+Skapa en interessant koppling mellan det som händer i verkligheten och det som händer digitalt. Vi vill på ett icke påtvingande sätt ge folk en möjlighet att interagera med varandra, resan och omvärlden. Framtidens resor ser vi som detta, ett sätt att bygga något roligt och underhållande när man åker kollektivt.
+
+Idé
+Därför är vår idé att skapa denna interaktion i form av ett spel där man får möjlighet att tävla mot sina medresenärer om man vill och samtidigt få en unik bussupplevelse. En upplevelse som innebär uppmärksamhet mot sin omgivning. Spelet skall skildra det som händer runtomkring och vara  annorlunda från resa till resa. 
+Exempel på spelfunktioner kan vara en stoppknapp trycks in skall man reagera i spelet, eller om man möter en annan buss ska man också reagera. 
