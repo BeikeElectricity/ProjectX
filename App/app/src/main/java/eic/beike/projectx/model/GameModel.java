@@ -31,7 +31,7 @@ public class GameModel implements IGameModel{
     private int pressedC = -1;
     private int pressedR = -1;
 
-    private double percentOfScore = 0;
+    private double percentOfScore = 1;
     private int score = 0;
 
     private IGameEventTrigger triggers;
@@ -163,7 +163,7 @@ public class GameModel implements IGameModel{
     protected void endRound() {
         triggers.triggerEndRound(percentOfScore * (double) score);
         score = 0;
-        percentOfScore = 0;
+        percentOfScore = 1;
     }
 
     /**

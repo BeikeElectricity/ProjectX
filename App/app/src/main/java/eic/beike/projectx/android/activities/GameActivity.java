@@ -227,13 +227,6 @@ public class GameActivity extends Activity
         last.setText(String.valueOf(latestScore));
     }
 
-    /**
-     * Creates a handler to update the ui
-     * @return The handler
-     */
-    private Handler makeHandler() {
-        return new GameEventHandler(Looper.getMainLooper(), this);
-    }
 
     public void updateButton(int row, int column, int colour) {
         if(row < gridButton.length && column < gridButton[row].length) {
